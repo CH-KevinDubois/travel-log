@@ -5,8 +5,7 @@ import { HttpClient } from "@angular/common/http";
 import { map, tap } from "rxjs/operators";
 import { User } from "../models/user";
 import { AuthRequest } from "../models/auth-request";
-
-const apiUrl = "https://masrad-2020-tl-kevin.herokuapp.com/api";
+import { environment } from 'src/environments/environment';
 
 // Add a constant for the storage key
 const STORAGE_KEY = "auth";
@@ -62,7 +61,7 @@ export class AuthService {
    * Logs in a user with the provided AuthRequest object and emits the received AuthResponse if successful.
    */
   login(authRequest: AuthRequest): Observable<User> {
-    return this.http.post<AuthResponse>(`${apiUrl}/auth`, authRequest).pipe(
+    return this.http.post<AuthResponse>(`${environment.apiUrl}/auth`, authRequest).pipe(
       // The tap operator allows you to do something with an observable's emitted value
       // and emit it again unaltered.
       // In our case, we just store this AuthResponse in the localStorage

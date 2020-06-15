@@ -123,6 +123,10 @@
           }
         }
       }
-    }},
-  "defaultProject": "traval-log"
+    }
+  },
+  "defaultProject": "traval-log",
+  "cli": {
+    "analytics": false
+  }
 }

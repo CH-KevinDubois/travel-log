@@ -10,8 +10,7 @@ const routes: Routes = [
   { path: "", redirectTo: "dummy", pathMatch: "full" },
   { path: "login", component: LoginPageComponent },
   {
-    path: "dummy",
-    component: DummyPageComponent,
+    path: "dummy", component: DummyPageComponent,
     // Prevent access to this page to unauthenticated users
     canActivate: [AuthGuard],
   },

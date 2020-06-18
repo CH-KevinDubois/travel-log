@@ -8,11 +8,13 @@ import { AppComponent } from './app.component';
 import { DummyPageComponent } from './dummy-page/dummy-page.component';
 import { ApiTokenInterceptorService } from './api/api-token-interceptor.service';
 import { SecurityModule } from './security/security.module';
+import { NavbarComponent } from './components/navbar/navbar.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     DummyPageComponent,
+    NavbarComponent,
   ],
   imports: [
     SecurityModule,

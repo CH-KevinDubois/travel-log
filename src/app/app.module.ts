@@ -1,11 +1,12 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import {MatIconModule} from '@angular/material/icon'; 
+import { MatIconModule } from '@angular/material/icon'; 
 import { MatLineModule } from '@angular/material/core';
+import { MatButtonModule } from '@angular/material/button'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,7 +30,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     HttpClientModule,
     BrowserAnimationsModule,
     MatToolbarModule,
-    MatIconModule,  
+    MatIconModule, 
+    MatButtonModule, 
   ],
   providers: [
     {

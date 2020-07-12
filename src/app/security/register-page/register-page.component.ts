@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
+import { FormControl, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-register-page',
@@ -7,6 +8,12 @@ import { NgForm } from '@angular/forms';
   styleUrls: ['./register-page.component.scss']
 })
 export class RegisterPageComponent implements OnInit {
+
+  username: string;
+  password: string;
+
+  usernameControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  passwordControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
   constructor() { }
 

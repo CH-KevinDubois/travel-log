@@ -1,21 +1,19 @@
 <form #registerForm="ngForm" (submit)="onSubmit(registerForm)">
         <div class="example-container">
             <mat-form-field appearance="fill">
-              <mat-label>Input</mat-label>
-              <input matInput>
+              <mat-label>Username</mat-label>
+              <input matInput [(ngModel)]="username" name="username" [formControl]="usernameControl" required>
+              <mat-error *ngIf="usernameControl.invalid || usernameControl.untouched">Enter username</mat-error>
             </mat-form-field>
             <br>
             <mat-form-field appearance="fill">
-              <mat-label>Select</mat-label>
-              <mat-select>
-                <mat-option value="option">Option</mat-option>
-                <mat-option value="option2">Option2</mat-option>
-              </mat-select>
+              <mat-label>Password</mat-label>
+              <input matInput [(ngModel)]="password" name="password" [formControl]="passwordControl" required>
+              <mat-error *ngIf="passwordControl.invalid || passwordControl.untouched">Enter username</mat-error>
             </mat-form-field>
             <br>
-            <mat-form-field appearance="fill">
-              <mat-label>Textarea</mat-label>
-              <textarea matInput></textarea>
-            </mat-form-field>
+            <button mat-raised-button [disabled]="passwordControl.invalid || usernameControl.invalid " type="submit" color="primary">Register</button>
           </div>
 </form>
+<p>{{username}}</p>
+<p>{{password}}</p>

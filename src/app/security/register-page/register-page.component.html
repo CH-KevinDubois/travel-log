@@ -3,13 +3,13 @@
             <mat-form-field appearance="fill">
               <mat-label>Username</mat-label>
               <input matInput [(ngModel)]="username" name="username" [formControl]="usernameControl" required>
-              <mat-error *ngIf="usernameControl.invalid || usernameControl.untouched">Enter username</mat-error>
+              <mat-error *ngIf="usernameControl.invalid || usernameControl.untouched">Username is required</mat-error>
             </mat-form-field>
             <br>
             <mat-form-field appearance="fill">
               <mat-label>Password</mat-label>
               <input matInput [(ngModel)]="password" name="password" [formControl]="passwordControl" required>
-              <mat-error *ngIf="passwordControl.invalid || passwordControl.untouched">Enter username</mat-error>
+              <mat-error *ngIf="passwordControl.invalid || passwordControl.untouched">Password is required</mat-error>
             </mat-form-field>
             <br>
             <button mat-raised-button [disabled]="passwordControl.invalid || usernameControl.invalid " type="submit" color="primary">Register</button>

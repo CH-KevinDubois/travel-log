@@ -1,29 +1,29 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
         <!--Left menu-->
-        <button mat-button routerLink="/login" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="0">
+        <button mat-button routerLink="/homepage" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="0">
             <span class="mat-button-wrapper">
                 <img src="../../assets/img/navbar/globe.svg" alt="TraveLog" class="travelog-logo"/>
-                <span class="logo-title">Trave<strong>L</strong>oG</span>
+                <span class="logo-title"><strong>T</strong>rave<strong>L</strong>o<strong>G</strong></span>
             </span>
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
-        <button mat-button routerLink="/login" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="1">
+        <button mat-button routerLink="/alltrips" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="1">
             <span class="mat-button-wrapper">
                 <span>All trips</span>
             </span>
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
-        <button mat-button routerLink="/register" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="2">
+        <button mat-button routerLink="/mytrips" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="2">
             <span class="mat-button-wrapper">
                 <span>My trips</span>
             </span>
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
-        <a mat-button="" routerLink="/" class="mat-focus-indicator mat-button button-menu" tabindex="3">
+        <a mat-button="" routerLink="/seecomments" class="mat-focus-indicator mat-button button-menu" tabindex="3">
             <span class="mat-button-wrapper">
                 <span>See comments</span>
             </span>
@@ -33,27 +33,21 @@
         <!--Spacer-->
         <div class="flex-spacer"></div>
         <!--Right menu-->
-        <button mat-button="" routerLink="/register" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="4">
+        <button mat-button [hidden]="userAuthenticated" routerLink="/login" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="4">
             <span class="mat-button-wrapper">
                 <span>Sign In</span>
             </span>
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
-        <a mat-button="" routerLink="/" class="mat-focus-indicator mat-button button-menu" tabindex="5">
-            <span class="mat-button-wrapper">
-                <span>Log Out</span>
-            </span>
-            <div matripple="" class="mat-ripple mat-button-ripple"></div>
-            <div class="mat-button-focus-overlay"></div>
-        </a>
-        <a mat-button="" routerLink="/" class="mat-focus-indicator mat-button button-menu" tabindex="6">
+        <button mat-button [hidden]="userAuthenticated" routerLink="/register" class="mat-focus-indicator mat-button button-menu" tabindex="6">
             <span class="mat-button-wrapper">
                 <span>Register</span>
             </span>
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
-        </a>
+        </button>
+        <app-logout-button [hidden]="!userAuthenticated"></app-logout-button>
         <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
         <mat-icon [hidden]="userAuthenticated" class="example-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>
     </mat-toolbar-row>

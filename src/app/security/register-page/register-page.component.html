@@ -3,7 +3,7 @@
             <mat-form-field appearance="fill">
               <mat-label>Username</mat-label>
               <input matInput 
-                [(ngModel)]="registerRequest.username" 
+                [(ngModel)]="registerRequest.name" 
                 name="username" 
                 [formControl]="usernameControl" 
                 required
@@ -25,5 +25,5 @@
             <button mat-raised-button [disabled]="passwordControl.invalid || usernameControl.invalid " type="submit" color="primary">Register</button>
           </div>
 </form>
-<p>{{registerRequest.username}}</p>
+<p>{{registerRequest.name}}</p>
 <p>{{registerRequest.password}}</p>

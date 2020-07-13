@@ -47,8 +47,28 @@
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
+
         <app-logout-button [hidden]="!userAuthenticated"></app-logout-button>
+
         <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
+
         <mat-icon [hidden]="userAuthenticated" class="example-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>
+
+        <button mat-icon-button [matMenuTriggerFor]="menu">
+            <mat-icon>account_circle</mat-icon>
+          </button>
+          <mat-menu #menu="matMenu">
+            <button mat-menu-item>
+              <mat-icon>delete</mat-icon>
+              <span>Delete account</span>
+            </button>
+            <button mat-menu-item 
+                enabled
+                routerLink="/register">
+            <mat-icon>edit</mat-icon>
+              <span>Edit account</span>
+            </button>
+          </mat-menu>
+          
     </mat-toolbar-row>
 </mat-toolbar>

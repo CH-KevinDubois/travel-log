@@ -14,6 +14,7 @@ import { DummyPageComponent } from './dummy-page/dummy-page.component';
 import { ApiTokenInterceptorService } from './api/api-token-interceptor.service';
 import { SecurityModule } from './security/security.module';
 import { NavbarComponent } from './navbar/navbar.component';
+import { RouterModule } from '@angular/router';
 
 
 @NgModule({
@@ -31,7 +32,8 @@ import { NavbarComponent } from './navbar/navbar.component';
     BrowserAnimationsModule,
     MatToolbarModule,
     MatIconModule, 
-    MatButtonModule, 
+    MatButtonModule,
+    RouterModule, 
   ],
   providers: [
     {

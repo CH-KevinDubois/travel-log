@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { FormControl, Validators } from '@angular/forms';
+import { RegisterRequest } from 'src/app/models/register-request';
 
 @Component({
   selector: 'app-register-page',
@@ -9,13 +10,14 @@ import { FormControl, Validators } from '@angular/forms';
 })
 export class RegisterPageComponent implements OnInit {
 
-  username: string;
-  password: string;
+  registerRequest : RegisterRequest;
 
-  usernameControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  usernameControl = new FormControl('', [Validators.required, Validators.minLength(5)]);
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
 
-  constructor() { }
+  constructor() {
+    this.registerRequest = new RegisterRequest();
+   }
 
   ngOnInit(): void {
   }
@@ -25,6 +27,9 @@ export class RegisterPageComponent implements OnInit {
   */
  onSubmit(form: NgForm) {
    console.log(form);
+   if(form.valid){
+
+   }
   }
   
 }

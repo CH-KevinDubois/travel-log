@@ -5,14 +5,22 @@ import { environment } from 'src/environments/environment';
 import { tap, map } from 'rxjs/operators';
 import { Observable } from 'rxjs';
 import { User } from '../models/user';
+import { AuthService } from './auth.service';
+import { Router } from '@angular/router';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ManageAccountService {
 
-  constructor(private http: HttpClient) { 
+  user : User;
 
+  constructor(
+    private http: HttpClient,
+    private auth : AuthService,
+    private router : Router) { 
+      this.auth.getUser().subscribe({
+        next: (user : User) => this.user = user})
   }
 
   /**
@@ -24,5 +32,18 @@ export class ManageAccountService {
         console.log(`User ${response.name} registered`);
       })
     );
+  }
+
+
+  /**
+   * Delete an useraccount
+   */
+  deleteUser(): void {
+    this.http.delete<any>(`${environment.apiUrl}/users/${this.user.id}`).subscribe({
+      next: (value) => console.log('next value : ' + value),
+      error: (value) => console.log('error value : ' + value)
+    }
+    );
+    console.log(`User ${this.user.name} deleted`); 
   }
 }

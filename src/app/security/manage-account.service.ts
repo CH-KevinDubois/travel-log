@@ -16,18 +16,12 @@ export class ManageAccountService {
   }
 
   /**
-   * Logs in a user with the provided AuthRequest object and emits the received AuthResponse if successful.
+   * Register an user with the provided RegisterRequest object and emits the received User if successful.
    */
   registerUser(registerRequest: RegisterRequest): Observable<User> {
     return this.http.post<User>(`${environment.apiUrl}/users`, registerRequest).pipe(
-      // The tap operator allows you to do something with an observable's emitted value
-      // and emit it again unaltered.
-      // In our case, we just store this AuthResponse in the localStorage
-      //tap((response) => this.saveAuth(response)),
-      map((response) => {
+      tap((response) => {
         console.log(`User ${response.name} registered`);
-        //Todo : Display the good registration now
-        return response;
       })
     );
   }

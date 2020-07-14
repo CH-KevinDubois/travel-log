@@ -8,6 +8,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { MatInputModule } from '@angular/material/input';
 import { RegisterPageComponent } from './register-page/register-page.component';
 import { MatButtonModule } from '@angular/material/button'; 
+import { MatSnackBarModule } from '@angular/material/snack-bar'; 
 
 
 @NgModule({
@@ -20,6 +21,7 @@ import { MatButtonModule } from '@angular/material/button';
     MatSelectModule,
     MatInputModule,
     MatButtonModule,
+    MatSnackBarModule,
   ],
   exports: [
     LoginPageComponent, 

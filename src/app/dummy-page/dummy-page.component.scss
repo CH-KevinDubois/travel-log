@@ -1,5 +1,12 @@
+* {
+    font-size: 1em;
+}
+
 p {
-    background-image: url('../../assets/page-acceuil.jpg');
-    height: 800px;
-    width: 800px;
+    background: lightblue;
+    margin: 5px;
+}
+
+mat-grid-list {
+    height: 90vh;
 }

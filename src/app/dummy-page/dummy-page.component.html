@@ -1,7 +1,75 @@
 <section class="row">
-    <p class="col-xs-5">1</p>
+    <p class="col-xs-12 col-xl-5">1</p>
     <p class="col-xs-5">2</p>
     <p class="col-xs-5">3</p>
     <p class="col-xs-5">4</p>
 </section>
-  
+
+<div class="main-containter row middle-xs">
+    <section class="col-xs-12 col-lg-4">
+        <mat-icon aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
+        <mat-icon aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
+        <mat-icon aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
+        <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+            <!-- Id Column -->
+            <ng-container matColumnDef="id">
+              <th mat-header-cell *matHeaderCellDef> Id </th>
+              <td mat-cell *matCellDef="let trip"> {{trip.id}} </td>
+            </ng-container>
+          
+            <!-- Title Column -->
+            <ng-container matColumnDef="title">
+              <th mat-header-cell *matHeaderCellDef> Title </th>
+              <td mat-cell *matCellDef="let trip"> {{trip.title}} </td>
+            </ng-container>
+          
+            <!-- Description Column -->
+            <ng-container matColumnDef="description">
+              <th mat-header-cell *matHeaderCellDef> Description </th>
+              <td mat-cell *matCellDef="let trip"> {{trip.description}} </td>
+            </ng-container>
+          
+            <!-- userHref Column -->
+            <ng-container matColumnDef="userHref">
+              <th mat-header-cell *matHeaderCellDef> userHref </th>
+              <td mat-cell *matCellDef="let trip"> {{trip.userHref}} </td>
+            </ng-container>
+          
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row (click)="logRow(row)" [ngClass]="{'selected': selectedTitle == row.title}" *matRowDef="let row; columns: displayedColumns;"></tr>
+        </table>       
+    </section>
+    <section class="col-xs-12 col-lg-4">
+        <form #registerForm="ngForm" (submit)="addTrip(registerForm)">
+            <div class="row start-xs">
+                <mat-form-field appearance="fill" class="col-xs-6">
+                  <mat-label>Title</mat-label>
+                  <input matInput 
+                    [(ngModel)]="tripRequest.title" 
+                    name="username" 
+                    [formControl]="usernameControl" 
+                    required
+                    placeholder="My Travel Title">
+                  <mat-error *ngIf="usernameControl.invalid || usernameControl.touched">Title is required</mat-error>
+                </mat-form-field>
+                <mat-form-field appearance="fill" class="col-xs-12">
+                  <mat-label>Password</mat-label>
+                  <textarea matInput 
+                    [(ngModel)]="tripRequest.description" 
+                    name="Description" 
+                    [formControl]="passwordControl" 
+                    required
+                    placeholder="My Awesome Travel Description"></textarea>
+                  <mat-error [hidden]="passwordControl.invalid || passwordControl.touched">Description is required</mat-error>
+                </mat-form-field>
+                <button mat-raised-button [disabled]="passwordControl.invalid || usernameControl.invalid " type="submit" color="primary">Validate</button>
+                <button mat-raised-button (click)="retrieveAllTrips($event)" color="primary">Afficher les trips</button>
+              </div>
+        </form>
+    </section>
+    <section class="col-xs-12 col-lg-4">carte</section>
+</div>
+
+
+<p>{{tripRequest.title}}</p>
+<p>{{tripRequest.description}}</p>

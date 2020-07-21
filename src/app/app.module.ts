@@ -9,6 +9,10 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatLineModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button'; 
 import { MatMenuModule, matMenuAnimations } from '@angular/material/menu';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatFormFieldModule } from '@angular/material/form-field'; 
+import { MatInputModule } from '@angular/material/input';
+import { MatTableModule, MatTable } from '@angular/material/table'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -29,6 +33,9 @@ import { RouterModule } from '@angular/router';
     SecurityModule,
     BrowserModule,
     FormsModule,
+    MatFormFieldModule,
+    ReactiveFormsModule,
+    MatInputModule,
     AppRoutingModule,
     HttpClientModule,
     BrowserAnimationsModule,
@@ -36,6 +43,7 @@ import { RouterModule } from '@angular/router';
     MatIconModule, 
     MatButtonModule,
     MatMenuModule,
+    MatTableModule,
     RouterModule, 
   ],
   providers: [

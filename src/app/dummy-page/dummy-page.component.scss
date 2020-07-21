@@ -1,12 +1,44 @@
 * {
-    font-size: 1em;
+    font-size: 1.1em;
+}
+
+.main-container {
+    height: 90vh;
 }
 
 p {
     background: lightblue;
-    margin: 5px;
+    margin: 10px;
 }
 
-mat-grid-list {
-    height: 90vh;
+section {
+    margin: 10px;
+}
+
+
+mat-form-field {
+    margin-bottom: 10px;
+}
+
+table {
+    overflow-x: auto;
+    width: 100%;
+}
+
+td:hover {
+    padding: 10px;
+    background-color: lightblue;
+    border-style: none;
+    border-radius: 10px;
+    transform: scale(1.1);
+}
+
+tr.selected {
+    background-color: lightblue;
+    
+}
+
+mat-icon {
+    font-size: 2em;
+    padding-right: 10px;
 }

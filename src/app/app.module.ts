@@ -13,6 +13,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field'; 
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule, MatTable } from '@angular/material/table'; 
+import { MatDialogModule, MatDialogContent } from '@angular/material/dialog'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -21,6 +22,7 @@ import { ApiTokenInterceptorService } from './api/api-token-interceptor.service'
 import { SecurityModule } from './security/security.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterModule } from '@angular/router';
+import { TripDialogComponent } from './api/dialogs/trip-dialog/trip-dialog.component';
 
 
 @NgModule({
@@ -28,6 +30,10 @@ import { RouterModule } from '@angular/router';
     AppComponent,
     DummyPageComponent,
     NavbarComponent,
+    TripDialogComponent,
+  ],
+  entryComponents: [
+    TripDialogComponent
   ],
   imports: [
     SecurityModule,
@@ -45,6 +51,7 @@ import { RouterModule } from '@angular/router';
     MatMenuModule,
     MatTableModule,
     RouterModule, 
+    MatDialogModule
   ],
   providers: [
     {

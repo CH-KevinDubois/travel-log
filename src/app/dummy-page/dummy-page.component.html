@@ -36,7 +36,7 @@
             </ng-container>
           
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row (click)="logRow(row)" [ngClass]="{'selected': selectedTitle == row.title}" *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row (click)="logRow(row)" [ngClass]="{'selected': selectedTrip.title == row.title}" *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>       
     </section>
     <section class="col-xs-12 col-lg-4">
@@ -67,9 +67,12 @@
               </div>
         </form>
     </section>
-    <section class="col-xs-12 col-lg-4">carte</section>
+    <section class="col-xs-12 col-lg-4">
+        <button mat-raised-button (click)="openDialog()">Open dialog</button>
+    </section>
 </div>
 
 
 <p>{{tripRequest.title}}</p>
 <p>{{tripRequest.description}}</p>
+<p>{{selectedTrip.title}}</p>

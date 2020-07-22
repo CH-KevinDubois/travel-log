@@ -9,6 +9,8 @@ import { Trip } from '../models/trip';
 import { environment } from 'src/environments/environment';
 import { DataSource } from '@angular/cdk/table';
 import { MatTableDataSource } from '@angular/material/table';
+import { MatDialog } from '@angular/material/dialog';
+import { TripDialogComponent } from '../api/dialogs/trip-dialog/trip-dialog.component';
 
 export interface PeriodicElement {
   name: string;
@@ -41,7 +43,7 @@ export class DummyPageComponent implements OnInit {
   personnalTrips: Trip[] = new Array<Trip>();
   allTrips: Trip[];
   dataSource: MatTableDataSource<Trip>;
-  selectedTitle: string;
+  selectedTrip: Trip;
 
   usernameControl = new FormControl('', [Validators.required, Validators.minLength(5)]);
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
@@ -52,11 +54,15 @@ export class DummyPageComponent implements OnInit {
   //dataSource = ELEMENT_DATA;
 
   // Inject the UserService
-  constructor(private userService: UserService,
+  constructor(
+    public dialog: MatDialog,
+    private userService: UserService,
     private tripService: TripService,
     private http: HttpClient,
-    private changeDetectorRefs: ChangeDetectorRef) {
+    private changeDetectorRefs: ChangeDetectorRef
+    ) {
       this.tripRequest = new TripRequest();
+      this.selectedTrip = new Trip();
     }
 
   ngOnInit(): void {
@@ -95,6 +101,22 @@ export class DummyPageComponent implements OnInit {
 
   logRow(row){
     console.log(row);
-    this.selectedTitle = this.selectedTitle === row.title ? undefined: row.title;
-;  }
+    this.selectedTrip = this.selectedTrip.title === row.title ? new Trip(): row;
+  }
+
+  openDialog(): void {
+    console.log(this.selectedTrip);
+    const dialogRef = this.dialog.open(TripDialogComponent, {
+      width: '250px',
+      data: this.selectedTrip
+    });
+    
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+      if(result === undefined) return;
+      this.selectedTrip = result;
+    });
+    
+  }
 }

@@ -23,6 +23,7 @@ import { SecurityModule } from './security/security.module';
 import { NavbarComponent } from './navbar/navbar.component';
 import { RouterModule } from '@angular/router';
 import { TripDialogComponent } from './api/dialogs/trip-dialog/trip-dialog.component';
+import { PlaceDialogComponent } from './api/dialogs/place-dialog/place-dialog.component';
 
 
 @NgModule({
@@ -31,6 +32,7 @@ import { TripDialogComponent } from './api/dialogs/trip-dialog/trip-dialog.compo
     DummyPageComponent,
     NavbarComponent,
     TripDialogComponent,
+    PlaceDialogComponent,
   ],
   entryComponents: [
     TripDialogComponent

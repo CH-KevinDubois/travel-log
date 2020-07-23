@@ -9,7 +9,7 @@ import { Trip } from '../models/trip';
 import { environment } from 'src/environments/environment';
 import { DataSource } from '@angular/cdk/table';
 import { MatTableDataSource } from '@angular/material/table';
-import { MatDialog } from '@angular/material/dialog';
+import { MatDialog, DialogPosition, MatDialogConfig } from '@angular/material/dialog';
 import { TripDialogComponent } from '../api/dialogs/trip-dialog/trip-dialog.component';
 
 export interface PeriodicElement {
@@ -106,8 +106,11 @@ export class DummyPageComponent implements OnInit {
 
   openDialog(): void {
     console.log(this.selectedTrip);
+    const dialogConfig = new MatDialogConfig();
+
     const dialogRef = this.dialog.open(TripDialogComponent, {
-      width: '250px',
+      width: '500px',
+      maxHeight: '500px',
       data: this.selectedTrip
     });
     

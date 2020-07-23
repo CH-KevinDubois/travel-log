@@ -1,12 +1,27 @@
-<h1 mat-dialog-title>Hi {{data.id}}</h1>
-<div mat-dialog-content>
-  <p>What's your favorite animal?</p>
-  <mat-form-field>
-    <mat-label>Favorite Animal</mat-label>
-    <input matInput [(ngModel)]="data.title">
-  </mat-form-field>
-</div>
-<div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">No Thanks</button>
-  <button mat-button mat-dialog-close [mat-dialog-close]="data" cdkFocusInitial>Ok</button>
-</div>
+<h1 mat-dialog-title>My trip</h1>
+<form mat-dialog-content #registerForm="ngForm">
+  <div class="row start-xs middle-xs">
+    <mat-form-field appearance="fill" class="col-xs-6">
+      <mat-label>Title</mat-label>
+      <input matInput 
+      [(ngModel)]="data.title" 
+      name="title" 
+      [formControl]="titleControl" 
+      required
+      placeholder="My Travel Title">
+      <mat-error *ngIf="titleControl.invalid || titleControl.touched">Title is required</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="col-xs-12">
+      <mat-label>Password</mat-label>
+      <textarea matInput 
+      [(ngModel)]="data.description" 
+      name="descripiton" 
+      [formControl]="descriptionControl" 
+      required
+      placeholder="My Awesome Travel Description"></textarea>
+      <mat-error [hidden]="descriptionControl.invalid || descriptionControl.touched">Description is required</mat-error>
+    </mat-form-field>
+    <button mat-button (click)="onNoClick()">No Thanks</button>
+    <button mat-raised-button mat-dialog-close [mat-dialog-close]="data" cdkFocusInitial>Validate</button>
+  </div>
+</form>

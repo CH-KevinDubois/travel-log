@@ -1,4 +1,4 @@
-<h1 mat-dialog-title>My trip</h1>
+<h1 mat-dialog-title>Edit a trip</h1>
 <form mat-dialog-content #registerForm="ngForm">
   <div class="row start-xs middle-xs">
     <mat-form-field appearance="fill" class="col-xs-6">
@@ -21,7 +21,11 @@
       placeholder="My Awesome Travel Description"></textarea>
       <mat-error [hidden]="descriptionControl.invalid || descriptionControl.touched">Description is required</mat-error>
     </mat-form-field>
-    <button mat-button (click)="onNoClick()">No Thanks</button>
-    <button mat-raised-button mat-dialog-close [mat-dialog-close]="data" cdkFocusInitial>Validate</button>
+    <p class="col-xs-3">
+      <button mat-button (click)="onNoClick()" >No Thanks</button>
+    </p>
+    <p class="col-xs-offset-1 col-xs-3">
+      <button mat-raised-button mat-dialog-close [mat-dialog-close]="data" cdkFocusInitial >Validate</button>
+    </p>
   </div>
 </form>

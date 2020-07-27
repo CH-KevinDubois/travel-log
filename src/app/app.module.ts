@@ -24,6 +24,8 @@ import { NavbarComponent } from './navbar/navbar.component';
 import { RouterModule } from '@angular/router';
 import { TripDialogComponent } from './api/dialogs/trip-dialog/trip-dialog.component';
 import { PlaceDialogComponent } from './api/dialogs/place-dialog/place-dialog.component';
+import { LoginDialogComponent } from './api/dialogs/login-dialog/login-dialog.component';
+import { RegisterDialogComponent } from './api/dialogs/register-dialog/register-dialog.component';
 
 
 @NgModule({
@@ -33,6 +35,8 @@ import { PlaceDialogComponent } from './api/dialogs/place-dialog/place-dialog.co
     NavbarComponent,
     TripDialogComponent,
     PlaceDialogComponent,
+    LoginDialogComponent,
+    RegisterDialogComponent,
   ],
   entryComponents: [
     TripDialogComponent

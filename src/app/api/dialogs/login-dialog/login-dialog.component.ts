@@ -1,4 +1,9 @@
 import { Component, OnInit } from '@angular/core';
+import { AuthRequest } from 'src/app/models/auth-request';
+import { AuthService } from 'src/app/security/auth.service';
+import { Router } from '@angular/router';
+import { NgForm, FormControl, Validators } from '@angular/forms';
+import { MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-login-dialog',
@@ -6,10 +11,52 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./login-dialog.component.scss']
 })
 export class LoginDialogComponent implements OnInit {
-
-  constructor() { }
-
-  ngOnInit(): void {
+  /**
+  * This authentication request object will be updated when the user
+  * edits the login form. It will then be sent to the API.
+  */
+  authRequest: AuthRequest;
+  
+  usernameControl = new FormControl('', [Validators.required, Validators.minLength(5)]);
+  passwordControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
+  
+  /**
+  * If true, it means that the authentication API has return a failed response
+  * (probably because the name or password is incorrect).
+  */
+  loginError: boolean;
+  
+  constructor(private auth: AuthService, private router: Router, public dialogRef: MatDialogRef<LoginDialogComponent>) {
+    this.authRequest = new AuthRequest();
+    this.loginError = false;
+    
   }
-
+  
+  ngOnInit() {
+    
+  }
+  
+  onNoClick(): void {
+    this.dialogRef.close();
+  }
+  
+  /**
+  * Called when the login form is submitted.
+  */
+  onSubmit(form: NgForm) {
+    // Only do something if the form is valid
+    if (form.valid) {
+      // Hide any previous login error.
+      this.loginError = false;
+      
+      // Perform the authentication request to the API.
+      this.auth.login(this.authRequest).subscribe({
+        next: () => this.router.navigateByUrl("/"),
+        error: (err) => {
+          this.loginError = true;
+          console.warn(`Authentication failed: ${err.message}`);
+        },
+      });
+    }
+  }
 }

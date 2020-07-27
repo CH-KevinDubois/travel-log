@@ -1,1 +1,31 @@
-<p>login-dialog works!</p>
+<h1 mat-dialog-title>Enter your credentials</h1>
+<form mat-dialog-content #registerForm="ngForm" (submit)="onSubmit(registerForm)">
+    <div class="example-container">
+        <mat-form-field appearance="fill">
+          <mat-label>Username</mat-label>
+          <input matInput 
+            cdkFocusInitial
+            [(ngModel)]="authRequest.username" 
+            name="username" 
+            [formControl]="usernameControl" 
+            required
+            placeholder="MyTravelName">
+          <mat-error *ngIf="usernameControl.invalid || usernameControl.touched">Username is required</mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput 
+            [(ngModel)]="authRequest.password" 
+            name="password" 
+            [formControl]="passwordControl" 
+            required
+            placeholder="A strong password">
+          <mat-error [hidden]="passwordControl.invalid || passwordControl.touched">Password is required</mat-error>
+        </mat-form-field>
+        <br>
+        <button mat-raised-button [disabled]="passwordControl.invalid || usernameControl.invalid " mat-dialog-close type="submit" color="primary">LoGin</button>
+      </div>
+</form>
+<p>{{authRequest.username}}</p>
+<p>{{authRequest.password}}</p>

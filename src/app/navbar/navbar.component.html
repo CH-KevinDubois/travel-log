@@ -33,9 +33,9 @@
         <!--Spacer-->
         <div class="flex-spacer"></div>
         <!--Right menu-->
-        <button mat-button [hidden]="userAuthenticated" routerLink="/login" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="4">
+        <button mat-button [hidden]="userAuthenticated" (click)="openLoginDialog()" class="mat-button button-menu" tabindex="4">
             <span class="mat-button-wrapper">
-                <span>Sign In</span>
+                <span>LoGin</span>
             </span>
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
@@ -47,8 +47,6 @@
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
-
-        <app-logout-button [hidden]="!userAuthenticated"></app-logout-button>
 
         <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
 
@@ -65,8 +63,12 @@
             <button mat-menu-item 
                 enabled
                 routerLink="/register">
-            <mat-icon>edit</mat-icon>
-              <span>Edit account</span>
+                <mat-icon>edit</mat-icon>
+                <span>Edit account</span>
+            </button>
+            <button mat-menu-item color="warn" class="mat-focus-indicator mat-raised-button button-menu" (click)="logout()">
+                <mat-icon> cancel_presentation</mat-icon>
+                <span>LoGout</span>
             </button>
           </mat-menu>
           

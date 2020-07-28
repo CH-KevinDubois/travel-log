@@ -1,19 +1,24 @@
 .example-icon {
-    padding: 0 14px;
-  }
-  
+  padding: 0 14px;
+}
+
 .flex-spacer {
-    flex: 1 1 auto;
-  }
+  flex: 1 1 auto;
+}
+
+ button > span {
+  font-size: 1.2em;
+}
 
 mat-toolbar{
   padding: 5px;
+  height: 80px;
 }
 
 .logo-title {
-    font-size: 2em;
-    padding-left: 10px;
-  }
+  font-size: 1.5em;
+  padding-left: 10px;
+}
 
 .button-menu {
   font-size: 1em;

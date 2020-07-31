@@ -4,10 +4,12 @@ import { LoginPageComponent } from './security/login-page/login-page.component';
 import { DummyPageComponent } from './dummy-page/dummy-page.component';
 import { AuthGuard } from './security/guards/auth.guard';
 import { RegisterPageComponent } from './security/register-page/register-page.component';
+import { AllTripsPageComponent } from './all-trips-page/all-trips-page.component';
 
 
 const routes: Routes = [
-  { path: "", redirectTo: "dummy", pathMatch: "full" },
+  { path: "", redirectTo: "all-trips", pathMatch: "full" },
+  { path: "all-trips", component: AllTripsPageComponent },
   { path: "login", component: LoginPageComponent },
   { path: "register", component:  RegisterPageComponent},
   //{ path: "**", component: ErrorPageComponent},

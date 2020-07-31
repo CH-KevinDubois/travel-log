@@ -1,0 +1,68 @@
+section {
+    background: lightblue;
+}
+
+mat-grid-list {
+    min-height: 90vh;
+}
+
+table {
+    overflow-x: auto;
+    width: 100%;
+}
+
+mat-icon {
+    font-size: 1.5rem;
+    color: #6200EE;
+    margin: 2px 5px;
+    height: auto;
+    width: auto;
+}
+
+td:hover {
+    padding: 10px;
+    background-color: lightblue;
+    border-style: none;
+    border-radius: 10px;
+    transform: scale(1.1);
+}
+
+tr.selected {
+    background-color: lightblue;
+    
+}
+
+img {
+    max-width: 100%;
+    border-radius: 50%;
+}
+
+img:hover {
+    max-width: 100%;
+    transform: scale(1.5, 1.5);
+    transform-origin: top;
+    transition: cubic-bezier(.55,.06,.68,.19);
+    transition-duration: 1s;
+    border-radius: 50px;
+}
+
+.outerContainer {  
+    height: 100%;
+    display: grid;
+    grid-template-columns: 1fr 2fr 3fr;
+    grid-template-rows: 1fr;
+    grid-gap: 10px;
+  padding: 10px;
+}
+
+.listPlacesContainer {  
+    
+    
+    display: grid;
+    grid-template-columns: auto;
+    grid-template-rows: 1fr 0.2fr 2fr;
+    grid-gap: 10px;
+    
+  background-color: #2196F3;
+  padding: 10px;
+}

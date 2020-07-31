@@ -27,7 +27,7 @@ import { TripDialogComponent } from './api/dialogs/trip-dialog/trip-dialog.compo
 import { PlaceDialogComponent } from './api/dialogs/place-dialog/place-dialog.component';
 import { LoginDialogComponent } from './api/dialogs/login-dialog/login-dialog.component';
 import { RegisterDialogComponent } from './api/dialogs/register-dialog/register-dialog.component';
-import { MyTripsPageComponent } from './my-trips-page/my-trips-page/my-trips-page.component';
+import { MyTripsPageComponent } from './my-trips-page/my-trips-page.component';
 import { AllTripsPageComponent } from './all-trips-page/all-trips-page.component';
 import { MapComponent } from './map/map.component';
 

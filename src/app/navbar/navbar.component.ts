@@ -61,7 +61,7 @@ export class NavbarComponent implements OnInit {
 
   logout(): void {
     this.auth.logout();
-    this.router.navigateByUrl("/login");
+    this.router.navigateByUrl("/all-trips");
   }
 
   ngOnInit(): void {

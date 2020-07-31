@@ -9,14 +9,19 @@
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
-        <button mat-button routerLink="/alltrips" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="1">
+        <button mat-button routerLink="/all-trips" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="1">
             <span class="mat-button-wrapper">
                 <span>All trips</span>
             </span>
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
-        <button mat-button routerLink="/mytrips" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="2">
+        <button mat-button 
+            [hidden]="!userAuthenticated" 
+            routerLink="/my-trips" 
+            routerLinkActive="active" 
+            class="mat-focus-indicator mat-button button-menu" 
+            tabindex="2">
             <span class="mat-button-wrapper">
                 <span>My trips</span>
             </span>

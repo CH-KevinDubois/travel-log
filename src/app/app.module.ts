@@ -13,7 +13,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field'; 
 import { MatInputModule } from '@angular/material/input';
 import { MatTableModule, MatTable } from '@angular/material/table'; 
-import { MatDialogModule, MatDialogContent } from '@angular/material/dialog'; 
+import { MatDialogModule, MatDialogContent } from '@angular/material/dialog';
+import { MatGridListModule } from '@angular/material/grid-list'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +27,9 @@ import { TripDialogComponent } from './api/dialogs/trip-dialog/trip-dialog.compo
 import { PlaceDialogComponent } from './api/dialogs/place-dialog/place-dialog.component';
 import { LoginDialogComponent } from './api/dialogs/login-dialog/login-dialog.component';
 import { RegisterDialogComponent } from './api/dialogs/register-dialog/register-dialog.component';
+import { MyTripsPageComponent } from './my-trips-page/my-trips-page/my-trips-page.component';
+import { AllTripsPageComponent } from './all-trips-page/all-trips-page.component';
+import { MapComponent } from './map/map.component';
 
 
 @NgModule({
@@ -37,6 +41,9 @@ import { RegisterDialogComponent } from './api/dialogs/register-dialog/register-
     PlaceDialogComponent,
     LoginDialogComponent,
     RegisterDialogComponent,
+    MyTripsPageComponent,
+    AllTripsPageComponent,
+    MapComponent,
   ],
   entryComponents: [
     TripDialogComponent
@@ -57,7 +64,8 @@ import { RegisterDialogComponent } from './api/dialogs/register-dialog/register-
     MatMenuModule,
     MatTableModule,
     RouterModule, 
-    MatDialogModule
+    MatDialogModule,
+    MatGridListModule
   ],
   providers: [
     {

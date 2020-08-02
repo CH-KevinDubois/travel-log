@@ -4,7 +4,7 @@ export class Place {
     id: string;
     href: string;
     name: string;
-    descripiton: string;
+    description: string;
     location: GeoJsonLocation;
     tripHref: string;
     tripId: string;

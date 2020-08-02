@@ -26,6 +26,7 @@ export class TripDialogComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  
   }
 
 }

@@ -8,7 +8,7 @@ export class Place {
     location: GeoJsonLocation;
     tripHref: string;
     tripId: string;
-    picureUrl?: string;
+    pictureUrl?: string;
     createdAt: Date;
     updatedAt: Date;
 }

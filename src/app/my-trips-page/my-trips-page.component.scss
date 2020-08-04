@@ -47,7 +47,7 @@ img:hover {
 }
 
 .outerContainer {  
-    height: 100%;
+    height: auto;
     display: grid;
     grid-template-columns: 1fr 2fr 3fr;
     grid-template-rows: 1fr;
@@ -58,9 +58,10 @@ img:hover {
 .listPlacesContainer {  
     
     
-    display: grid;
+    display: flex;
+    flex-flow: column nowrap;
     grid-template-columns: auto;
-    grid-template-rows: 1fr 0.2fr 2fr;
+    grid-template-rows: 1fr 0.2fr 2fr 2fr;
     grid-gap: 10px;
     
   background-color: #2196F3;

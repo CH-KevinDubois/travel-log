@@ -30,6 +30,7 @@ import { RegisterDialogComponent } from './api/dialogs/register-dialog/register-
 import { MyTripsPageComponent } from './my-trips-page/my-trips-page.component';
 import { AllTripsPageComponent } from './all-trips-page/all-trips-page.component';
 import { MapComponent } from './map/map.component';
+import { LeafletModule } from '@asymmetrik/ngx-leaflet';
 
 
 @NgModule({
@@ -65,7 +66,8 @@ import { MapComponent } from './map/map.component';
     MatTableModule,
     RouterModule, 
     MatDialogModule,
-    MatGridListModule
+    MatGridListModule,
+    LeafletModule,
   ],
   providers: [
     {

@@ -1,12 +1,12 @@
 import { GeoJsonLocation } from './geo-json-location';
 
 export class PlaceRequest {
-    name: String;
+    name: string;
     description: string;
     location: GeoJsonLocation;
-    tripHref?: String;
-    tripId?: String;
-    pictureUrl?: String;
+    tripHref?: string;
+    tripId?: string;
+    pictureUrl?: string;
 
     constructor(data: Partial<PlaceRequest> = { }) {
         this.name = data.name;

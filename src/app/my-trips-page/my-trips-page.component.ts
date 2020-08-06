@@ -4,7 +4,7 @@ import { MatTableDataSource } from '@angular/material/table';
 import { TripService } from '../api/services/trip.service';
 import { HttpClient } from '@angular/common/http';
 import { AuthService } from '../security/auth.service';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, result } from 'lodash';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
 import { TripDialogComponent } from '../api/dialogs/trip-dialog/trip-dialog.component';
 import { Place } from '../models/place';
@@ -12,6 +12,8 @@ import { PlaceDialogComponent } from '../api/dialogs/place-dialog/place-dialog.c
 import { PlaceRequest } from '../models/place-request';
 import { PlaceService } from '../api/services/place.service';
 import { GeoJsonLocation } from '../models/geo-json-location';
+import { StateManagementService } from '../api/services/state-management.service';
+import { TripRequest } from '../models/trip-request';
 
 @Component({
   selector: 'app-my-trips-page',
@@ -23,6 +25,7 @@ export class MyTripsPageComponent implements OnInit {
   myTrips: Trip[];
   dataSource: MatTableDataSource<Trip>;
   selectedTrip: Trip;
+  isTripSelected: boolean;
 
   tripPlaces: Place[];
   dataSoucePlaceTable: MatTableDataSource<Place>;
@@ -37,10 +40,12 @@ export class MyTripsPageComponent implements OnInit {
     private placeService: PlaceService,
     private http: HttpClient,
     private changeDetectorRefs: ChangeDetectorRef,
-    private auth: AuthService
+    private auth: AuthService,
+    private stateManagement: StateManagementService
     ) {
       this.selectedTrip = new Trip();
       this.selectedPlace = new Place();
+      this.isTripSelected = false;
     }
     
     ngOnInit(): void {
@@ -73,32 +78,66 @@ export class MyTripsPageComponent implements OnInit {
   
       const dialogRef = this.dialog.open(TripDialogComponent, {
         width: '500px',
-        maxHeight: '500px',
+        minHeight: '500px',
         data: selectedTripCopy
       });
   
       dialogRef.afterClosed().subscribe(result => {
-        console.log('The dialog was closed');
+        console.log('Trip dialog closed');
         console.log(result);
         if(result === undefined) return;
-        this.selectedTrip = result;
+
+        const tripRequest = new TripRequest(result);
+        if(result.id){
+          console.log('edit');
+          //Todo réinjecter le bon voyage updaté
+          this.tripService.updateTrip(result.id, tripRequest).subscribe({
+            next: result => console.log(result),
+            error: error => console.log(error)
+          })
+        }
+        else
+          console.log('new');
+          //Injecter le noveau voyage
+          this.tripService.createNewTrip(tripRequest).subscribe({
+            next: result => console.log(result),
+            error: error => console.log(error)
+          })
+          
+        //this.selectedTrip = result;
       }, error => console.log(error));
       
     }
 
+    deleteTrip(): void {
+      if(confirm("Do you want to delete the trip?")){
+        this.tripService.deleteTrip(this.selectedTrip.id).subscribe({
+          next: result => console.log(result),
+          error: error => console.log(error)
+        });
+        // Delete the corresponding entry in the data source
+        const index = this.dataSource.data.indexOf(this.selectedTrip);
+        this.dataSource.data.splice(index, 1);
+        this.dataSource._updateChangeSubscription();
+      }
+    }
+
     openPlaceDialog(): void {
       console.log('Place dialog opened');
-      const selectedPlace = cloneDeep(this.selectedPlace);
+      const selectedPlaceCopy = cloneDeep(this.selectedPlace);
       const dialogConfig = new MatDialogConfig();
   
       const dialogRef = this.dialog.open(PlaceDialogComponent, {
         width: '500px',
-        maxHeight: '500px',
-        data: selectedPlace
+        minHeight: '500px',
+        disableClose: true,
+        data: selectedPlaceCopy
       });
   
       dialogRef.afterClosed().subscribe(result => {
         console.log('The placeDialog was closed');
+        console.log(result);
+        
         // If undefined the form has been closed just return
         if(result === undefined) return;
         // If id exists then user is editing a place
@@ -121,18 +160,21 @@ export class MyTripsPageComponent implements OnInit {
       
     }
     
-    toggleTrip(row){
-      if(this.selectedTrip.title === row.title){
+    selectTrip(row){
+      if(this.selectedTrip.id === row.id){
         this.selectedTrip = new Trip();
-        this.tripPlaces.length = 0;
+        //this.tripPlaces.length = 0;
+        this.isTripSelected = false;
       }
       else{
+        this.isTripSelected = true;
         this.selectedTrip = row;
         this.placeService.retrieveTripPlaceById(this.selectedTrip.id).subscribe({
           next: places => this.dataSoucePlaceTable = new MatTableDataSource(places),
           error: err => console.log(err)
         });
       } 
+      
     }
 
     selectPlace(row){

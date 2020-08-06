@@ -13,10 +13,20 @@ export class TripService {
 
   constructor(private http: HttpClient) { }
 
-  createTrip(tripResquest: TripRequest): Observable<Trip> {
-    return this.http.post<Trip>(`${environment.apiUrl}/trips`, tripResquest).pipe(
+  createNewTrip(tripRequest: TripRequest): Observable<Trip> {
+    return this.http.post<Trip>(`${environment.apiUrl}/trips`, tripRequest).pipe(
       tap((trip) => console.log(trip))
     );
+  }
+
+  updateTrip(tripId: string, tripRequest: TripRequest): Observable<Trip>{
+    return this.http.patch<Trip>(`${environment.apiUrl}/trips/${tripId}`, tripRequest).pipe(
+      tap((trip) => console.log(trip))
+    );
+  }
+
+  deleteTrip(tripId: string){
+    return this.http.delete<Trip>(`${environment.apiUrl}/trips/${tripId}`);
   }
 
 

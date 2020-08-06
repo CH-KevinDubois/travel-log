@@ -1,6 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { latLng, Map, MapOptions, tileLayer, Marker, marker, LeafletMouseEvent } from 'leaflet';
 import { Icon, IconOptions, icon } from 'leaflet';
+import { StateManagementService } from '../api/services/state-management.service';
+import { GeoJsonLocation } from '../models/geo-json-location';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
@@ -24,7 +26,9 @@ export class MapComponent implements OnInit {
   mapMarkers: Marker[];
   map: Map;
 
-  constructor() {
+  constructor(
+    private stateManagement: StateManagementService
+  ) {
     this.mapOptions = {
       layers: [
         tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -46,7 +50,8 @@ export class MapComponent implements OnInit {
     this.map.on('click', (event : LeafletMouseEvent) => {
       const coord = event.latlng;
       console.log(`Map moved to ${coord.lat}, ${coord.lng}`);
-      //new Marker([ coord.lat, coord.lng], { icon: defaultIcon }).addTo(map);
+      new Marker([ coord.lat, coord.lng], { icon: defaultIcon }).addTo(map);
+      this.stateManagement.getClickedPintOnMapSubject().next(new GeoJsonLocation(coord.lat, coord.lng));
       //console.log(this.map);
       //this.mapMarkers = [marker([ coord.lat, coord.lng ], { icon: defaultIcon })];
       //map.invalidateSize();

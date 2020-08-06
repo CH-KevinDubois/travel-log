@@ -1,7 +1,10 @@
-import { Component, OnInit, Inject } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
 import { FormControl, Validators, MaxLengthValidator } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Place } from 'src/app/models/place';
+import { StateManagementService } from '../../services/state-management.service';
+import { Observer, Observable, Subscription } from 'rxjs';
+import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 
 @Component({
   selector: 'app-place-dialog',
@@ -14,8 +17,11 @@ export class PlaceDialogComponent implements OnInit {
   descriptionControl: FormControl;
   pictureUrlControl: FormControl;
 
+  mapClickedSubscription: Subscription;
+
   constructor(
     public dialogRef: MatDialogRef<PlaceDialogComponent>,
+    private stateManagement: StateManagementService,
     @Inject(MAT_DIALOG_DATA) public place: Place) 
     {
       this.nameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]);
@@ -28,6 +34,18 @@ export class PlaceDialogComponent implements OnInit {
     }
     
     ngOnInit(): void {
+
+      this.mapClickedSubscription = this.stateManagement.getClickedPintOnMapSubject().subscribe({
+        next: location => {
+          this.place.location.coordinates[0] = location.coordinates[0];
+          this.place.location.coordinates[1] = location.coordinates[1];
+          console.log(this.place.location.coordinates);
+        }
+      });
+    }
+
+    ngOnDestroy(): void {
+      this.mapClickedSubscription.unsubscribe();
     }
   }
   

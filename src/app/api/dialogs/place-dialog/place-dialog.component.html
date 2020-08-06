@@ -1,9 +1,9 @@
-<h1 *ngIf="!place.id" mat-dialog-title>Create a place</h1>
-<h1 *ngIf="place.id" mat-dialog-title>Edit a place</h1>
+<h1 mat-dialog-title *ngIf="!place.id" mat-dialog-title>Create a place</h1>
+<h1 mat-dialog-title *ngIf="place.id" mat-dialog-title>Edit a place</h1>
 <form mat-dialog-content #registerForm="ngForm">
   <div class="row start-xs middle-xs">
     <mat-form-field appearance="fill" class="col-xs-6">
-      <mat-label>Title</mat-label>
+      <mat-label>Place name</mat-label>
       <input matInput 
       [(ngModel)]="place.name" 
       name="Name" 
@@ -11,6 +11,14 @@
       required
       placeholder="Place name">
       <mat-error *ngIf="nameControl.invalid || nameControl.touched">Title is required</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="col-xs-6">
+      <mat-label>Coord</mat-label>
+      <input matInput 
+      [(ngModel)]="place.location.coordinates[1]" 
+      name="Coord" 
+      required
+      placeholder="Coord">
     </mat-form-field>
     <mat-form-field appearance="fill" class="col-xs-12">
       <mat-label>Description</mat-label>
@@ -31,14 +39,17 @@
         placeholder="A picture from the place">
         <mat-error *ngIf="pictureUrlControl.invalid">Wrong format / minLength(10) maxLength(500)</mat-error>
       </mat-form-field>
-    <p>
-      <button mat-button (click)="onNoClick()" >No Thanks</button>
-    </p>
-    <p>
-      <button mat-raised-button 
-      mat-dialog-close 
-      [mat-dialog-close]="place"
-      [disabled]="descriptionControl.invalid || nameControl.invalid || pictureUrlControl.invalid">Validate</button>
-    </p>
   </div>
 </form>
+<div mat-dialog-actions>
+  <button mat-button (click)="onNoClick()" >No Thanks</button>
+  <button mat-raised-button 
+      mat-dialog-close 
+      [mat-dialog-close]="place"
+      [disabled]="descriptionControl.invalid || nameControl.invalid || pictureUrlControl.invalid">
+      Validate
+    </button>
+</div>
+<div>{{place.location.coordinates}}</div>
+<div>{{place.name}}</div>
+<app-map></app-map>

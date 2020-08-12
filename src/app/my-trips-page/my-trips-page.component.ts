@@ -16,6 +16,19 @@ import { StateManagementService } from '../api/services/state-management.service
 import { TripRequest } from '../models/trip-request';
 import { Observable } from 'rxjs';
 import { ActiveSelections } from '../models/active-selections';
+import { Marker, marker, Icon, IconOptions, icon } from 'leaflet';
+
+const defaultIcon: Icon<IconOptions> = icon({
+  // This define the displayed icon size, in pixel
+  iconSize: [ 25, 41 ],
+  // This defines the pixel that should be placed right above the location
+  // If not provided, the image center will be used, and that could be awkward
+  iconAnchor: [ 13, 41 ],
+  // The path to the image to display. In this case, it's a Leaflet asset
+  iconUrl: 'leaflet/pin.svg',
+  // The path to the image's shadow to display. Also a leaflet asset
+  shadowUrl: 'leaflet/marker-shadow.png'
+});
 
 @Component({
   selector: 'app-my-trips-page',
@@ -34,6 +47,9 @@ export class MyTripsPageComponent implements OnInit {
 
   placeDisplayedColumns: string [] = ['name'];
   displayedColumns: string[] = ['title'];
+
+  // Markers for the map
+  markers: Marker[];
   
   constructor(
     public dialog: MatDialog,
@@ -45,6 +61,11 @@ export class MyTripsPageComponent implements OnInit {
     private stateManagement: StateManagementService
     ) {
       this.selections = new ActiveSelections();
+      this.markers = [
+        marker([ 46.778186, 6.641524 ], { icon: defaultIcon }),
+        marker([ 46.780796, 6.647395 ], { icon: defaultIcon }),
+        marker([ 46.784992, 6.652267 ], { icon: defaultIcon })
+      ];
     }
     
     ngOnInit(): void {
@@ -70,12 +91,12 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     openTripDialog(): Observable<any> {
-      let tripRequest: TripRequest;
+      let tripForDialog: Trip;
       if(this.selections.isTripSelected()){
-        tripRequest = new TripRequest(this.selections.selectedTrip);
+        tripForDialog = cloneDeep(this.selections.selectedTrip);
       }
       else{
-        tripRequest = new TripRequest();
+        tripForDialog = new Trip();
       }
 
       const dialogConfig = new MatDialogConfig();
@@ -83,7 +104,7 @@ export class MyTripsPageComponent implements OnInit {
       const dialogRef = this.dialog.open(TripDialogComponent, {
         width: '500px',
         minHeight: '500px',
-        data: tripRequest
+        data: tripForDialog
       });
       
       return dialogRef.afterClosed();
@@ -142,24 +163,21 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     openPlaceDialog(): void {
-      console.log('Place dialog opened');
-
-      let placeRequest: PlaceRequest;
+      let placeForDialog: Place;
       if(this.selections.isPlaceSelected()){
-        placeRequest = new PlaceRequest(this.selections.selectedPlace);
+        placeForDialog = cloneDeep(this.selections.selectedPlace);
       }
       else{
-        placeRequest = new PlaceRequest();
+        placeForDialog = new Place();
       }
-      console.log(placeRequest);
-      
+
       const dialogConfig = new MatDialogConfig();
       
       const dialogRef = this.dialog.open(PlaceDialogComponent, {
         width: '500px',
         maxHeight: '90vh',
         disableClose: true,
-        data: placeRequest
+        data: placeForDialog
       });
       
       dialogRef.afterClosed().subscribe(result => {
@@ -194,13 +212,11 @@ export class MyTripsPageComponent implements OnInit {
       }
       else{
         this.selections.selectedTrip = row;
-
         this.placeService.retrieveTripPlaceById(this.selections.selectedTrip.id).subscribe({
           next: places => this.dataSoucePlaceTable = new MatTableDataSource(places),
           error: err => console.log(err)
         });
       } 
-      
     }
     
     selectPlace(row){

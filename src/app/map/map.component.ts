@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { latLng, Map, MapOptions, tileLayer, Marker, marker, LeafletMouseEvent } from 'leaflet';
+import { Component, OnInit, Input } from '@angular/core';
+import { latLng, Map, MapOptions, tileLayer, Marker, marker, LeafletMouseEvent, LatLng, Zoom } from 'leaflet';
 import { Icon, IconOptions, icon } from 'leaflet';
 import { StateManagementService } from '../api/services/state-management.service';
 import { GeoJsonLocation } from '../models/geo-json-location';
@@ -22,8 +22,11 @@ const defaultIcon: Icon<IconOptions> = icon({
   styleUrls: ['./map.component.scss'],
 })
 export class MapComponent implements OnInit {
+  @Input() isEditable: boolean = false;
+  @Input() center: LatLng = new LatLng(0,0);
+  @Input() zoom: number = 2;
   mapOptions: MapOptions;
-  mapMarkers: Marker[];
+  @Input() mapMarkers: Marker[];
   map: Map;
 
   constructor(
@@ -33,29 +36,28 @@ export class MapComponent implements OnInit {
       layers: [
         tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
           maxZoom: 18,
+          minZoom: 2,
         }),
       ],
-      zoom: 13,
-      center: latLng(46.778186, 6.641524),
+      zoom: this.zoom,
+      center: this.center
     };
-    this.mapMarkers = [
-      marker([ 46.778186, 6.641524 ], { icon: defaultIcon }),
-      marker([ 46.780796, 6.647395 ], { icon: defaultIcon }),
-      marker([ 46.784992, 6.652267 ], { icon: defaultIcon })
-    ];
   }
 
   onMapReady(map: Map) {
     this.map = map;
-    this.map.on('click', (event : LeafletMouseEvent) => {
-      const coord = event.latlng;
-      console.log(`Map moved to ${coord.lat}, ${coord.lng}`);
-      new Marker([ coord.lat, coord.lng], { icon: defaultIcon }).addTo(map);
-      this.stateManagement.getClickedPointOnMapSubject().next(new GeoJsonLocation(coord.lat, coord.lng));
-      //console.log(this.map);
-      //this.mapMarkers = [marker([ coord.lat, coord.lng ], { icon: defaultIcon })];
-      //map.invalidateSize();
-    });
+    if(this.isEditable){
+      this.map.on('click', (event : LeafletMouseEvent) => {
+        const coord = event.latlng;
+        console.log(`Map moved to ${coord.lat}, ${coord.lng}`);
+        new Marker([ coord.lat, coord.lng], { icon: defaultIcon }).addTo(map);
+        this.stateManagement.getClickedPointOnMapSubject().next(new GeoJsonLocation(coord.lat, coord.lng));
+        //console.log(this.map);
+        //this.mapMarkers = [marker([ coord.lat, coord.lng ], { icon: defaultIcon })];
+        //map.invalidateSize();
+      });
+    }
+
   }
 
   ngOnInit(): void {}

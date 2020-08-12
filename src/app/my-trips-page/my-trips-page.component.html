@@ -2,9 +2,9 @@
     <!-- Diplay the list of trips -->
     <section colspan="1">
         <section>
-            <mat-icon *ngIf="!this.isTripSelected" (click)="createNewTrip()">add_box</mat-icon>
-            <mat-icon *ngIf="this.isTripSelected" (click)="deleteSelectedTrip()">delete</mat-icon>
-            <mat-icon *ngIf="this.isTripSelected" (click)="updateSelectedTrip()">edit</mat-icon>
+            <mat-icon *ngIf="!this.selections.isTripSelected()" (click)="createNewTrip()">add_box</mat-icon>
+            <mat-icon *ngIf="this.selections.isTripSelected()" (click)="deleteSelectedTrip()">delete</mat-icon>
+            <mat-icon *ngIf="this.selections.isTripSelected()" (click)="updateSelectedTrip()">edit</mat-icon>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 
                 <!-- Title Column -->
@@ -14,18 +14,19 @@
                 </ng-container>
                 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row (click)="selectTrip(row)" (dblclick)="edit(row)" [ngClass]="{'selected': selectedTrip.title == row.title}" *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>   
-            <p>{{selectedTrip.id}}</p>    
+                <tr mat-row (click)="selectTrip(row)" (dblclick)="edit(row)" [ngClass]="{'selected': selections.selectedTrip == row}" *matRowDef="let row; columns: displayedColumns;"></tr>
+            </table>     
         </section>
     </section>
     <!-- Display a summary of the display trip -->
-    <section  *ngIf="selectedTrip.id" colspan="1">
-        <div  *ngIf="selectedTrip.id" class="listPlacesContainer">
-            <div>{{selectedTrip.description}}</div>
-            <img [src]="selectedPlace.pictureUrl">
-            <div>{{selectedPlace.name}}</div>
-            <div>{{selectedPlace.description}}</div>
+    <section  *ngIf="selections.selectedTrip" colspan="1">
+        <div  *ngIf="selections.selectedTrip" class="listPlacesContainer">
+            <div>{{selections.selectedTrip.description}}</div>
+            <ng-container *ngIf="selections.isPlaceSelected()">
+                <img [src]="selections.selectedPlace.pictureUrl">
+                <div>{{selections.selectedPlace.name}}</div>
+                <div>{{selections.selectedPlace.description}}</div>
+            </ng-container>
             <div>
                 <mat-icon (click)="openPlaceDialog()">add_box</mat-icon>
                 <mat-icon aria-hidden="false" aria-label="Example heart icon">delete</mat-icon>
@@ -38,7 +39,7 @@
                     </ng-container>
                     
                     <tr mat-header-row *matHeaderRowDef="placeDisplayedColumns"></tr>
-                    <tr mat-row (click)="selectPlace(row)" [ngClass]="{'selected': selectedPlace.name == row.name}" *matRowDef="let row; columns: placeDisplayedColumns;"></tr>
+                    <tr mat-row (click)="selectPlace(row)" [ngClass]="{'selected': selections.selectedPlace == row}" *matRowDef="let row; columns: placeDisplayedColumns;"></tr>
                 </table>
             </div>
         </div>

@@ -41,6 +41,7 @@
     </mat-form-field>
   </div>
 </form>
+<app-map mat-dialog-content></app-map>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()" >No Thanks</button>
   <button mat-raised-button 
@@ -52,4 +53,3 @@
 </div>
 <div>{{place.location.coordinates}}</div>
 <div>{{place.name}}</div>
-<app-map></app-map>

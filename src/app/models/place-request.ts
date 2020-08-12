@@ -15,5 +15,9 @@ export class PlaceRequest {
         this.tripHref = data.tripHref;
         this.tripId = data.tripId;
         this.pictureUrl = data.pictureUrl;
+
+        if(this.location === undefined){
+            this.location = new GeoJsonLocation(0,0);
+        }
     }
 }

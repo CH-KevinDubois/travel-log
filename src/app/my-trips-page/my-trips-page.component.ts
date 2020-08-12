@@ -15,6 +15,7 @@ import { GeoJsonLocation } from '../models/geo-json-location';
 import { StateManagementService } from '../api/services/state-management.service';
 import { TripRequest } from '../models/trip-request';
 import { Observable } from 'rxjs';
+import { ActiveSelections } from '../models/active-selections';
 
 @Component({
   selector: 'app-my-trips-page',
@@ -23,16 +24,15 @@ import { Observable } from 'rxjs';
 })
 export class MyTripsPageComponent implements OnInit {
   
+  selections: ActiveSelections;
+
   myTrips: Trip[];
   dataSource: MatTableDataSource<Trip>;
-  selectedTrip: Trip;
-  isTripSelected: boolean;
-  
+
   tripPlaces: Place[];
   dataSoucePlaceTable: MatTableDataSource<Place>;
+
   placeDisplayedColumns: string [] = ['name'];
-  selectedPlace: Place;
-  
   displayedColumns: string[] = ['title'];
   
   constructor(
@@ -44,9 +44,7 @@ export class MyTripsPageComponent implements OnInit {
     private auth: AuthService,
     private stateManagement: StateManagementService
     ) {
-      this.selectedTrip = new Trip();
-      this.selectedPlace = new Place();
-      this.isTripSelected = false;
+      this.selections = new ActiveSelections();
     }
     
     ngOnInit(): void {
@@ -64,7 +62,6 @@ export class MyTripsPageComponent implements OnInit {
       this.tripService.retrievePersonalTrips(myId).subscribe({
         next: (trips) => {
           this.dataSource = new MatTableDataSource(trips);
-          //this.changeDetectorRefs.detectChanges();
         },
         error: err => {
           console.log(err.status);
@@ -73,14 +70,20 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     openTripDialog(): Observable<any> {
-      console.log(this.selectedTrip);
-      const selectedTripCopy = cloneDeep(this.selectedTrip);
+      let tripRequest: TripRequest;
+      if(this.selections.isTripSelected()){
+        tripRequest = new TripRequest(this.selections.selectedTrip);
+      }
+      else{
+        tripRequest = new TripRequest();
+      }
+
       const dialogConfig = new MatDialogConfig();
       
       const dialogRef = this.dialog.open(TripDialogComponent, {
         width: '500px',
         minHeight: '500px',
-        data: selectedTripCopy
+        data: tripRequest
       });
       
       return dialogRef.afterClosed();
@@ -95,7 +98,7 @@ export class MyTripsPageComponent implements OnInit {
         this.tripService.updateTrip(result.id, tripRequest).subscribe({
           next: trip => {
             // Update the corresponding entry in the data source
-            const index = this.dataSource.data.indexOf(this.selectedTrip);
+            const index = this.dataSource.data.indexOf(this.selections.selectedTrip);
             this.dataSource.data.splice(index, 1, trip);
             this.dataSource._updateChangeSubscription();
           },
@@ -127,12 +130,12 @@ export class MyTripsPageComponent implements OnInit {
     
     deleteSelectedTrip(): void {
       if(confirm("Do you want to delete the trip?")){
-        this.tripService.deleteTrip(this.selectedTrip.id).subscribe({
+        this.tripService.deleteTrip(this.selections.selectedTrip.id).subscribe({
           next: result => console.log(result),
           error: error => console.log(error)
         });
         // Delete the corresponding entry in the data source
-        const index = this.dataSource.data.indexOf(this.selectedTrip);
+        const index = this.dataSource.data.indexOf(this.selections.selectedTrip);
         this.dataSource.data.splice(index, 1);
         this.dataSource._updateChangeSubscription();
       }
@@ -140,14 +143,23 @@ export class MyTripsPageComponent implements OnInit {
     
     openPlaceDialog(): void {
       console.log('Place dialog opened');
-      const selectedPlaceCopy = cloneDeep(this.selectedPlace);
+
+      let placeRequest: PlaceRequest;
+      if(this.selections.isPlaceSelected()){
+        placeRequest = new PlaceRequest(this.selections.selectedPlace);
+      }
+      else{
+        placeRequest = new PlaceRequest();
+      }
+      console.log(placeRequest);
+      
       const dialogConfig = new MatDialogConfig();
       
       const dialogRef = this.dialog.open(PlaceDialogComponent, {
         width: '500px',
-        minHeight: '500px',
+        maxHeight: '90vh',
         disableClose: true,
-        data: selectedPlaceCopy
+        data: placeRequest
       });
       
       dialogRef.afterClosed().subscribe(result => {
@@ -162,8 +174,8 @@ export class MyTripsPageComponent implements OnInit {
         }
         // Else the user is creating a place
         else{
-          result.tripHref = this.selectedTrip.href;
-          result.tripId = this.selectedTrip.id;
+          result.tripHref = this.selections.selectedTrip.href;
+          result.tripId = this.selections.selectedTrip.id;
           result.location = new GeoJsonLocation(42,42);
           let placeRequest = new PlaceRequest(result);
           this.placeService.createPlace(placeRequest).subscribe({
@@ -171,21 +183,19 @@ export class MyTripsPageComponent implements OnInit {
             error: err => console.log(err)
           })
         }
-        this.selectedPlace = result;
+        this.selections.selectedPlace = result;
       });
       
     }
     
     selectTrip(row){
-      if(this.selectedTrip.id === row.id){
-        this.selectedTrip = new Trip();
-        //this.tripPlaces.length = 0;
-        this.isTripSelected = false;
+      if(this.selections.selectedTrip === row){
+        this.selections.removeSelectedTrip();
       }
       else{
-        this.isTripSelected = true;
-        this.selectedTrip = row;
-        this.placeService.retrieveTripPlaceById(this.selectedTrip.id).subscribe({
+        this.selections.selectedTrip = row;
+
+        this.placeService.retrieveTripPlaceById(this.selections.selectedTrip.id).subscribe({
           next: places => this.dataSoucePlaceTable = new MatTableDataSource(places),
           error: err => console.log(err)
         });
@@ -194,7 +204,12 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     selectPlace(row){
-      this.selectedPlace = this.selectedPlace.name === row.name ? new Place() : row; 
+      if(this.selections.selectedPlace === row){
+        this.selections.removeSelectedPlace();
+      }
+      else{
+        this.selections.selectedPlace = row;
+      } 
     }
     
     edit(row){

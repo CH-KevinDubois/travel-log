@@ -1,5 +1,4 @@
 import { Trip } from './trip';
-import { MatTableDataSource } from '@angular/material/table';
 import { Place } from './place';
 
 export class ActiveSelections {
@@ -24,11 +23,13 @@ export class ActiveSelections {
     public set selectedTrip(v : Trip) {
         this._isTripSelected = true;
         this._selectedTrip = v;
+        this.removeSelectedPlace();
     }
     
     public removeSelectedTrip(): void {
         this._selectedTrip = null;
         this._isTripSelected = false;
+        this.removeSelectedPlace();
     }
 
     public isTripSelected(): Boolean {

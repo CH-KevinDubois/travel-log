@@ -2,9 +2,9 @@
     <!-- Diplay the list of trips -->
     <section colspan="1">
         <section>
-            <mat-icon *ngIf="!this.isTripSelected" (click)="openTripDialog()">add_box</mat-icon>
-            <mat-icon *ngIf="this.isTripSelected" (click)="deleteTrip()">delete</mat-icon>
-            <mat-icon *ngIf="this.isTripSelected" (click)="openTripDialog()">edit</mat-icon>
+            <mat-icon *ngIf="!this.isTripSelected" (click)="createNewTrip()">add_box</mat-icon>
+            <mat-icon *ngIf="this.isTripSelected" (click)="deleteSelectedTrip()">delete</mat-icon>
+            <mat-icon *ngIf="this.isTripSelected" (click)="updateSelectedTrip()">edit</mat-icon>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 
                 <!-- Title Column -->
@@ -22,6 +22,7 @@
     <!-- Display a summary of the display trip -->
     <section  *ngIf="selectedTrip.id" colspan="1">
         <div  *ngIf="selectedTrip.id" class="listPlacesContainer">
+            <div>{{selectedTrip.description}}</div>
             <img [src]="selectedPlace.pictureUrl">
             <div>{{selectedPlace.name}}</div>
             <div>{{selectedPlace.description}}</div>

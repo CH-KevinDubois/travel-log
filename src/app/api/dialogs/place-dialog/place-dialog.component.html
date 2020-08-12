@@ -31,24 +31,24 @@
       <mat-error [hidden]="descriptionControl.invalid || descriptionControl.touched">Description is required</mat-error>
     </mat-form-field>
     <mat-form-field appearance="fill" class="col-xs-6">
-        <mat-label>Picutre url</mat-label>
-        <input matInput 
-        [(ngModel)]="place.pictureUrl" 
-        name="url" 
-        [formControl]="pictureUrlControl" 
-        placeholder="A picture from the place">
-        <mat-error *ngIf="pictureUrlControl.invalid">Wrong format / minLength(10) maxLength(500)</mat-error>
-      </mat-form-field>
+      <mat-label>Picutre url</mat-label>
+      <input matInput 
+      [(ngModel)]="place.pictureUrl" 
+      name="url" 
+      [formControl]="pictureUrlControl" 
+      placeholder="A picture from the place">
+      <mat-error *ngIf="pictureUrlControl.invalid">Wrong format / minLength(10) maxLength(500)</mat-error>
+    </mat-form-field>
   </div>
 </form>
 <div mat-dialog-actions>
   <button mat-button (click)="onNoClick()" >No Thanks</button>
   <button mat-raised-button 
-      mat-dialog-close 
-      [mat-dialog-close]="place"
-      [disabled]="descriptionControl.invalid || nameControl.invalid || pictureUrlControl.invalid">
-      Validate
-    </button>
+  mat-dialog-close 
+  [mat-dialog-close]="place"
+  [disabled]="descriptionControl.invalid || nameControl.invalid || pictureUrlControl.invalid">
+  Validate
+</button>
 </div>
 <div>{{place.location.coordinates}}</div>
 <div>{{place.name}}</div>

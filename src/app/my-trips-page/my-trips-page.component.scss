@@ -1,7 +1,3 @@
-section {
-    background: lightblue;
-}
-
 mat-grid-list {
     min-height: 90vh;
 }
@@ -63,6 +59,5 @@ img:hover {
     grid-template-columns: auto;
     grid-template-rows: 1fr 0.2fr 2fr 2fr;
     grid-gap: 10px;
-    background-color: #2196F3;
     padding: 10px;
 }

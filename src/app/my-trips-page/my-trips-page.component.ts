@@ -14,6 +14,7 @@ import { PlaceService } from '../api/services/place.service';
 import { GeoJsonLocation } from '../models/geo-json-location';
 import { StateManagementService } from '../api/services/state-management.service';
 import { TripRequest } from '../models/trip-request';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-my-trips-page',
@@ -26,7 +27,7 @@ export class MyTripsPageComponent implements OnInit {
   dataSource: MatTableDataSource<Trip>;
   selectedTrip: Trip;
   isTripSelected: boolean;
-
+  
   tripPlaces: Place[];
   dataSoucePlaceTable: MatTableDataSource<Place>;
   placeDisplayedColumns: string [] = ['name'];
@@ -70,46 +71,61 @@ export class MyTripsPageComponent implements OnInit {
         }
       })
     }
-
-    openTripDialog(): void {
+    
+    openTripDialog(): Observable<any> {
       console.log(this.selectedTrip);
       const selectedTripCopy = cloneDeep(this.selectedTrip);
       const dialogConfig = new MatDialogConfig();
-  
+      
       const dialogRef = this.dialog.open(TripDialogComponent, {
         width: '500px',
         minHeight: '500px',
         data: selectedTripCopy
       });
-  
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('Trip dialog closed');
-        console.log(result);
+      
+      return dialogRef.afterClosed();
+    }
+    
+    updateSelectedTrip(): void {
+      this.openTripDialog().subscribe(result => {
+        // If dialog closed
         if(result === undefined) return;
-
+        
         const tripRequest = new TripRequest(result);
-        if(result.id){
-          console.log('edit');
-          //Todo réinjecter le bon voyage updaté
-          this.tripService.updateTrip(result.id, tripRequest).subscribe({
-            next: result => console.log(result),
-            error: error => console.log(error)
-          })
-        }
-        else
-          console.log('new');
-          //Injecter le noveau voyage
-          this.tripService.createNewTrip(tripRequest).subscribe({
-            next: result => console.log(result),
-            error: error => console.log(error)
-          })
-          
-        //this.selectedTrip = result;
+        this.tripService.updateTrip(result.id, tripRequest).subscribe({
+          next: trip => {
+            // Update the corresponding entry in the data source
+            const index = this.dataSource.data.indexOf(this.selectedTrip);
+            this.dataSource.data.splice(index, 1, trip);
+            this.dataSource._updateChangeSubscription();
+          },
+          // Todo specify errors if time
+          error: error => console.log(error)
+        });
       }, error => console.log(error));
       
     }
-
-    deleteTrip(): void {
+    
+    createNewTrip(): void {
+      this.openTripDialog().subscribe(result => {
+        // If dialog closed
+        if(result === undefined) return;
+        
+        const tripRequest = new TripRequest(result);
+        this.tripService.createNewTrip(tripRequest).subscribe({
+          next: trip => {
+            // Add the new trip into data source
+            this.dataSource.data.push(trip);
+            this.dataSource._updateChangeSubscription();
+          },
+          // Todo specify errors if time
+          error: error => console.log(error)
+        });
+      }, 
+      error => console.log(error));
+    }
+    
+    deleteSelectedTrip(): void {
       if(confirm("Do you want to delete the trip?")){
         this.tripService.deleteTrip(this.selectedTrip.id).subscribe({
           next: result => console.log(result),
@@ -121,19 +137,19 @@ export class MyTripsPageComponent implements OnInit {
         this.dataSource._updateChangeSubscription();
       }
     }
-
+    
     openPlaceDialog(): void {
       console.log('Place dialog opened');
       const selectedPlaceCopy = cloneDeep(this.selectedPlace);
       const dialogConfig = new MatDialogConfig();
-  
+      
       const dialogRef = this.dialog.open(PlaceDialogComponent, {
         width: '500px',
         minHeight: '500px',
         disableClose: true,
         data: selectedPlaceCopy
       });
-  
+      
       dialogRef.afterClosed().subscribe(result => {
         console.log('The placeDialog was closed');
         console.log(result);
@@ -176,7 +192,7 @@ export class MyTripsPageComponent implements OnInit {
       } 
       
     }
-
+    
     selectPlace(row){
       this.selectedPlace = this.selectedPlace.name === row.name ? new Place() : row; 
     }

@@ -51,7 +51,7 @@ export class MapComponent implements OnInit {
       const coord = event.latlng;
       console.log(`Map moved to ${coord.lat}, ${coord.lng}`);
       new Marker([ coord.lat, coord.lng], { icon: defaultIcon }).addTo(map);
-      this.stateManagement.getClickedPintOnMapSubject().next(new GeoJsonLocation(coord.lat, coord.lng));
+      this.stateManagement.getClickedPointOnMapSubject().next(new GeoJsonLocation(coord.lat, coord.lng));
       //console.log(this.map);
       //this.mapMarkers = [marker([ coord.lat, coord.lng ], { icon: defaultIcon })];
       //map.invalidateSize();

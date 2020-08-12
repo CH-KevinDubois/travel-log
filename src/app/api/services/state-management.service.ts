@@ -13,7 +13,7 @@ export class StateManagementService {
     this.clickedPointOnMapSubject = new  Subject<GeoJsonLocation>();
   }
 
-  getClickedPintOnMapSubject(): Subject<GeoJsonLocation>{
+  getClickedPointOnMapSubject(): Subject<GeoJsonLocation>{
     return this.clickedPointOnMapSubject;
   }
 }

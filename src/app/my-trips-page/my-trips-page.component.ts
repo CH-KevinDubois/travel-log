@@ -109,27 +109,7 @@ export class MyTripsPageComponent implements OnInit {
       
       return dialogRef.afterClosed();
     }
-    
-    updateSelectedTrip(): void {
-      this.openTripDialog().subscribe(result => {
-        // If dialog closed
-        if(result === undefined) return;
-        
-        const tripRequest = new TripRequest(result);
-        this.tripService.updateTrip(result.id, tripRequest).subscribe({
-          next: trip => {
-            // Update the corresponding entry in the data source
-            const index = this.dataSource.data.indexOf(this.selections.selectedTrip);
-            this.dataSource.data.splice(index, 1, trip);
-            this.dataSource._updateChangeSubscription();
-          },
-          // Todo specify errors if time
-          error: error => console.log(error)
-        });
-      }, error => console.log(error));
-      
-    }
-    
+
     createNewTrip(): void {
       this.openTripDialog().subscribe(result => {
         // If dialog closed
@@ -149,6 +129,26 @@ export class MyTripsPageComponent implements OnInit {
       error => console.log(error));
     }
     
+    editSelectedTrip(): void {
+      this.openTripDialog().subscribe(result => {
+        // If dialog closed
+        if(result === undefined) return;
+        
+        const tripRequest = new TripRequest(result);
+        this.tripService.updateTrip(result.id, tripRequest).subscribe({
+          next: trip => {
+            // Update the corresponding entry in the data source
+            const index = this.dataSource.data.indexOf(this.selections.selectedTrip);
+            this.dataSource.data.splice(index, 1, trip);
+            this.dataSource._updateChangeSubscription();
+          },
+          // Todo specify errors if time
+          error: error => console.log(error)
+        });
+      }, error => console.log(error));
+      
+    }
+    
     deleteSelectedTrip(): void {
       if(confirm("Do you want to delete the trip?")){
         this.tripService.deleteTrip(this.selections.selectedTrip.id).subscribe({
@@ -162,7 +162,7 @@ export class MyTripsPageComponent implements OnInit {
       }
     }
     
-    openPlaceDialog(): void {
+    openPlaceDialog(): Observable<any> {
       let placeForDialog: Place;
       if(this.selections.isPlaceSelected()){
         placeForDialog = cloneDeep(this.selections.selectedPlace);
@@ -170,40 +170,69 @@ export class MyTripsPageComponent implements OnInit {
       else{
         placeForDialog = new Place();
       }
-
-      const dialogConfig = new MatDialogConfig();
-      
       const dialogRef = this.dialog.open(PlaceDialogComponent, {
         width: '500px',
         maxHeight: '90vh',
         disableClose: true,
         data: placeForDialog
       });
-      
-      dialogRef.afterClosed().subscribe(result => {
-        console.log('The placeDialog was closed');
-        console.log(result);
-        
-        // If undefined the form has been closed just return
-        if(result === undefined) return;
-        // If id exists then user is editing a place
-        else if(result.id !== undefined){
-          //Todo edit
-        }
-        // Else the user is creating a place
+      return dialogRef.afterClosed();
+    }
+
+    createNewPlace(): void {
+      this.openPlaceDialog().subscribe(place => {
+        // Undefined means the form has been closed so just return
+        if(place === undefined) return;
+        // The user is creating a new place
         else{
-          result.tripHref = this.selections.selectedTrip.href;
-          result.tripId = this.selections.selectedTrip.id;
-          result.location = new GeoJsonLocation(42,42);
-          let placeRequest = new PlaceRequest(result);
+          let placeRequest = new PlaceRequest(place);
+          placeRequest.tripHref = this.selections.selectedTrip.href;
+          placeRequest.tripId = this.selections.selectedTrip.id;
+          
           this.placeService.createPlace(placeRequest).subscribe({
             next: place => console.log('Place created'),
             error: err => console.log(err)
           })
         }
-        this.selections.selectedPlace = result;
+        this.dataSoucePlaceTable.data.push(place);
+        this.dataSoucePlaceTable._updateChangeSubscription();
+        this.selections.selectedPlace = place;
       });
-      
+    }
+
+    editSelectedPlace(): void {
+      this.openPlaceDialog().subscribe(place => {
+        // Undefined means the form has been closed so just return
+        if(place === undefined) return;
+        // The user is creating a new place
+        else{
+          let placeRequest = new PlaceRequest(place);
+          placeRequest.tripHref = this.selections.selectedTrip.href;
+          placeRequest.tripId = this.selections.selectedTrip.id;
+          
+          this.placeService.updatePlace(this.selections.selectedPlace.id, placeRequest).subscribe({
+            next: place => console.log('Place updated'),
+            error: err => console.log(err)
+          })
+        }
+        const index = this.dataSoucePlaceTable.data.indexOf(this.selections.selectedPlace);
+        this.dataSoucePlaceTable.data.splice(index, 1, place);
+        this.dataSoucePlaceTable._updateChangeSubscription();
+        this.selections.selectedPlace = place;
+      });
+    }
+
+    deleteSelectedPlace(): void {
+      if(confirm("Do you want to delete this place?")){
+        this.placeService.deletePlace(this.selections.selectedPlace.id).subscribe({
+          next: place => console.log('Place deleted'),
+          error: err => console.log(err)
+        })
+      }
+      const index = this.dataSoucePlaceTable.data.indexOf(this.selections.selectedPlace);
+      this.dataSoucePlaceTable.data.splice(index, 1);
+      this.dataSoucePlaceTable._updateChangeSubscription();
+      this.selections.removeSelectedPlace();
     }
     
     selectTrip(row){

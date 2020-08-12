@@ -4,7 +4,7 @@
         <section>
             <mat-icon *ngIf="!this.selections.isTripSelected()" (click)="createNewTrip()">add_box</mat-icon>
             <mat-icon *ngIf="this.selections.isTripSelected()" (click)="deleteSelectedTrip()">delete</mat-icon>
-            <mat-icon *ngIf="this.selections.isTripSelected()" (click)="updateSelectedTrip()">edit</mat-icon>
+            <mat-icon *ngIf="this.selections.isTripSelected()" (click)="editSelectedTrip()">edit</mat-icon>
             <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
                 
                 <!-- Title Column -->
@@ -28,9 +28,9 @@
                 <div>{{selections.selectedPlace.description}}</div>
             </ng-container>
             <div>
-                <mat-icon (click)="openPlaceDialog()">add_box</mat-icon>
-                <mat-icon aria-hidden="false" aria-label="Example heart icon">delete</mat-icon>
-                <mat-icon aria-hidden="false" aria-label="Example heart icon">edit</mat-icon>
+                <mat-icon *ngIf="!this.selections.isPlaceSelected()" (click)="createNewPlace()">add_box</mat-icon>
+                <mat-icon *ngIf="this.selections.isPlaceSelected()"(click)="deleteSelectedPlace()">delete</mat-icon>
+                <mat-icon *ngIf="this.selections.isPlaceSelected()" (click)="editSelectedPlace()">edit</mat-icon>
                 <table mat-table [dataSource]="dataSoucePlaceTable" class="mat-elevation-z8">
                     <!-- Name Column -->
                     <ng-container matColumnDef="name">

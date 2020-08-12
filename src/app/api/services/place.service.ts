@@ -19,6 +19,17 @@ export class PlaceService {
     );
   }
 
+  updatePlace(placeId: string, placeRequest: PlaceRequest): Observable<Place> {
+    return this.http.patch<Place>(`${environment.apiUrl}/places/${placeId}`, placeRequest).pipe(
+      tap((place) => console.log(place))
+    );
+  }
+
+  deletePlace(placeId: string): Observable<Place> {
+    return this.http.delete<Place>(`${environment.apiUrl}/places/${placeId}`).pipe(
+      tap((place) => console.log(place))
+    );
+  }
 
   retrieveTripPlaceById(tripId: string): Observable<Place[]>{
     return this.http.get<Place[]>(`${environment.apiUrl}/places`, {params: {trip: tripId}});

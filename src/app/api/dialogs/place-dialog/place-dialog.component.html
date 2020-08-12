@@ -12,14 +12,6 @@
       placeholder="Place name">
       <mat-error *ngIf="nameControl.invalid || nameControl.touched">Title is required</mat-error>
     </mat-form-field>
-    <mat-form-field appearance="fill" class="col-xs-6">
-      <mat-label>Coord</mat-label>
-      <input matInput 
-      [(ngModel)]="place.location" 
-      name="Coord" 
-      required
-      placeholder="Coord">
-    </mat-form-field>
     <mat-form-field appearance="fill" class="col-xs-12">
       <mat-label>Description</mat-label>
       <textarea matInput 
@@ -30,7 +22,7 @@
       placeholder="An awesome Place Description"></textarea>
       <mat-error [hidden]="descriptionControl.invalid || descriptionControl.touched">Description is required</mat-error>
     </mat-form-field>
-    <mat-form-field appearance="fill" class="col-xs-6">
+    <mat-form-field appearance="fill" class="col-xs-12">
       <mat-label>Picutre url</mat-label>
       <input matInput 
       [(ngModel)]="place.pictureUrl" 
@@ -38,6 +30,24 @@
       [formControl]="pictureUrlControl" 
       placeholder="A picture from the place">
       <mat-error *ngIf="pictureUrlControl.invalid">Wrong format / minLength(10) maxLength(500)</mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="col-xs-6">
+      <mat-label>Longitude</mat-label>
+      <input matInput 
+      [(ngModel)]="place.location.coordinates[0]" 
+      [formControl]="longitudeControl"
+      name="Longitude" 
+      required
+      placeholder="Longitude">
+    </mat-form-field>
+    <mat-form-field appearance="fill" class="col-xs-6">
+      <mat-label>Latitude</mat-label>
+      <input matInput 
+      [(ngModel)]="place.location.coordinates[1]" 
+      [formControl]="latitudeControl"
+      name="Latitude" 
+      required
+      placeholder="Latitude">
     </mat-form-field>
   </div>
 </form>

@@ -36,7 +36,7 @@
             </ng-container>
           
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-            <tr mat-row (click)="logRow(row)" [ngClass]="{'selected': selectedTrip.title == row.title}" *matRowDef="let row; columns: displayedColumns;"></tr>
+            <tr mat-row (click)="logRow(row)" (dblclick)="edit(row)" [ngClass]="{'selected': selectedTrip.title == row.title}" *matRowDef="let row; columns: displayedColumns;"></tr>
         </table>       
     </section>
     <section class="col-xs-12 col-lg-4">

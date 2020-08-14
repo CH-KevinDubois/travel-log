@@ -7,10 +7,11 @@ import { NgForm } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { Trip } from '../models/trip';
 import { environment } from 'src/environments/environment';
-import { DataSource } from '@angular/cdk/table';
+import { DataSource, RowContext } from '@angular/cdk/table';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatDialog, DialogPosition, MatDialogConfig } from '@angular/material/dialog';
 import { TripDialogComponent } from '../api/dialogs/trip-dialog/trip-dialog.component';
+import { cloneDeep } from 'lodash';
 
 export interface PeriodicElement {
   name: string;
@@ -76,7 +77,7 @@ export class DummyPageComponent implements OnInit {
 
   addTrip(form: NgForm): void {
     if(form.valid){
-      this.tripService.createTrip(this.tripRequest).subscribe({
+      this.tripService.createNewTrip(this.tripRequest).subscribe({
         next: (trip) => console.log(trip)
       })
     }
@@ -104,16 +105,21 @@ export class DummyPageComponent implements OnInit {
     this.selectedTrip = this.selectedTrip.title === row.title ? new Trip(): row;
   }
 
+  edit(row){
+    console.log(`double ${row}`);
+  }
+
   openDialog(): void {
     console.log(this.selectedTrip);
+    const selectedTripCopy = cloneDeep(this.selectedTrip);
     const dialogConfig = new MatDialogConfig();
 
     const dialogRef = this.dialog.open(TripDialogComponent, {
       width: '500px',
       maxHeight: '500px',
-      data: this.selectedTrip
+      data: selectedTripCopy
     });
-    
+
     dialogRef.afterClosed().subscribe(result => {
       console.log('The dialog was closed');
       console.log(result);

@@ -5,6 +5,9 @@ import { Observable, of, throwError } from 'rxjs';
 import { Trip } from 'src/app/models/trip';
 import { environment } from 'src/environments/environment';
 import { tap, filter, concatMap, map, catchError, retry } from 'rxjs/operators';
+import { MatSort } from '@angular/material/sort';
+import { MatPaginator } from '@angular/material/paginator';
+import { Filter } from 'src/app/chips/filters/filters.component';
 
 @Injectable({
   providedIn: 'root'
@@ -43,20 +46,25 @@ export class TripService {
     );
   }
 
-  retrieveTrips(userId?: string, ascOrder?: string, page?: number, pageSize?: number): Observable<Trip[]>{
-    let params: any = {};
+  retrieveTrips(userId?: string, sort?: MatSort, filters?: Filter[], paginator?: MatPaginator): Observable<Trip[]>{
+    let params: HttpParams = new HttpParams();
     if(userId)
-      params.user = userId;
-    if(ascOrder === 'asc')
-      params.sort = "title";
-    else
-      params.sort = "-title";
-    if(page)
-      params.page = page;
-    if(pageSize)
-      params.pageSize = pageSize;
-
-
+      params = params.append('user', userId);
+    if(sort){
+      if(sort.direction === 'asc')
+      params = params.append('sort', sort.active);
+      else
+      params = params.append('sort', `-${sort.active}`);
+    }
+    if(paginator){
+      params = params.append('page', Number(paginator.pageIndex+1).toString());
+      params = params.append('pageSize', Number(paginator.pageSize).toString());
+    }
+    if(filters)
+      filters.forEach(filter => params = params.append('search', filter.name));
+    
+    console.log(params.toString());
+    
     return this.http.get<Trip[]>(`${environment.apiUrl}/trips`, {
       params : params
     }).pipe(

@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { TripRequest } from 'src/app/models/trip-request';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable, of, throwError } from 'rxjs';
 import { Trip } from 'src/app/models/trip';
 import { environment } from 'src/environments/environment';
@@ -34,6 +34,32 @@ export class TripService {
     return this.http.get<Trip[]>(`${environment.apiUrl}/trips`).pipe(
     map(trips => trips.filter(trip => trip.userId === personalId)),
     // One more try
+    retry(1),
+    // Example how to catch and rethrow an error
+    catchError(err => {
+      console.log('Handling error locally and rethrowing it...', err);
+      return throwError(err);
+      })
+    );
+  }
+
+  retrieveTrips(userId?: string, ascOrder?: string, page?: number, pageSize?: number): Observable<Trip[]>{
+    let params: any = {};
+    if(userId)
+      params.user = userId;
+    if(ascOrder === 'asc')
+      params.sort = "title";
+    else
+      params.sort = "-title";
+    if(page)
+      params.page = page;
+    if(pageSize)
+      params.pageSize = pageSize;
+
+
+    return this.http.get<Trip[]>(`${environment.apiUrl}/trips`, {
+      params : params
+    }).pipe(
     retry(1),
     // Example how to catch and rethrow an error
     catchError(err => {

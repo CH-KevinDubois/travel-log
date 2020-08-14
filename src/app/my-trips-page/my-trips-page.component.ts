@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
 import { Trip } from '../models/trip';
 import { MatTableDataSource } from '@angular/material/table';
 import { TripService } from '../api/services/trip.service';
@@ -17,6 +17,7 @@ import { TripRequest } from '../models/trip-request';
 import { Observable } from 'rxjs';
 import { ActiveSelections } from '../models/active-selections';
 import { Marker, marker, Icon, IconOptions, icon } from 'leaflet';
+import { TripTableComponent } from '../table/trip-table/trip-table.component';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
@@ -36,7 +37,10 @@ const defaultIcon: Icon<IconOptions> = icon({
   styleUrls: ['./my-trips-page.component.scss']
 })
 export class MyTripsPageComponent implements OnInit {
+
+  @ViewChild(TripTableComponent) tripsTable: TripTableComponent
   
+  myId: string;
   selections: ActiveSelections;
 
   myTrips: Trip[];
@@ -73,14 +77,13 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     retrieveOwnTrips(){
-      let myId: string;
       this.auth.getUser().subscribe({
         next: (user) => {
-          myId = user.id
+          this.myId = user.id
         },
         error: _ => console.log('Cannot retrive user trips')
       });
-      this.tripService.retrievePersonalTrips(myId).subscribe({
+      this.tripService.retrievePersonalTrips(this.myId).subscribe({
         next: (trips) => {
           this.dataSource = new MatTableDataSource(trips);
         },
@@ -119,6 +122,7 @@ export class MyTripsPageComponent implements OnInit {
         this.tripService.createNewTrip(tripRequest).subscribe({
           next: trip => {
             // Add the new trip into data source
+            this.tripsTable.reloadTrips()
             this.dataSource.data.push(trip);
             this.dataSource._updateChangeSubscription();
           },

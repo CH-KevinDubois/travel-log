@@ -31,6 +31,10 @@ import { MyTripsPageComponent } from './my-trips-page/my-trips-page.component';
 import { AllTripsPageComponent } from './all-trips-page/all-trips-page.component';
 import { MapComponent } from './map/map.component';
 import { LeafletModule } from '@asymmetrik/ngx-leaflet';
+import { TripTableComponent } from './table/trip-table/trip-table.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { MatSortModule } from '@angular/material/sort';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 
 @NgModule({
@@ -45,6 +49,7 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     MyTripsPageComponent,
     AllTripsPageComponent,
     MapComponent,
+    TripTableComponent,
   ],
   entryComponents: [
     TripDialogComponent
@@ -68,6 +73,9 @@ import { LeafletModule } from '@asymmetrik/ngx-leaflet';
     MatDialogModule,
     MatGridListModule,
     LeafletModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatProgressSpinnerModule
   ],
   providers: [
     {

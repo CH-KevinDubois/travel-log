@@ -15,7 +15,12 @@
                 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row (click)="selectTrip(row)" (dblclick)="edit(row)" [ngClass]="{'selected': selections.selectedTrip == row}" *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>     
+            </table>  
+            <app-trip-table 
+                [userId]="myId"
+                [selectedTrip]="selections.selectedTrip" 
+                (onTripClicked)="selectTrip($event)">
+            </app-trip-table>
         </section>
     </section>
     <!-- Display a summary of the display trip -->

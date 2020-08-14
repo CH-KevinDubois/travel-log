@@ -15,6 +15,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatTableModule, MatTable } from '@angular/material/table'; 
 import { MatDialogModule, MatDialogContent } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
+import { MatChipsModule } from '@angular/material/chips';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -35,6 +36,8 @@ import { TripTableComponent } from './table/trip-table/trip-table.component';
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { FiltersComponent } from './chips/filters/filters.component';
+
 
 
 @NgModule({
@@ -50,6 +53,7 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     AllTripsPageComponent,
     MapComponent,
     TripTableComponent,
+    FiltersComponent,
   ],
   entryComponents: [
     TripDialogComponent
@@ -75,7 +79,8 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     LeafletModule,
     MatPaginatorModule,
     MatSortModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatChipsModule
   ],
   providers: [
     {

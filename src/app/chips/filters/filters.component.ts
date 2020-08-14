@@ -35,14 +35,14 @@ export class FiltersComponent implements OnInit {
     // Add our fruit
     if ((value || '').trim()) {
       this.filters.push({name: value.trim()});
+      // Notify the new filter to the table
+      this.onChange.emit();
     }
 
     // Reset the input value
     if (input) {
       input.value = '';
     }
-    // Notify the new filter to the table
-    this.onChange.emit();
   }
 
   remove(filter: Filter): void {
@@ -50,9 +50,9 @@ export class FiltersComponent implements OnInit {
 
     if (index >= 0) {
       this.filters.splice(index, 1);
+      // Notify the  to the table
+      this.onChange.emit();
     }
-    // Notify the  to the table
-    this.onChange.emit();
   }
 
 }

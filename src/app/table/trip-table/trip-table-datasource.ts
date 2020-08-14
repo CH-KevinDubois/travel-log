@@ -5,6 +5,7 @@ import { map, catchError, finalize } from 'rxjs/operators';
 import { Observable, of as observableOf, merge, BehaviorSubject, of } from 'rxjs';
 import { Trip } from 'src/app/models/trip';
 import { TripService } from 'src/app/api/services/trip.service';
+import { Filter } from 'src/app/chips/filters/filters.component';
 
 /**
 * Data source for the TripTable view. This class should
@@ -15,6 +16,7 @@ export class TripsDataSource extends DataSource<Trip> {
   data: Trip[];
   paginator: MatPaginator;
   sort: MatSort;
+  filters: Filter[];
   
   private tripsSubject = new BehaviorSubject<Trip[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -43,7 +45,7 @@ export class TripsDataSource extends DataSource<Trip> {
     this.loadingSubject.next(true);
     console.log(this.sort.active);
     
-    this.tripService.retrieveTrips(id, this.sort.direction).pipe(
+    this.tripService.retrieveTrips(id, this.sort, this.filters, this.paginator).pipe(
       catchError(() => of([])),
       finalize(() => this.loadingSubject.next(false))
       )

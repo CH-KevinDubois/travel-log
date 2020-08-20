@@ -6,6 +6,7 @@ import { Observable, of as observableOf, merge, BehaviorSubject, of } from 'rxjs
 import { Trip } from 'src/app/models/trip';
 import { TripService } from 'src/app/api/services/trip.service';
 import { Filter } from 'src/app/chips/filters/filters.component';
+import { HttpParams } from '@angular/common/http';
 
 /**
 * Data source for the TripTable view. This class should
@@ -29,23 +30,26 @@ export class TripsDataSource extends DataSource<Trip> {
   
   loadTrips(id?: string){
     this.loadingSubject.next(true);
-    
-    this.tripService.retrieveTrips(id).pipe(
-      catchError(() => of([])),
-      finalize(() => this.loadingSubject.next(false))
-      )
-      .subscribe(trips => {
-        this.tripsSubject.next(trips);
-        this.data = trips;
-      }
-        );
-    }
 
-  reloadTrips(id?: string){
-    this.loadingSubject.next(true);
-    console.log(this.sort.active);
+    let params: HttpParams = new HttpParams();
+    if(id)
+      params = params.append('user', id);
+    if(this.sort){
+      if(this.sort.direction === 'asc')
+      params = params.append('sort', this.sort.active);
+      else
+      params = params.append('sort', `-${this.sort.active}`);
+    }
+    /* Does not work well with the API
+    if(this.paginator){
+      params = params.append('page', Number(this.paginator.pageIndex+1).toString());
+      params = params.append('pageSize', Number(this.paginator.pageSize).toString());
+    }
+    */
+    if(this.filters)
+    this.filters.forEach(filter => params = params.append('search', filter.name));
     
-    this.tripService.retrieveTrips(id, this.sort, this.filters, this.paginator).pipe(
+    this.tripService.retrieveTrips(params).pipe(
       catchError(() => of([])),
       finalize(() => this.loadingSubject.next(false))
       )

@@ -61,7 +61,8 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   }
 
   reloadTrips(){
-    this.dataSource.reloadTrips(this.userId);
+    this.dataSource.loadTrips(this.userId);
+    this.paginator.length = this.dataSource.data.length;
   }
 
   selectTrip(trip: Trip){

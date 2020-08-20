@@ -46,24 +46,7 @@ export class TripService {
     );
   }
 
-  retrieveTrips(userId?: string, sort?: MatSort, filters?: Filter[], paginator?: MatPaginator): Observable<Trip[]>{
-    let params: HttpParams = new HttpParams();
-    if(userId)
-      params = params.append('user', userId);
-    if(sort){
-      if(sort.direction === 'asc')
-      params = params.append('sort', sort.active);
-      else
-      params = params.append('sort', `-${sort.active}`);
-    }
-    if(paginator){
-      params = params.append('page', Number(paginator.pageIndex+1).toString());
-      params = params.append('pageSize', Number(paginator.pageSize).toString());
-    }
-    if(filters)
-      filters.forEach(filter => params = params.append('search', filter.name));
-    
-    console.log(params.toString());
+  retrieveTrips(params: HttpParams): Observable<Trip[]>{
     
     return this.http.get<Trip[]>(`${environment.apiUrl}/trips`, {
       params : params

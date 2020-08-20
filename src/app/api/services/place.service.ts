@@ -34,4 +34,8 @@ export class PlaceService {
   retrieveTripPlaceById(tripId: string): Observable<Place[]>{
     return this.http.get<Place[]>(`${environment.apiUrl}/places`, {params: {trip: tripId}});
   }
+
+  retrievePlaces(params: HttpParams): Observable<Place[]>{
+    return this.http.get<Place[]>(`${environment.apiUrl}/places`, {params: params});
+  }
 }

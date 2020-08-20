@@ -37,6 +37,7 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FiltersComponent } from './chips/filters/filters.component';
+import { PlaceTableComponent } from './table/place-table/place-table.component';
 
 
 
@@ -54,6 +55,7 @@ import { FiltersComponent } from './chips/filters/filters.component';
     MapComponent,
     TripTableComponent,
     FiltersComponent,
+    PlaceTableComponent,
   ],
   entryComponents: [
     TripDialogComponent

@@ -43,9 +43,6 @@ export class MyTripsPageComponent implements OnInit {
   myId: string;
   selections: ActiveSelections;
 
-  myTrips: Trip[];
-  dataSource: MatTableDataSource<Trip>;
-
   tripPlaces: Place[];
   dataSoucePlaceTable: MatTableDataSource<Place>;
 
@@ -73,24 +70,12 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     ngOnInit(): void {
-      this.retrieveOwnTrips();
-    }
-    
-    retrieveOwnTrips(){
       this.auth.getUser().subscribe({
         next: (user) => {
           this.myId = user.id
         },
-        error: _ => console.log('Cannot retrive user trips')
+        error: _ => console.log('Cannot retrieve user id')
       });
-      this.tripService.retrievePersonalTrips(this.myId).subscribe({
-        next: (trips) => {
-          this.dataSource = new MatTableDataSource(trips);
-        },
-        error: err => {
-          console.log(err.status);
-        }
-      })
     }
     
     openTripDialog(): Observable<any> {
@@ -121,10 +106,7 @@ export class MyTripsPageComponent implements OnInit {
         const tripRequest = new TripRequest(result);
         this.tripService.createNewTrip(tripRequest).subscribe({
           next: trip => {
-            // Add the new trip into data source
-            this.tripsTable.reloadTrips()
-            this.dataSource.data.push(trip);
-            this.dataSource._updateChangeSubscription();
+            this.tripsTable.reloadTrips();
           },
           // Todo specify errors if time
           error: error => console.log(error)
@@ -141,10 +123,7 @@ export class MyTripsPageComponent implements OnInit {
         const tripRequest = new TripRequest(result);
         this.tripService.updateTrip(result.id, tripRequest).subscribe({
           next: trip => {
-            // Update the corresponding entry in the data source
-            const index = this.dataSource.data.indexOf(this.selections.selectedTrip);
-            this.dataSource.data.splice(index, 1, trip);
-            this.dataSource._updateChangeSubscription();
+            this.tripsTable.reloadTrips();
           },
           // Todo specify errors if time
           error: error => console.log(error)
@@ -156,13 +135,12 @@ export class MyTripsPageComponent implements OnInit {
     deleteSelectedTrip(): void {
       if(confirm("Do you want to delete the trip?")){
         this.tripService.deleteTrip(this.selections.selectedTrip.id).subscribe({
-          next: result => console.log(result),
+          next: _ => {
+            this.tripsTable.reloadTrips();
+            this.selections.removeSelectedTrip();
+          },
           error: error => console.log(error)
         });
-        // Delete the corresponding entry in the data source
-        const index = this.dataSource.data.indexOf(this.selections.selectedTrip);
-        this.dataSource.data.splice(index, 1);
-        this.dataSource._updateChangeSubscription();
       }
     }
     
@@ -239,12 +217,12 @@ export class MyTripsPageComponent implements OnInit {
       this.selections.removeSelectedPlace();
     }
     
-    selectTrip(row){
-      if(this.selections.selectedTrip === row){
+    selectTrip(trip: Trip){
+      if(this.selections.selectedTrip === trip){
         this.selections.removeSelectedTrip();
       }
       else{
-        this.selections.selectedTrip = row;
+        this.selections.selectedTrip = trip;
         this.placeService.retrieveTripPlaceById(this.selections.selectedTrip.id).subscribe({
           next: places => this.dataSoucePlaceTable = new MatTableDataSource(places),
           error: err => console.log(err)
@@ -252,12 +230,12 @@ export class MyTripsPageComponent implements OnInit {
       } 
     }
     
-    selectPlace(row){
-      if(this.selections.selectedPlace === row){
+    selectPlace(place: Place){
+      if(this.selections.selectedPlace === place){
         this.selections.removeSelectedPlace();
       }
       else{
-        this.selections.selectedPlace = row;
+        this.selections.selectedPlace = place;
       } 
     }
     

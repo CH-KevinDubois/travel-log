@@ -147,7 +147,6 @@ export class MyTripsPageComponent implements OnInit {
         placeForDialog = new Place();
       }
       const dialogRef = this.dialog.open(PlaceDialogComponent, {
-        width: '500px',
         maxHeight: '90vh',
         disableClose: true,
         data: placeForDialog

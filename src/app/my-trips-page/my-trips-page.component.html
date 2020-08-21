@@ -1,7 +1,7 @@
 <div class="outerContainer">
     <!-- Diplay the list of trips -->
-    <section colspan="1">
-        <section>
+    <section>
+        <div>
             <mat-icon *ngIf="!this.selections.isTripSelected()" (click)="createNewTrip()">add_box</mat-icon>
             <mat-icon *ngIf="this.selections.isTripSelected()" (click)="deleteSelectedTrip()">delete</mat-icon>
             <mat-icon *ngIf="this.selections.isTripSelected()" (click)="editSelectedTrip()">edit</mat-icon>
@@ -10,29 +10,43 @@
                 [selectedTrip]="selections.selectedTrip" 
                 (onTripClicked)="selectTrip($event)">
             </app-trip-table>
-        </section>
-    </section>
-    <!-- Display a summary of the display trip -->
-    <section colspan="1">
-        <div class="listPlacesContainer">
-            <div *ngIf="selections.selectedTrip">{{selections.selectedTrip.description}}</div>
-            <ng-container *ngIf="selections.isPlaceSelected()">
-                <img [src]="selections.selectedPlace.pictureUrl">
-                <div>{{selections.selectedPlace.name}}</div>
-                <div>{{selections.selectedPlace.description}}</div>
-            </ng-container>
-            <div>
-                <mat-icon *ngIf="!this.selections.isPlaceSelected()" (click)="createNewPlace()">add_box</mat-icon>
-                <mat-icon *ngIf="this.selections.isPlaceSelected()"(click)="deleteSelectedPlace()">delete</mat-icon>
-                <mat-icon *ngIf="this.selections.isPlaceSelected()" (click)="editSelectedPlace()">edit</mat-icon>
-                <app-place-table 
-                    [userId]="myId"
-                    [selectedPlace]="selections.selectedPlace"
-                    [selectedTrip]="selections.selectedTrip"  
-                    (onPlaceClicked)="selectPlace($event)">
-                </app-place-table>
-            </div>
         </div>
+    </section>
+    <!-- Display the list of places -->
+    <section>
+        <div class="listPlacesContainer">
+            <mat-icon 
+                *ngIf="this.selections.isTripSelected() && !this.selections.isPlaceSelected()" 
+                (click)="createNewPlace()">
+                    add_box
+                </mat-icon>
+            <mat-icon 
+                *ngIf="this.selections.isTripSelected() && this.selections.isPlaceSelected()"
+                (click)="deleteSelectedPlace()">
+                    delete
+            </mat-icon>
+            <mat-icon 
+                *ngIf="this.selections.isTripSelected() && this.selections.isPlaceSelected()" 
+                (click)="editSelectedPlace()">
+                    edit
+            </mat-icon>
+            <mat-icon class="grey-icon"> insert_comment</mat-icon>
+            <app-place-table 
+                [userId]="myId"
+                [selectedPlace]="selections.selectedPlace"
+                [selectedTrip]="selections.selectedTrip"  
+                (onPlaceClicked)="selectPlace($event)">
+            </app-place-table>
+        </div>
+    </section>
+    <section class="descriptionContainer">
+        <div *ngIf="selections.selectedTrip">{{selections.selectedTrip.title}}</div>
+        <div *ngIf="selections.selectedTrip">{{selections.selectedTrip.description}}</div>
+        <ng-container *ngIf="selections.isPlaceSelected()">
+            <img [src]="selections.selectedPlace?.pictureUrl">
+            <div>{{selections.selectedPlace.name}}</div>
+            <div>{{selections.selectedPlace.description}}</div>
+        </ng-container>
     </section>
     <section>
         <app-map [mapMarkers]="markers"></app-map>

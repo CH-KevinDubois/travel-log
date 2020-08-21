@@ -16,3 +16,9 @@ tr.selected {
   background-color: lightblue;
   
 }
+
+#paginator {
+  bottom: 0px;
+  position: sticky;
+  z-index: 10;
+}

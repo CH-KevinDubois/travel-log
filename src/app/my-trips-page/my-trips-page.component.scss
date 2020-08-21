@@ -45,17 +45,21 @@ img:hover {
 .outerContainer {  
     height: 90vh;
     display: grid;
-    grid-template-columns: 1fr 2fr 3fr;
+    grid-template-columns: 1.5fr 1.5fr 1.5fr 3fr;
     grid-template-rows: 1fr;
     grid-gap: 10px;
     padding: 10px;
 }
 
-.listPlacesContainer {  
+.descriptionContainer {  
     display: flex;
     flex-flow: column nowrap;
     grid-template-columns: auto;
     grid-template-rows: 1fr 0.2fr 2fr 2fr;
     grid-gap: 10px;
     padding: 10px;
+}
+
+.grey-icon {
+    color: grey;
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, Inject, OnDestroy, SimpleChange, SimpleChanges } from '@angular/core';
 import { FormControl, Validators, MaxLengthValidator } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Place } from 'src/app/models/place';
@@ -43,7 +43,6 @@ export class PlaceDialogComponent implements OnInit {
         next: location => {
           this.place.location.coordinates[0] = location.coordinates[0];
           this.place.location.coordinates[1] = location.coordinates[1];
-          console.log(this.place.location.coordinates);
         }
       });
     }

@@ -6,12 +6,24 @@ import { GeoJsonLocation } from '../models/geo-json-location';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
-  iconSize: [ 25, 41 ],
+  iconSize: [ 32, 32 ],
   // This defines the pixel that should be placed right above the location
   // If not provided, the image center will be used, and that could be awkward
   iconAnchor: [ 13, 41 ],
   // The path to the image to display. In this case, it's a Leaflet asset
-  iconUrl: 'leaflet/pin.svg',
+  iconUrl: 'leaflet/marker-icon-black.png',
+  // The path to the image's shadow to display. Also a leaflet asset
+  shadowUrl: 'leaflet/marker-shadow.png'
+});
+
+const defaultRedIcon: Icon<IconOptions> = icon({
+  // This define the displayed icon size, in pixel
+  iconSize: [ 32, 32 ],
+  // This defines the pixel that should be placed right above the location
+  // If not provided, the image center will be used, and that could be awkward
+  iconAnchor: [ 13, 41 ],
+  // The path to the image to display. In this case, it's a Leaflet asset
+  iconUrl: 'leaflet/marker-icon-red.png',
   // The path to the image's shadow to display. Also a leaflet asset
   shadowUrl: 'leaflet/marker-shadow.png'
 });
@@ -56,7 +68,7 @@ export class MapComponent implements OnInit {
         if(this.previousSelectedPlace)
           this.previousSelectedPlace.removeFrom(map);
 
-        this.previousSelectedPlace = new Marker([ coord.lat, coord.lng], { icon: defaultIcon }).addTo(map);
+        this.previousSelectedPlace = new Marker([ coord.lat, coord.lng], { icon: defaultRedIcon }).addTo(map);
         this.stateManagement.getClickedPointOnMapSubject().next(new GeoJsonLocation(coord.lat, coord.lng));
         //console.log(this.map);
         //this.mapMarkers = [marker([ coord.lat, coord.lng ], { icon: defaultIcon })];

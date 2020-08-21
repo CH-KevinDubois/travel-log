@@ -28,6 +28,8 @@ export class MapComponent implements OnInit {
   mapOptions: MapOptions;
   @Input() mapMarkers: Marker[];
   map: Map;
+  previousSelectedPlace: Marker;
+  markers = new Array();
 
   constructor(
     private stateManagement: StateManagementService
@@ -50,7 +52,11 @@ export class MapComponent implements OnInit {
       this.map.on('click', (event : LeafletMouseEvent) => {
         const coord = event.latlng;
         console.log(`Map moved to ${coord.lat}, ${coord.lng}`);
-        new Marker([ coord.lat, coord.lng], { icon: defaultIcon }).addTo(map);
+
+        if(this.previousSelectedPlace)
+          this.previousSelectedPlace.removeFrom(map);
+
+        this.previousSelectedPlace = new Marker([ coord.lat, coord.lng], { icon: defaultIcon }).addTo(map);
         this.stateManagement.getClickedPointOnMapSubject().next(new GeoJsonLocation(coord.lat, coord.lng));
         //console.log(this.map);
         //this.mapMarkers = [marker([ coord.lat, coord.lng ], { icon: defaultIcon })];
@@ -58,8 +64,27 @@ export class MapComponent implements OnInit {
       });
     }
 
+    this.stateManagement.coordinates$.subscribe({
+      next: coordinates => {
+        while(this.markers.length > 0){
+          this.removeMarker(this.markers.pop());
+        }
+        coordinates.forEach( coordinate => {
+          this.markers.push(new Marker([ coordinate.coordinates[0], coordinate.coordinates[1]], { icon: defaultIcon }).addTo(map))
+        });
+        this.markers.forEach( marker => this.renderMarker(marker));
+      }
+    })
+
   }
 
   ngOnInit(): void {}
 
+  renderMarker(marker: Marker){
+    marker.addTo(this.map);
+  }
+
+  removeMarker(marker: Marker){
+    marker.removeFrom(this.map);
+  }
 }

@@ -8,6 +8,7 @@ import { FiltersComponent } from 'src/app/chips/filters/filters.component';
 import { PlaceService } from 'src/app/api/services/place.service';
 import { tap } from 'rxjs/operators';
 import { Trip } from 'src/app/models/trip';
+import { StateManagementService } from 'src/app/api/services/state-management.service';
 
 @Component({
   selector: 'app-place-table',
@@ -26,7 +27,9 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   @ViewChild(FiltersComponent) filterList : FiltersComponent;
   dataSource: PlacesDataSource;
 
-  constructor(private placeService: PlaceService) {
+  constructor(
+    private placeService: PlaceService, 
+    private stateManagement: StateManagementService) {
   }
 
   // Columns displayed in the table
@@ -34,7 +37,7 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
 
   // Load the places on init
   ngOnInit() {
-    this.dataSource = new PlacesDataSource(this.placeService);
+    this.dataSource = new PlacesDataSource(this.placeService, this.stateManagement);
     this.dataSource.loadPlaces(this.selectedTrip);
   }
 

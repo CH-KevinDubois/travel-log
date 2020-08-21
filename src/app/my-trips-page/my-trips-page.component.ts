@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectorRef, ViewChild } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges } from '@angular/core';
 import { Trip } from '../models/trip';
 import { MatTableDataSource } from '@angular/material/table';
 import { TripService } from '../api/services/trip.service';
@@ -19,6 +19,7 @@ import { ActiveSelections } from '../models/active-selections';
 import { Marker, marker, Icon, IconOptions, icon } from 'leaflet';
 import { TripTableComponent } from '../table/trip-table/trip-table.component';
 import { PlaceTableComponent } from '../table/place-table/place-table.component';
+import { MapComponent } from '../map/map.component';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
@@ -41,6 +42,7 @@ export class MyTripsPageComponent implements OnInit {
 
   @ViewChild(TripTableComponent) tripsTable: TripTableComponent
   @ViewChild(PlaceTableComponent) placesTable: PlaceTableComponent
+  @ViewChild(MapComponent) map: MapComponent
   
   myId: string;
   selections: ActiveSelections;
@@ -57,11 +59,11 @@ export class MyTripsPageComponent implements OnInit {
     private stateManagement: StateManagementService
     ) {
       this.selections = new ActiveSelections();
-      this.markers = [
-        marker([ 46.778186, 6.641524 ], { icon: defaultIcon }),
-        marker([ 46.780796, 6.647395 ], { icon: defaultIcon }),
-        marker([ 46.784992, 6.652267 ], { icon: defaultIcon })
-      ];
+      this.markers = [];
+      //   marker([ 46.778186, 6.641524 ], { icon: defaultIcon }),
+      //   marker([ 46.780796, 6.647395 ], { icon: defaultIcon }),
+      //   marker([ 46.784992, 6.652267 ], { icon: defaultIcon })
+      // ];
     }
     
     ngOnInit(): void {

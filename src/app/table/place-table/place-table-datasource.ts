@@ -8,6 +8,8 @@ import { Filter } from 'src/app/chips/filters/filters.component';
 import { HttpParams } from '@angular/common/http';
 import { PlaceService } from 'src/app/api/services/place.service';
 import { Trip } from 'src/app/models/trip';
+import { StateManagementService } from 'src/app/api/services/state-management.service';
+import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 
 /**
 * Data source for the PlaceTable view. This class should
@@ -25,7 +27,7 @@ export class PlacesDataSource extends DataSource<Place> {
   
   public loading$ = this.loadingSubject.asObservable();
   
-  constructor(private placeService: PlaceService) {
+  constructor(private placeService: PlaceService, private stateManagement: StateManagementService) {
     super();
   }
   
@@ -61,6 +63,17 @@ export class PlacesDataSource extends DataSource<Place> {
       .subscribe(places => {
         this.placesSubject.next(places);
         this.data = places;
+        // Create the data for the map
+        let coordinates = new Array;
+        this.data.forEach(place => {
+          coordinates.push(
+            new GeoJsonLocation(
+              place.location.coordinates[0], 
+              place.location.coordinates[1]
+            )
+          )
+        })
+        this.stateManagement.emitCoordinates(coordinates);
       }
         );
     }

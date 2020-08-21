@@ -25,16 +25,6 @@
                 <mat-icon *ngIf="!this.selections.isPlaceSelected()" (click)="createNewPlace()">add_box</mat-icon>
                 <mat-icon *ngIf="this.selections.isPlaceSelected()"(click)="deleteSelectedPlace()">delete</mat-icon>
                 <mat-icon *ngIf="this.selections.isPlaceSelected()" (click)="editSelectedPlace()">edit</mat-icon>
-                <table mat-table [dataSource]="dataSoucePlaceTable" class="mat-elevation-z8">
-                    <!-- Name Column -->
-                    <ng-container matColumnDef="name">
-                        <th mat-header-cell *matHeaderCellDef> Place name </th>
-                        <td mat-cell *matCellDef="let place"> {{place.name}} </td>
-                    </ng-container>
-                    
-                    <tr mat-header-row *matHeaderRowDef="placeDisplayedColumns"></tr>
-                    <tr mat-row (click)="selectPlace(row)" [ngClass]="{'selected': selections.selectedPlace == row}" *matRowDef="let row; columns: placeDisplayedColumns;"></tr>
-                </table>
                 <app-place-table 
                     [userId]="myId"
                     [selectedPlace]="selections.selectedPlace"

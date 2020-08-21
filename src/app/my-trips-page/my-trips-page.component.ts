@@ -45,13 +45,6 @@ export class MyTripsPageComponent implements OnInit {
   myId: string;
   selections: ActiveSelections;
 
-  tripPlaces: Place[];
-  dataSoucePlaceTable: MatTableDataSource<Place>;
-
-  placeDisplayedColumns: string [] = ['name'];
-  displayedColumns: string[] = ['title'];
-
-  // Markers for the map
   markers: Marker[];
   
   constructor(
@@ -108,7 +101,7 @@ export class MyTripsPageComponent implements OnInit {
         const tripRequest = new TripRequest(result);
         this.tripService.createNewTrip(tripRequest).subscribe({
           next: trip => {
-            this.tripsTable.reloadTrips();
+            this.selections.selectedTrip = trip;
           },
           // Todo specify errors if time
           error: error => console.log(error)
@@ -125,7 +118,7 @@ export class MyTripsPageComponent implements OnInit {
         const tripRequest = new TripRequest(result);
         this.tripService.updateTrip(result.id, tripRequest).subscribe({
           next: trip => {
-            this.tripsTable.reloadTrips();
+            this.selections.selectedTrip = trip;
           },
           // Todo specify errors if time
           error: error => console.log(error)
@@ -138,7 +131,6 @@ export class MyTripsPageComponent implements OnInit {
       if(confirm("Do you want to delete the trip?")){
         this.tripService.deleteTrip(this.selections.selectedTrip.id).subscribe({
           next: _ => {
-            this.tripsTable.reloadTrips();
             this.selections.removeSelectedTrip();
           },
           error: error => console.log(error)
@@ -174,13 +166,13 @@ export class MyTripsPageComponent implements OnInit {
           placeRequest.tripId = this.selections.selectedTrip.id;
           
           this.placeService.createPlace(placeRequest).subscribe({
-            next: place => console.log('Place created'),
+            next: place => {
+              console.log('Place created');
+              this.selections.selectedPlace = place;
+            },
             error: err => console.log(err)
           })
         }
-        this.dataSoucePlaceTable.data.push(place);
-        this.dataSoucePlaceTable._updateChangeSubscription();
-        this.selections.selectedPlace = place;
       });
     }
 
@@ -195,42 +187,34 @@ export class MyTripsPageComponent implements OnInit {
           placeRequest.tripId = this.selections.selectedTrip.id;
           
           this.placeService.updatePlace(this.selections.selectedPlace.id, placeRequest).subscribe({
-            next: place => console.log('Place updated'),
+            next: place => {
+              console.log('Place updated');
+              this.selections.selectedPlace = place;
+            },
             error: err => console.log(err)
           })
         }
-        const index = this.dataSoucePlaceTable.data.indexOf(this.selections.selectedPlace);
-        this.dataSoucePlaceTable.data.splice(index, 1, place);
-        this.dataSoucePlaceTable._updateChangeSubscription();
-        this.selections.selectedPlace = place;
       });
     }
 
     deleteSelectedPlace(): void {
       if(confirm("Do you want to delete this place?")){
         this.placeService.deletePlace(this.selections.selectedPlace.id).subscribe({
-          next: place => console.log('Place deleted'),
+          next: place => {
+            console.log('Place deleted');
+            this.selections.removeSelectedPlace();
+          },
           error: err => console.log(err)
         })
       }
-      const index = this.dataSoucePlaceTable.data.indexOf(this.selections.selectedPlace);
-      this.dataSoucePlaceTable.data.splice(index, 1);
-      this.dataSoucePlaceTable._updateChangeSubscription();
-      this.selections.removeSelectedPlace();
     }
     
     selectTrip(trip: Trip){
       if(this.selections.selectedTrip && this.selections.selectedTrip.id === trip.id){
         this.selections.removeSelectedTrip();
-        //this.placesTable.reloadPlaces();
       }
       else{
         this.selections.selectedTrip = trip;
-        //this.placesTable.reloadPlaces(trip);
-        this.placeService.retrieveTripPlaceById(this.selections.selectedTrip.id).subscribe({
-          next: places => this.dataSoucePlaceTable = new MatTableDataSource(places),
-          error: err => console.log(err)
-        });
       } 
     }
     

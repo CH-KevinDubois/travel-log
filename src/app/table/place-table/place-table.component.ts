@@ -64,9 +64,12 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   }
 
   ngOnChanges(changes: SimpleChanges) {
-    if(this.dataSource)
+    if(this.dataSource){
       if(changes.selectedTrip)
         this.reloadPlaces();
+      if(changes.selectedPlace)
+        this.reloadPlaces();
+    }
   }
 
 

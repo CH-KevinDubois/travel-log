@@ -7,6 +7,7 @@ import { Place } from 'src/app/models/place';
 import { Filter } from 'src/app/chips/filters/filters.component';
 import { HttpParams } from '@angular/common/http';
 import { PlaceService } from 'src/app/api/services/place.service';
+import { Trip } from 'src/app/models/trip';
 
 /**
 * Data source for the PlaceTable view. This class should
@@ -28,20 +29,22 @@ export class PlacesDataSource extends DataSource<Place> {
     super();
   }
   
-  loadPlaces(userId?: string, tripId?: string){
+  loadPlaces(slectedTrip?: Trip){
     this.loadingSubject.next(true);
 
     let params: HttpParams = new HttpParams();
-    if(userId)
-      params = params.append('user', userId);
-    if(tripId)
-      params = params.append('trip', tripId);
+    /*if(userId)
+      params = params.append('user', userId);*/
+    if(slectedTrip)
+      params = params.append('trip', slectedTrip.id);
     if(this.sort){
       if(this.sort.direction === 'asc')
-      params = params.append('sort', this.sort.active);
+      params = params.append('sort', 'name');
       else
-      params = params.append('sort', `-${this.sort.active}`);
+      params = params.append('sort', '-name');
     }
+    else
+      params = params.append('sort', 'name');
     /* Does not work well with the API
     if(this.paginator){
       params = params.append('page', Number(this.paginator.pageIndex+1).toString());

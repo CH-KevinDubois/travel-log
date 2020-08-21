@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
@@ -7,6 +7,7 @@ import { Place } from 'src/app/models/place';
 import { FiltersComponent } from 'src/app/chips/filters/filters.component';
 import { PlaceService } from 'src/app/api/services/place.service';
 import { tap } from 'rxjs/operators';
+import { Trip } from 'src/app/models/trip';
 
 @Component({
   selector: 'app-place-table',
@@ -16,6 +17,7 @@ import { tap } from 'rxjs/operators';
 export class PlaceTableComponent implements AfterViewInit, OnInit {
   @Input() userId: string = null;
   @Input() selectedPlace: Place = null;
+  @Input() selectedTrip: Trip = null;
   @Input() onPlaceModified: EventEmitter<boolean>;
   @Output() onPlaceClicked = new EventEmitter<Place>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -27,12 +29,13 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   constructor(private placeService: PlaceService) {
   }
 
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['title'];
+  // Columns displayed in the table
+  displayedColumns = ['name'];
 
+  // Load the places on init
   ngOnInit() {
     this.dataSource = new PlacesDataSource(this.placeService);
-    this.dataSource.loadPlaces(this.userId);
+    this.dataSource.loadPlaces(this.selectedTrip);
   }
 
   ngAfterViewInit() {
@@ -43,25 +46,32 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
 
     this.paginator.page
       .pipe(
-        tap(() => this.reloadTrips())
+        tap(() => this.reloadPlaces())
       )
       .subscribe();
 
     this.sort.sortChange
       .pipe(
-        tap(() => this.reloadTrips())
+        tap(() => this.reloadPlaces())
       )
       .subscribe();
 
     this.filterList.onChange
       .pipe(
-        tap(() => this.reloadTrips())
+        tap(() => this.reloadPlaces())
       )
       .subscribe();
   }
 
-  reloadTrips(){
-    this.dataSource.loadPlaces(this.userId);
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.dataSource)
+      if(changes.selectedTrip)
+        this.reloadPlaces();
+  }
+
+
+  reloadPlaces(){
+    this.dataSource.loadPlaces(this.selectedTrip);
   }
 
   selectPlace(place: Place){

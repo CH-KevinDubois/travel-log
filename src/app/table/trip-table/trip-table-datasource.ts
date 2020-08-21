@@ -40,6 +40,8 @@ export class TripsDataSource extends DataSource<Trip> {
       else
       params = params.append('sort', `-${this.sort.active}`);
     }
+    else
+      params = params.append('sort', 'title');
     /* Does not work well with the API
     if(this.paginator){
       params = params.append('page', Number(this.paginator.pageIndex+1).toString());

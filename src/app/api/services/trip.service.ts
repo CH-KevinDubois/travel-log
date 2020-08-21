@@ -52,9 +52,20 @@ export class TripService {
       params : params
     }).pipe(
     retry(1),
-    // Example how to catch and rethrow an error
     catchError(err => {
-      console.log('Handling error locally and rethrowing it...', err);
+      console.log(err);
+      return throwError(err);
+      })
+    );
+  }
+
+  retrieveTripsByHref(tripHref: String): Observable<Trip>{
+    
+    return this.http.get<Trip>(`${environment.url}${tripHref}`)
+    .pipe(
+    retry(1),
+    catchError(err => {
+      console.log(err);
       return throwError(err);
       })
     );

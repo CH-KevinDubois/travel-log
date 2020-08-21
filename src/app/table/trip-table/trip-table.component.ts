@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, Input, Output, EventEmitter } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
@@ -16,7 +16,6 @@ import { FiltersComponent } from 'src/app/chips/filters/filters.component';
 export class TripTableComponent implements AfterViewInit, OnInit {
   @Input() userId: string = null;
   @Input() selectedTrip: Trip = null;
-  @Input() onTripModified: EventEmitter<boolean>;
   @Output() onTripClicked = new EventEmitter<Trip>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -33,6 +32,12 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   ngOnInit() {
     this.dataSource = new TripsDataSource(this.tripService);
     this.dataSource.loadTrips(this.userId);
+  }
+
+  ngOnChanges(changes: SimpleChanges) {
+    if(this.dataSource)
+      if(changes.selectedTrip)
+        this.reloadTrips();
   }
 
   ngAfterViewInit() {

@@ -13,9 +13,9 @@
         </section>
     </section>
     <!-- Display a summary of the display trip -->
-    <section  *ngIf="selections.selectedTrip" colspan="1">
-        <div  *ngIf="selections.selectedTrip" class="listPlacesContainer">
-            <div>{{selections.selectedTrip.description}}</div>
+    <section colspan="1">
+        <div class="listPlacesContainer">
+            <div *ngIf="selections.selectedTrip">{{selections.selectedTrip.description}}</div>
             <ng-container *ngIf="selections.isPlaceSelected()">
                 <img [src]="selections.selectedPlace.pictureUrl">
                 <div>{{selections.selectedPlace.name}}</div>
@@ -35,6 +35,12 @@
                     <tr mat-header-row *matHeaderRowDef="placeDisplayedColumns"></tr>
                     <tr mat-row (click)="selectPlace(row)" [ngClass]="{'selected': selections.selectedPlace == row}" *matRowDef="let row; columns: placeDisplayedColumns;"></tr>
                 </table>
+                <app-place-table 
+                    [userId]="myId"
+                    [selectedPlace]="selections.selectedPlace"
+                    [selectedTrip]="selections.selectedTrip"  
+                    (onPlaceClicked)="selectPlace($event)">
+                </app-place-table>
             </div>
         </div>
     </section>

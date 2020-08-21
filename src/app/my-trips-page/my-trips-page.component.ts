@@ -18,6 +18,7 @@ import { Observable } from 'rxjs';
 import { ActiveSelections } from '../models/active-selections';
 import { Marker, marker, Icon, IconOptions, icon } from 'leaflet';
 import { TripTableComponent } from '../table/trip-table/trip-table.component';
+import { PlaceTableComponent } from '../table/place-table/place-table.component';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
@@ -39,6 +40,7 @@ const defaultIcon: Icon<IconOptions> = icon({
 export class MyTripsPageComponent implements OnInit {
 
   @ViewChild(TripTableComponent) tripsTable: TripTableComponent
+  @ViewChild(PlaceTableComponent) placesTable: PlaceTableComponent
   
   myId: string;
   selections: ActiveSelections;
@@ -218,11 +220,13 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     selectTrip(trip: Trip){
-      if(this.selections.selectedTrip === trip){
+      if(this.selections.selectedTrip && this.selections.selectedTrip.id === trip.id){
         this.selections.removeSelectedTrip();
+        //this.placesTable.reloadPlaces();
       }
       else{
         this.selections.selectedTrip = trip;
+        //this.placesTable.reloadPlaces(trip);
         this.placeService.retrieveTripPlaceById(this.selections.selectedTrip.id).subscribe({
           next: places => this.dataSoucePlaceTable = new MatTableDataSource(places),
           error: err => console.log(err)
@@ -231,17 +235,19 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     selectPlace(place: Place){
-      if(this.selections.selectedPlace === place){
+      if(this.selections.selectedPlace && this.selections.selectedPlace.id === place.id){
         this.selections.removeSelectedPlace();
       }
       else{
         this.selections.selectedPlace = place;
+        /* Find a way to select the trip when clicking the place
+        if(!this.selections.selectedTrip)
+        this.tripService.retrieveTripsByHref(place.href).subscribe({
+          next: trip => 
+          {this.selections.selectedTrip = trip;
+          }
+        });*/
       } 
     }
-    
-    edit(row){
-      console.log(`double ${row}`);
-    }
-    
   }
   

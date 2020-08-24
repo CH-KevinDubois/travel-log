@@ -67,15 +67,16 @@ export class PlacesDataSource extends DataSource<Place> {
         let coordinates = new Array;
         this.data.forEach(place => {
           coordinates.push(
+            // Use the coordinates for bc it is not a well formed GeoJsonLocation object 
+            // (/!\ it is not instancited, thus we cannot use the setter/getter)
             new GeoJsonLocation(
               place.location.coordinates[0], 
               place.location.coordinates[1]
             )
-          )
+          );
         })
         this.stateManagement.emitCoordinates(coordinates);
-      }
-        );
+      });
     }
     
     /**

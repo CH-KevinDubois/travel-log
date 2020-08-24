@@ -6,12 +6,12 @@ import { GeoJsonLocation } from '../models/geo-json-location';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
-  iconSize: [ 32, 32 ],
+  iconSize: [ 25, 41 ],
   // This defines the pixel that should be placed right above the location
   // If not provided, the image center will be used, and that could be awkward
   iconAnchor: [ 13, 41 ],
   // The path to the image to display. In this case, it's a Leaflet asset
-  iconUrl: 'leaflet/marker-icon-black.png',
+  iconUrl: 'leaflet/marker-icon.png',
   // The path to the image's shadow to display. Also a leaflet asset
   shadowUrl: 'leaflet/marker-shadow.png'
 });
@@ -21,11 +21,11 @@ const defaultRedIcon: Icon<IconOptions> = icon({
   iconSize: [ 32, 32 ],
   // This defines the pixel that should be placed right above the location
   // If not provided, the image center will be used, and that could be awkward
-  iconAnchor: [ 13, 41 ],
+  iconAnchor: [ 16, 32 ],
   // The path to the image to display. In this case, it's a Leaflet asset
   iconUrl: 'leaflet/marker-icon-red.png',
   // The path to the image's shadow to display. Also a leaflet asset
-  shadowUrl: 'leaflet/marker-shadow.png'
+  shadowUrl: 'leaflet/smaller-marker-shadow.png'
 });
 
 @Component({
@@ -69,7 +69,7 @@ export class MapComponent implements OnInit {
           this.previousSelectedPlace.removeFrom(map);
 
         this.previousSelectedPlace = new Marker([ coord.lat, coord.lng], { icon: defaultRedIcon }).addTo(map);
-        this.stateManagement.getClickedPointOnMapSubject().next(new GeoJsonLocation(coord.lat, coord.lng));
+        this.stateManagement.getClickedPointOnMapSubject().next(new GeoJsonLocation(coord.lng, coord.lat));
         //console.log(this.map);
         //this.mapMarkers = [marker([ coord.lat, coord.lng ], { icon: defaultIcon })];
         //map.invalidateSize();
@@ -82,7 +82,7 @@ export class MapComponent implements OnInit {
           this.removeMarker(this.markers.pop());
         }
         coordinates.forEach( coordinate => {
-          this.markers.push(new Marker([ coordinate.coordinates[0], coordinate.coordinates[1]], { icon: defaultIcon }).addTo(map))
+          this.markers.push(new Marker([ coordinate.lat, coordinate.lng], { icon: defaultIcon }).addTo(map))
         });
         this.markers.forEach( marker => this.renderMarker(marker));
       }

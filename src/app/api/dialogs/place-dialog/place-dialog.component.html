@@ -55,11 +55,11 @@
       </div>
     </form>
     <div mat-dialog-actions>
-      <button mat-button (click)="onNoClick()" >No Thanks</button>
+      <button mat-button (click)="onNoClick()" >Cancel</button>
       <button mat-raised-button 
         mat-dialog-close 
         [mat-dialog-close]="place"
-        [disabled]="descriptionControl.invalid || nameControl.invalid || pictureUrlControl.invalid">
+        [disabled]="descriptionControl.invalid || nameControl.invalid || pictureUrlControl.invalid ||longitudeControl.invalid || latitudeControl.invalid">
           Validate
       </button>
     </div>

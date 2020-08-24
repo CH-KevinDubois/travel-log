@@ -25,7 +25,7 @@ export class Place {
         this.updatedAt = data.updatedAt;
 
         if(this.location === undefined){
-            this.location = new GeoJsonLocation(-200, -200);
+            this.location = new GeoJsonLocation(undefined, undefined);
         }
     }
 }

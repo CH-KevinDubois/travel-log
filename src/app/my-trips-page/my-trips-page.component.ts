@@ -2,7 +2,7 @@ import { Component, OnInit, ChangeDetectorRef, ViewChild, SimpleChanges } from '
 import { Trip } from '../models/trip';
 import { MatTableDataSource } from '@angular/material/table';
 import { TripService } from '../api/services/trip.service';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { AuthService } from '../security/auth.service';
 import { cloneDeep, result } from 'lodash';
 import { MatDialogConfig, MatDialog } from '@angular/material/dialog';
@@ -20,6 +20,7 @@ import { Marker, marker, Icon, IconOptions, icon } from 'leaflet';
 import { TripTableComponent } from '../table/trip-table/trip-table.component';
 import { PlaceTableComponent } from '../table/place-table/place-table.component';
 import { MapComponent } from '../map/map.component';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
@@ -53,6 +54,7 @@ export class MyTripsPageComponent implements OnInit {
     public dialog: MatDialog,
     private tripService: TripService,
     private placeService: PlaceService,
+    private snackBar : MatSnackBar,
     private http: HttpClient,
     private changeDetectorRefs: ChangeDetectorRef,
     private auth: AuthService,
@@ -103,13 +105,17 @@ export class MyTripsPageComponent implements OnInit {
         const tripRequest = new TripRequest(result);
         this.tripService.createNewTrip(tripRequest).subscribe({
           next: trip => {
+            this.openSuccessSnackBar('Trip successfully created!');
             this.selections.selectedTrip = trip;
           },
           // Todo specify errors if time
-          error: error => console.log(error)
+          error: (err: HttpErrorResponse) => {
+            this.openErrorSnackBar(err.error.message);
+            console.log(err);
+          }
         });
       }, 
-      error => console.log(error));
+      error => console.log(`Dialog error : ${error}`));
     }
     
     editSelectedTrip(): void {
@@ -120,12 +126,16 @@ export class MyTripsPageComponent implements OnInit {
         const tripRequest = new TripRequest(result);
         this.tripService.updateTrip(result.id, tripRequest).subscribe({
           next: trip => {
+            this.openSuccessSnackBar('Trip successfully edited!');
             this.selections.selectedTrip = trip;
           },
           // Todo specify errors if time
-          error: error => console.log(error)
+          error: (err: HttpErrorResponse) => {
+            this.openErrorSnackBar(err.error.message);
+            console.log(err);
+          }
         });
-      }, error => console.log(error));
+      }, error => console.log(`Dialog error : ${error}`));
       
     }
     
@@ -133,9 +143,13 @@ export class MyTripsPageComponent implements OnInit {
       if(confirm("Do you want to delete the trip?")){
         this.tripService.deleteTrip(this.selections.selectedTrip.id).subscribe({
           next: _ => {
+            this.openSuccessSnackBar('Trip successfully deleted!');
             this.selections.removeSelectedTrip();
           },
-          error: error => console.log(error)
+          error: (err: HttpErrorResponse) => {
+            this.openErrorSnackBar(err.error.message);
+            console.log(err);
+          }
         });
       }
     }
@@ -158,7 +172,7 @@ export class MyTripsPageComponent implements OnInit {
 
     createNewPlace(): void {
       this.openPlaceDialog().subscribe(place => {
-        // Undefined means the form has been closed so just return
+        // Undefined means the dialog has been closed so just return
         if(place === undefined) return;
         // The user is creating a new place
         else{
@@ -168,20 +182,24 @@ export class MyTripsPageComponent implements OnInit {
           
           this.placeService.createPlace(placeRequest).subscribe({
             next: place => {
-              console.log('Place created');
+              this.openSuccessSnackBar('Place successfully created!');
               this.selections.selectedPlace = place;
             },
-            error: err => console.log(err)
-          })
+            error: (err: HttpErrorResponse) => {
+              this.openErrorSnackBar(err.error.message);
+              console.log(err);
+            }
+          });
         }
-      });
+      }, 
+      error => console.log(`Dialog error : ${error}`));
     }
 
     editSelectedPlace(): void {
       this.openPlaceDialog().subscribe(place => {
-        // Undefined means the form has been closed so just return
+        // Undefined means the dialog has been closed so just return
         if(place === undefined) return;
-        // The user is creating a new place
+        // The user is editing the place
         else{
           let placeRequest = new PlaceRequest(place);
           placeRequest.tripHref = this.selections.selectedTrip.href;
@@ -189,23 +207,30 @@ export class MyTripsPageComponent implements OnInit {
           
           this.placeService.updatePlace(this.selections.selectedPlace.id, placeRequest).subscribe({
             next: place => {
-              console.log('Place updated');
+              this.openSuccessSnackBar('Place successfully edited!');
               this.selections.selectedPlace = place;
             },
-            error: err => console.log(err)
-          })
+            error: (err: HttpErrorResponse) => {
+              this.openErrorSnackBar(err.error.message);
+              console.log(err);
+            }
+          });
         }
-      });
+      },
+      error => console.log(`Dialog error : ${error}`));
     }
 
     deleteSelectedPlace(): void {
       if(confirm("Do you want to delete this place?")){
         this.placeService.deletePlace(this.selections.selectedPlace.id).subscribe({
           next: place => {
-            console.log('Place deleted');
+            this.openSuccessSnackBar('Place successfully deleted!');
             this.selections.removeSelectedPlace();
           },
-          error: err => console.log(err)
+          error: (err: HttpErrorResponse) => {
+            this.openErrorSnackBar(err.error.message);
+            console.log(err);
+          }
         })
       }
     }
@@ -233,6 +258,24 @@ export class MyTripsPageComponent implements OnInit {
           }
         });*/
       } 
+    }
+
+    openErrorSnackBar(error: string) : void {
+      let snackBarRef = this.snackBar.open(`${error}`, 'Quitter', {
+        duration: 20000,
+        panelClass: ['mat-toolbar', 'mat-warn']
+      });
+
+      snackBarRef.onAction().subscribe( _ => snackBarRef.dismiss());
+    }
+
+    openSuccessSnackBar(message: string) : void {
+      let snackBarRef = this.snackBar.open(`${message}`, 'Quitter', {
+        duration: 5000,
+        panelClass: ['mat-toolbar', 'mat-primary']
+      });
+
+      snackBarRef.onAction().subscribe( _ => snackBarRef.dismiss());
     }
   }
   

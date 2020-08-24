@@ -8,7 +8,7 @@ import { Filter } from 'src/app/chips/filters/filters.component';
 import { HttpParams } from '@angular/common/http';
 import { PlaceService } from 'src/app/api/services/place.service';
 import { Trip } from 'src/app/models/trip';
-import { StateManagementService } from 'src/app/api/services/state-management.service';
+import { MapManagementService } from 'src/app/api/services/map-management.service';
 import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 
 /**
@@ -27,7 +27,7 @@ export class PlacesDataSource extends DataSource<Place> {
   
   public loading$ = this.loadingSubject.asObservable();
   
-  constructor(private placeService: PlaceService, private stateManagement: StateManagementService) {
+  constructor(private placeService: PlaceService, private stateManagement: MapManagementService) {
     super();
   }
   

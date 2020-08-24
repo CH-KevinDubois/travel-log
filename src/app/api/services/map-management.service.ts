@@ -5,7 +5,7 @@ import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 @Injectable({
   providedIn: 'root'
 })
-export class StateManagementService {
+export class MapManagementService {
 
   public clickedPointOnMapSubject: Subject<GeoJsonLocation>; 
 

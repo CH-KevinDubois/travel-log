@@ -8,7 +8,7 @@ import { FiltersComponent } from 'src/app/chips/filters/filters.component';
 import { PlaceService } from 'src/app/api/services/place.service';
 import { tap } from 'rxjs/operators';
 import { Trip } from 'src/app/models/trip';
-import { StateManagementService } from 'src/app/api/services/state-management.service';
+import { MapManagementService } from 'src/app/api/services/map-management.service';
 
 @Component({
   selector: 'app-place-table',
@@ -29,7 +29,7 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
 
   constructor(
     private placeService: PlaceService, 
-    private stateManagement: StateManagementService) {
+    private stateManagement: MapManagementService) {
   }
 
   // Columns displayed in the table

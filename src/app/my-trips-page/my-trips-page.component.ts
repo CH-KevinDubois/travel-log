@@ -12,7 +12,7 @@ import { PlaceDialogComponent } from '../api/dialogs/place-dialog/place-dialog.c
 import { PlaceRequest } from '../models/place-request';
 import { PlaceService } from '../api/services/place.service';
 import { GeoJsonLocation } from '../models/geo-json-location';
-import { StateManagementService } from '../api/services/state-management.service';
+import { MapManagementService } from '../api/services/map-management.service';
 import { TripRequest } from '../models/trip-request';
 import { Observable } from 'rxjs';
 import { ActiveSelections } from '../models/active-selections';
@@ -58,7 +58,7 @@ export class MyTripsPageComponent implements OnInit {
     private http: HttpClient,
     private changeDetectorRefs: ChangeDetectorRef,
     private auth: AuthService,
-    private stateManagement: StateManagementService
+    private stateManagement: MapManagementService
     ) {
       this.selections = new ActiveSelections();
       this.markers = [];

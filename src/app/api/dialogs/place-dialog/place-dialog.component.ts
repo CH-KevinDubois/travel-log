@@ -2,7 +2,7 @@ import { Component, OnInit, Inject, OnDestroy, SimpleChange, SimpleChanges } fro
 import { FormControl, Validators, MaxLengthValidator } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Place } from 'src/app/models/place';
-import { StateManagementService } from '../../services/state-management.service';
+import { MapManagementService } from '../../services/map-management.service';
 import { Observer, Observable, Subscription } from 'rxjs';
 import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 
@@ -23,7 +23,7 @@ export class PlaceDialogComponent implements OnInit {
 
   constructor(
     public dialogRef: MatDialogRef<PlaceDialogComponent>,
-    private stateManagement: StateManagementService,
+    private stateManagement: MapManagementService,
     @Inject(MAT_DIALOG_DATA) public place: Place) 
     {
       this.nameControl = new FormControl('', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]);

@@ -1,7 +1,7 @@
 import { Component, OnInit, Input } from '@angular/core';
 import { latLng, Map, MapOptions, tileLayer, Marker, marker, LeafletMouseEvent, LatLng, Zoom } from 'leaflet';
 import { Icon, IconOptions, icon } from 'leaflet';
-import { StateManagementService } from '../api/services/state-management.service';
+import { MapManagementService } from '../api/services/map-management.service';
 import { GeoJsonLocation } from '../models/geo-json-location';
 
 const defaultIcon: Icon<IconOptions> = icon({
@@ -44,7 +44,7 @@ export class MapComponent implements OnInit {
   markers = new Array();
 
   constructor(
-    private stateManagement: StateManagementService
+    private stateManagement: MapManagementService
   ) {
     this.mapOptions = {
       layers: [

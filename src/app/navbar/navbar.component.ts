@@ -37,8 +37,6 @@ export class NavbarComponent implements OnInit {
   }
 
   openLoginDialog(): void {
-    console.log('Open login dialog');
-    //const dialogConfig = new MatDialogConfig();
     const dialogRef = this.dialog.open(LoginDialogComponent, {
       width: '500px',
       maxHeight: '500px',
@@ -46,15 +44,11 @@ export class NavbarComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log(result);
     });
     
   }
 
   openRegisterDialog(): void {
-    console.log('Open login dialog');
-    //const dialogConfig = new MatDialogConfig();
     const dialogRef = this.dialog.open(RegisterDialogComponent, {
       width: '500px',
       maxHeight: '500px',
@@ -62,8 +56,6 @@ export class NavbarComponent implements OnInit {
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
-      console.log(result);
     });
     
   }

@@ -16,6 +16,7 @@
         <mat-form-field appearance="fill">
           <mat-label>Password</mat-label>
           <input matInput 
+            type="password"
             [(ngModel)]="authRequest.password" 
             name="password" 
             [formControl]="passwordControl" 
@@ -27,5 +28,3 @@
         <button mat-raised-button [disabled]="passwordControl.invalid || usernameControl.invalid " mat-dialog-close type="submit" color="primary">LoGin</button>
       </div>
 </form>
-<p>{{authRequest.username}}</p>
-<p>{{authRequest.password}}</p>

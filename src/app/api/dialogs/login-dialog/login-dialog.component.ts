@@ -4,6 +4,7 @@ import { AuthService } from 'src/app/security/auth.service';
 import { Router } from '@angular/router';
 import { NgForm, FormControl, Validators } from '@angular/forms';
 import { MatDialogRef } from '@angular/material/dialog';
+import { UserNotificationService } from '../../services/user-notification.service';
 
 @Component({
   selector: 'app-login-dialog',
@@ -20,16 +21,13 @@ export class LoginDialogComponent implements OnInit {
   usernameControl = new FormControl('', [Validators.required, Validators.minLength(5)]);
   passwordControl = new FormControl('', [Validators.required, Validators.minLength(4)]);
   
-  /**
-  * If true, it means that the authentication API has return a failed response
-  * (probably because the name or password is incorrect).
-  */
-  loginError: boolean;
   
-  constructor(private auth: AuthService, private router: Router, public dialogRef: MatDialogRef<LoginDialogComponent>) {
-    this.authRequest = new AuthRequest();
-    this.loginError = false;
-    
+  constructor(
+    private auth: AuthService, 
+    private router: Router, 
+    public dialogRef: MatDialogRef<LoginDialogComponent>,
+    private userNotification: UserNotificationService) {
+      this.authRequest = new AuthRequest();
   }
   
   ngOnInit() {
@@ -46,14 +44,15 @@ export class LoginDialogComponent implements OnInit {
   onSubmit(form: NgForm) {
     // Only do something if the form is valid
     if (form.valid) {
-      // Hide any previous login error.
-      this.loginError = false;
-      
+
       // Perform the authentication request to the API.
       this.auth.login(this.authRequest).subscribe({
-        next: () => this.router.navigateByUrl("/"),
+        next: () => {
+          this.userNotification.openSuccessNotification('Successfully logged in!')
+          this.router.navigateByUrl("my-trips")
+        },
         error: (err) => {
-          this.loginError = true;
+          this.userNotification.openErrorNotification('Wrong credentials! Please retry.');
           console.warn(`Authentication failed: ${err.message}`);
         },
       });

@@ -27,18 +27,19 @@ export class PlacesDataSource extends DataSource<Place> {
   
   public loading$ = this.loadingSubject.asObservable();
   
-  constructor(private placeService: PlaceService, private stateManagement: MapManagementService) {
+  constructor(private placeService: PlaceService, private mapManagement: MapManagementService) {
     super();
   }
   
-  loadPlaces(slectedTrip?: Trip){
+  loadPlaces(tripsToLoad: Trip[]){
     this.loadingSubject.next(true);
 
     let params: HttpParams = new HttpParams();
     /*if(userId)
       params = params.append('user', userId);*/
-    if(slectedTrip)
-      params = params.append('trip', slectedTrip.id);
+    tripsToLoad.forEach(trip => 
+      params = params.append('trip', trip.id))
+      
     if(this.sort){
       if(this.sort.direction === 'asc')
       params = params.append('sort', 'name');
@@ -55,6 +56,8 @@ export class PlacesDataSource extends DataSource<Place> {
     */
     if(this.filters)
     this.filters.forEach(filter => params = params.append('search', filter.name));
+
+    console.log(params.toString());
     
     this.placeService.retrievePlaces(params).pipe(
       catchError(() => of([])),
@@ -75,7 +78,7 @@ export class PlacesDataSource extends DataSource<Place> {
             )
           );
         })
-        this.stateManagement.emitCoordinates(coordinates);
+        this.mapManagement.emitCoordinates(coordinates);
       });
     }
     

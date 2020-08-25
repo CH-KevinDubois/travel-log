@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import { Trip } from 'src/app/models/trip';
 import { Place } from 'src/app/models/place';
-import { Subject, Observable, BehaviorSubject } from 'rxjs';
+import { Subject, Observable, BehaviorSubject, AsyncSubject } from 'rxjs';
+import { MAT_HAMMER_OPTIONS } from '@angular/material/core';
 
 
 @Injectable({
@@ -16,6 +17,7 @@ export class DataManagementService {
     private _isPlaceSelectedSubject: BehaviorSubject<boolean>;
 
     private _tripListSubject: BehaviorSubject<Trip[]>;
+    private _tripListReadySubject: AsyncSubject<boolean>;
 
     constructor() {
         this._isPlaceSelectedSubject = new BehaviorSubject<boolean>(false);
@@ -23,6 +25,7 @@ export class DataManagementService {
         this._selectedTripSubject = new Subject<Trip>();
         this._selectedPlaceSubject = new Subject<Place>();
         this._tripListSubject = new BehaviorSubject<Trip[]>([]);
+        this._tripListReadySubject = new AsyncSubject<boolean>();
         
     }
 
@@ -37,9 +40,9 @@ export class DataManagementService {
     }
     
     public removeSelectedTrip(): void {
-        this._selectedTripSubject.next();
-        this._isTripSelectedSubject.next(false);
         this.removeSelectedPlace();
+        this._isTripSelectedSubject.next(false);
+        this._selectedTripSubject.next();   
     }
 
     public get isTripSelected$(): Observable<boolean> {
@@ -56,8 +59,8 @@ export class DataManagementService {
     }
     
     public removeSelectedPlace(): void {
-        this._selectedPlaceSubject.next();
         this._isPlaceSelectedSubject.next(false);
+        this._selectedPlaceSubject.next();
     }
 
     public get isPlaceSelected$(): Observable<boolean> {
@@ -65,11 +68,17 @@ export class DataManagementService {
     }
 
     public get tripList$(): Observable<Trip[]> {
-      return this._tripListSubject.asObservable();
+        return this._tripListSubject.asObservable();
     }
 
     public emitTripList(l: Trip[]) {
-      this._tripListSubject.next(l);
+        this._tripListSubject.next(l);
+        this._tripListReadySubject.next(true);
+        this._tripListReadySubject.complete();
+    }
+
+    public get tripListReady$() {
+        return this._tripListReadySubject.asObservable();
     }
 
 }

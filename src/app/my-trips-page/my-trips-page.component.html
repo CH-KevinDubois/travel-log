@@ -6,9 +6,7 @@
             <mat-icon *ngIf="this.isTripSelected" (click)="deleteSelectedTrip()">delete</mat-icon>
             <mat-icon *ngIf="this.isTripSelected" (click)="editSelectedTrip()">edit</mat-icon>
             <app-trip-table 
-                [userId]="myId"
-                [selectedTrip]="selectedTrip" 
-                (onTripClicked)="selectTrip($event)">
+                [userId]="myId">
             </app-trip-table>
         </div>
     </section>
@@ -32,9 +30,6 @@
             </mat-icon>
             <mat-icon class="grey-icon"> insert_comment</mat-icon>
             <app-place-table 
-                [userId]="myId"
-                [selectedPlace]="selectedPlace"
-                [selectedTrip]="selectedTrip"  
                 (onPlaceClicked)="selectPlace($event)">
             </app-place-table>
         </div>

@@ -7,6 +7,7 @@ import { Trip } from 'src/app/models/trip';
 import { TripService } from 'src/app/api/services/trip.service';
 import { Filter } from 'src/app/chips/filters/filters.component';
 import { HttpParams } from '@angular/common/http';
+import { DataManagementService } from 'src/app/api/services/data-management.service';
 
 /**
 * Data source for the TripTable view. This class should
@@ -24,7 +25,9 @@ export class TripsDataSource extends DataSource<Trip> {
   
   public loading$ = this.loadingSubject.asObservable();
   
-  constructor(private tripService: TripService) {
+  constructor(
+    private tripService: TripService,
+    private dataManagement: DataManagementService) {
     super();
   }
   
@@ -57,6 +60,7 @@ export class TripsDataSource extends DataSource<Trip> {
       )
       .subscribe(trips => {
         this.tripsSubject.next(trips);
+        this.dataManagement.emitTripList(trips);
         this.data = trips;
       }
         );

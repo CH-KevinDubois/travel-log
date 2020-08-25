@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
+import { AfterViewInit, Component, OnInit, OnDestroy, ViewChild, Input, Output, EventEmitter, SimpleChanges } from '@angular/core';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTable } from '@angular/material/table';
@@ -9,6 +9,9 @@ import { PlaceService } from 'src/app/api/services/place.service';
 import { tap } from 'rxjs/operators';
 import { Trip } from 'src/app/models/trip';
 import { MapManagementService } from 'src/app/api/services/map-management.service';
+import { DataManagementService } from 'src/app/api/services/data-management.service';
+import { GeoJsonLocation } from 'src/app/models/geo-json-location';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-place-table',
@@ -16,20 +19,30 @@ import { MapManagementService } from 'src/app/api/services/map-management.servic
   styleUrls: ['./place-table.component.scss']
 })
 export class PlaceTableComponent implements AfterViewInit, OnInit {
-  @Input() userId: string = null;
-  @Input() selectedPlace: Place = null;
-  @Input() selectedTrip: Trip = null;
+  //@Input() userId: string = null;
+  //@Input() selectedPlace: Place = null;
+  //@Input() selectedTrip: Trip = null;
   @Input() onPlaceModified: EventEmitter<boolean>;
-  @Output() onPlaceClicked = new EventEmitter<Place>();
+  //@Output() onPlaceClicked = new EventEmitter<Place>();
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<Place>;
   @ViewChild(FiltersComponent) filterList : FiltersComponent;
+
   dataSource: PlacesDataSource;
+
+  selectedTrip: Trip;
+  selectedPlace: Place;
+  isTripSelected: boolean = false;
+  isPlaceSelected: boolean = false;
+  tripList: Trip[];
+
+  subscriptionTable : Subscription[] = new Array<Subscription>();
 
   constructor(
     private placeService: PlaceService, 
-    private stateManagement: MapManagementService) {
+    private mapManagement: MapManagementService,
+    private dataManagement: DataManagementService) {
   }
 
   // Columns displayed in the table
@@ -37,51 +50,106 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
 
   // Load the places on init
   ngOnInit() {
-    this.dataSource = new PlacesDataSource(this.placeService, this.stateManagement);
-    this.dataSource.loadPlaces(this.selectedTrip);
+    this.dataSource = new PlacesDataSource(this.placeService, this.mapManagement);
+
+    this.subscriptionTable.push(this.dataManagement.isTripSelected$.subscribe({
+      next: value => this.isTripSelected = value
+    }));
+
+    this.subscriptionTable.push(this.dataManagement.isPlaceSelected$.subscribe({
+      next: value => this.isPlaceSelected = value
+    }));
+
+    this.subscriptionTable.push(this.dataManagement.selectedTrip$.subscribe({
+      next: value => {
+        this.selectedTrip = value;
+      }
+    }));
+
+    this.subscriptionTable.push(this.dataManagement.selectedPlace$.subscribe({
+      next: value => {
+        this.selectedPlace = value;
+      }
+    }));
+
+    this.subscriptionTable.push(this.dataManagement.tripList$.subscribe({
+      next: value => {
+        this.tripList = value;
+      }
+    }));
+
   }
 
   ngAfterViewInit() {
+
+    // Automtic reaload when a selection occurs
+    this.subscriptionTable.push(this.dataManagement.selectedTrip$.pipe(
+      tap( _ => {
+        this.loadPlaces();
+      })
+      ).subscribe());
+
+    this.subscriptionTable.push(this.dataManagement.selectedPlace$.pipe(
+      tap( _ => {
+        //if(this.isPlaceSelected)
+          this.loadPlaces();
+      })
+      ).subscribe());
+
+    // Set up dataSource, sort, paginator and filters
     this.table.dataSource = this.dataSource;
     this.dataSource.sort = this.sort;
     this.dataSource.paginator = this.paginator;
     this.dataSource.filters = this.filterList.filters;
 
-    this.paginator.page
+    // Automatic reloads when an action occurs
+    this.subscriptionTable.push(this.paginator.page
       .pipe(
-        tap(() => this.reloadPlaces())
+        tap(() => this.loadPlaces())
       )
-      .subscribe();
+      .subscribe());
 
-    this.sort.sortChange
+      this.subscriptionTable.push(this.sort.sortChange
       .pipe(
-        tap(() => this.reloadPlaces())
+        tap(() => this.loadPlaces())
       )
-      .subscribe();
+      .subscribe());
 
-    this.filterList.onChange
+      this.subscriptionTable.push(this.filterList.onChange
       .pipe(
-        tap(() => this.reloadPlaces())
+        tap(() => this.loadPlaces())
       )
-      .subscribe();
+      .subscribe());
+
+      this.subscriptionTable.push(this.dataManagement.tripListReady$
+      .subscribe({
+        next: _ => this.loadPlaces()
+    }));
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    if(this.dataSource){
-      if(changes.selectedTrip)
-        this.reloadPlaces();
-      if(changes.selectedPlace)
-        this.reloadPlaces();
-    }
-  }
-
-
-  reloadPlaces(){
-    this.dataSource.loadPlaces(this.selectedTrip);
+  loadPlaces(){
+    console.log(this.selectedTrip);
+    console.log(this.isTripSelected);
+    if(this.isTripSelected)
+      this.dataSource.loadPlaces([this.selectedTrip]);
+    else
+      this.dataSource.loadPlaces(this.tripList);
   }
 
   selectPlace(place: Place){
-    this.onPlaceClicked.emit(place);
+    if(this.isPlaceSelected && this.selectedPlace.id === place.id){
+      this.dataManagement.removeSelectedPlace();
+    }
+    else
+      this.dataManagement.emitSelectedPlace(place);
+      this.mapManagement.emitSelectedPlace(
+        new GeoJsonLocation(place.location.coordinates[0], place.location.coordinates[1]));
+  }
+
+  ngOnDestroy(): void{
+    this.subscriptionTable.forEach(
+      subscription => subscription.unsubscribe()
+    );
   }
 
 }

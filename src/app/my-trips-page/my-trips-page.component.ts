@@ -20,7 +20,7 @@ import { Marker, marker, Icon, IconOptions, icon } from 'leaflet';
 import { TripTableComponent } from '../table/trip-table/trip-table.component';
 import { PlaceTableComponent } from '../table/place-table/place-table.component';
 import { MapComponent } from '../map/map.component';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { UserNotificationService } from '../api/services/user-notification.service';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
@@ -54,7 +54,7 @@ export class MyTripsPageComponent implements OnInit {
     public dialog: MatDialog,
     private tripService: TripService,
     private placeService: PlaceService,
-    private snackBar : MatSnackBar,
+    private userNotification: UserNotificationService,
     private http: HttpClient,
     private changeDetectorRefs: ChangeDetectorRef,
     private auth: AuthService,
@@ -105,12 +105,12 @@ export class MyTripsPageComponent implements OnInit {
         const tripRequest = new TripRequest(result);
         this.tripService.createNewTrip(tripRequest).subscribe({
           next: trip => {
-            this.openSuccessSnackBar('Trip successfully created!');
+            this.userNotification.openSuccessNotification('Trip successfully created!');
             this.selections.selectedTrip = trip;
           },
           // Todo specify errors if time
           error: (err: HttpErrorResponse) => {
-            this.openErrorSnackBar(err.error.message);
+            this.userNotification.openErrorNotification(err.error.message);
             console.log(err);
           }
         });
@@ -126,12 +126,12 @@ export class MyTripsPageComponent implements OnInit {
         const tripRequest = new TripRequest(result);
         this.tripService.updateTrip(result.id, tripRequest).subscribe({
           next: trip => {
-            this.openSuccessSnackBar('Trip successfully edited!');
+            this.userNotification.openSuccessNotification('Trip successfully edited!');
             this.selections.selectedTrip = trip;
           },
           // Todo specify errors if time
           error: (err: HttpErrorResponse) => {
-            this.openErrorSnackBar(err.error.message);
+            this.userNotification.openErrorNotification(err.error.message);
             console.log(err);
           }
         });
@@ -143,11 +143,11 @@ export class MyTripsPageComponent implements OnInit {
       if(confirm("Do you want to delete the trip?")){
         this.tripService.deleteTrip(this.selections.selectedTrip.id).subscribe({
           next: _ => {
-            this.openSuccessSnackBar('Trip successfully deleted!');
+            this.userNotification.openSuccessNotification('Trip successfully deleted!');
             this.selections.removeSelectedTrip();
           },
           error: (err: HttpErrorResponse) => {
-            this.openErrorSnackBar(err.error.message);
+            this.userNotification.openErrorNotification(err.error.message);
             console.log(err);
           }
         });
@@ -182,11 +182,11 @@ export class MyTripsPageComponent implements OnInit {
           
           this.placeService.createPlace(placeRequest).subscribe({
             next: place => {
-              this.openSuccessSnackBar('Place successfully created!');
+              this.userNotification.openSuccessNotification('Place successfully created!');
               this.selections.selectedPlace = place;
             },
             error: (err: HttpErrorResponse) => {
-              this.openErrorSnackBar(err.error.message);
+              this.userNotification.openErrorNotification(err.error.message);
               console.log(err);
             }
           });
@@ -207,11 +207,11 @@ export class MyTripsPageComponent implements OnInit {
           
           this.placeService.updatePlace(this.selections.selectedPlace.id, placeRequest).subscribe({
             next: place => {
-              this.openSuccessSnackBar('Place successfully edited!');
+              this.userNotification.openSuccessNotification('Place successfully edited!');
               this.selections.selectedPlace = place;
             },
             error: (err: HttpErrorResponse) => {
-              this.openErrorSnackBar(err.error.message);
+              this.userNotification.openErrorNotification(err.error.message);
               console.log(err);
             }
           });
@@ -224,11 +224,11 @@ export class MyTripsPageComponent implements OnInit {
       if(confirm("Do you want to delete this place?")){
         this.placeService.deletePlace(this.selections.selectedPlace.id).subscribe({
           next: place => {
-            this.openSuccessSnackBar('Place successfully deleted!');
+            this.userNotification.openSuccessNotification('Place successfully deleted!');
             this.selections.removeSelectedPlace();
           },
           error: (err: HttpErrorResponse) => {
-            this.openErrorSnackBar(err.error.message);
+            this.userNotification.openErrorNotification(err.error.message);
             console.log(err);
           }
         })
@@ -259,24 +259,6 @@ export class MyTripsPageComponent implements OnInit {
           }
         });*/
       } 
-    }
-
-    openErrorSnackBar(error: string) : void {
-      let snackBarRef = this.snackBar.open(`${error}`, 'Quitter', {
-        duration: 20000,
-        panelClass: ['mat-toolbar', 'mat-warn']
-      });
-
-      snackBarRef.onAction().subscribe( _ => snackBarRef.dismiss());
-    }
-
-    openSuccessSnackBar(message: string) : void {
-      let snackBarRef = this.snackBar.open(`${message}`, 'Quitter', {
-        duration: 5000,
-        panelClass: ['mat-toolbar', 'mat-primary']
-      });
-
-      snackBarRef.onAction().subscribe( _ => snackBarRef.dismiss());
     }
   }
   

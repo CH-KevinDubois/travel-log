@@ -28,7 +28,7 @@
         <div matripple="" class="mat-ripple mat-button-ripple"></div>
         <div class="mat-button-focus-overlay"></div>
     </button>
-    <a mat-button="" routerLink="/seecomments" class="mat-focus-indicator mat-button button-menu" tabindex="3">
+    <a [disabled]="true" mat-button="" class="mat-focus-indicator mat-button button-menu" tabindex="3">
         <span class="mat-button-wrapper">
             <span>See comments</span>
         </span>
@@ -53,10 +53,6 @@
         <div class="mat-button-focus-overlay"></div>
     </button>
     
-    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
-    
-    <mat-icon [hidden]="userAuthenticated" class="example-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>
-    
     <button mat-icon-button [hidden]="!userAuthenticated" [matMenuTriggerFor]="menu">
         <mat-icon>account_circle</mat-icon>
     </button>
@@ -66,12 +62,12 @@
             <span>Delete account</span>
         </button>
         <button mat-menu-item 
-        enabled
-        routerLink="/register">
+        disabled
+        routerLink="/">
         <mat-icon>edit</mat-icon>
         <span>Edit account</span>
     </button>
-    <button mat-menu-item color="warn" class="mat-focus-indicator mat-raised-button button-menu" (click)="logout()">
+    <button mat-menu-item (click)="logout()">
         <mat-icon> cancel_presentation</mat-icon>
         <span>LoGout</span>
     </button>

@@ -86,7 +86,6 @@ export class MapComponent implements OnInit {
     this.stateManagement.coordinates$.subscribe({
       next: coordinates => {
         while(this.markers.length > 0){
-          console.log(this.markers.length);
           this.removeMarker(this.markers.pop());
         }
         coordinates.forEach( coordinate => {

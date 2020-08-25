@@ -5,6 +5,7 @@ import { ManageAccountService } from '../security/manage-account.service';
 import { User } from '../models/user';
 import { LoginDialogComponent } from '../api/dialogs/login-dialog/login-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { RegisterDialogComponent } from '../api/dialogs/register-dialog/register-dialog.component';
 
 @Component({
   selector: 'app-navbar',
@@ -39,6 +40,22 @@ export class NavbarComponent implements OnInit {
     console.log('Open login dialog');
     //const dialogConfig = new MatDialogConfig();
     const dialogRef = this.dialog.open(LoginDialogComponent, {
+      width: '500px',
+      maxHeight: '500px',
+      position: {top: '80px', right: '10px'}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      console.log(result);
+    });
+    
+  }
+
+  openRegisterDialog(): void {
+    console.log('Open login dialog');
+    //const dialogConfig = new MatDialogConfig();
+    const dialogRef = this.dialog.open(RegisterDialogComponent, {
       width: '500px',
       maxHeight: '500px',
       position: {top: '80px', right: '10px'}

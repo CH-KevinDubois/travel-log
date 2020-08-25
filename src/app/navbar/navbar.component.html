@@ -17,65 +17,65 @@
             <div class="mat-button-focus-overlay"></div>
         </button>
         <button mat-button 
-            [hidden]="!userAuthenticated" 
-            routerLink="/my-trips" 
-            routerLinkActive="active" 
-            class="mat-focus-indicator mat-button button-menu" 
-            tabindex="2">
-            <span class="mat-button-wrapper">
-                <span>My trips</span>
-            </span>
-            <div matripple="" class="mat-ripple mat-button-ripple"></div>
-            <div class="mat-button-focus-overlay"></div>
+        [hidden]="!userAuthenticated" 
+        routerLink="/my-trips" 
+        routerLinkActive="active" 
+        class="mat-focus-indicator mat-button button-menu" 
+        tabindex="2">
+        <span class="mat-button-wrapper">
+            <span>My trips</span>
+        </span>
+        <div matripple="" class="mat-ripple mat-button-ripple"></div>
+        <div class="mat-button-focus-overlay"></div>
+    </button>
+    <a mat-button="" routerLink="/seecomments" class="mat-focus-indicator mat-button button-menu" tabindex="3">
+        <span class="mat-button-wrapper">
+            <span>See comments</span>
+        </span>
+        <div matripple="" class="mat-ripple mat-button-ripple"></div>
+        <div class="mat-button-focus-overlay"></div>
+    </a>
+    <!--Spacer-->
+    <div class="flex-spacer"></div>
+    <!--Right menu-->
+    <button mat-button [hidden]="userAuthenticated" (click)="openLoginDialog()" class="mat-button button-menu" tabindex="4">
+        <span class="mat-button-wrapper">
+            <span>LoGin</span>
+        </span>
+        <div matripple="" class="mat-ripple mat-button-ripple"></div>
+        <div class="mat-button-focus-overlay"></div>
+    </button>
+    <button mat-button [hidden]="userAuthenticated" (click)="openRegisterDialog()" class="mat-focus-indicator mat-button button-menu" tabindex="6">
+        <span class="mat-button-wrapper">
+            <span>Register</span>
+        </span>
+        <div matripple="" class="mat-ripple mat-button-ripple"></div>
+        <div class="mat-button-focus-overlay"></div>
+    </button>
+    
+    <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
+    
+    <mat-icon [hidden]="userAuthenticated" class="example-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>
+    
+    <button mat-icon-button [hidden]="!userAuthenticated" [matMenuTriggerFor]="menu">
+        <mat-icon>account_circle</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+        <button mat-menu-item (click)="deleteAccount()">
+            <mat-icon>delete</mat-icon>
+            <span>Delete account</span>
         </button>
-        <a mat-button="" routerLink="/seecomments" class="mat-focus-indicator mat-button button-menu" tabindex="3">
-            <span class="mat-button-wrapper">
-                <span>See comments</span>
-            </span>
-            <div matripple="" class="mat-ripple mat-button-ripple"></div>
-            <div class="mat-button-focus-overlay"></div>
-        </a>
-        <!--Spacer-->
-        <div class="flex-spacer"></div>
-        <!--Right menu-->
-        <button mat-button [hidden]="userAuthenticated" (click)="openLoginDialog()" class="mat-button button-menu" tabindex="4">
-            <span class="mat-button-wrapper">
-                <span>LoGin</span>
-            </span>
-            <div matripple="" class="mat-ripple mat-button-ripple"></div>
-            <div class="mat-button-focus-overlay"></div>
-        </button>
-        <button mat-button [hidden]="userAuthenticated" routerLink="/register" class="mat-focus-indicator mat-button button-menu" tabindex="6">
-            <span class="mat-button-wrapper">
-                <span>Register</span>
-            </span>
-            <div matripple="" class="mat-ripple mat-button-ripple"></div>
-            <div class="mat-button-focus-overlay"></div>
-        </button>
+        <button mat-menu-item 
+        enabled
+        routerLink="/register">
+        <mat-icon>edit</mat-icon>
+        <span>Edit account</span>
+    </button>
+    <button mat-menu-item color="warn" class="mat-focus-indicator mat-raised-button button-menu" (click)="logout()">
+        <mat-icon> cancel_presentation</mat-icon>
+        <span>LoGout</span>
+    </button>
+</mat-menu>
 
-        <mat-icon class="example-icon" aria-hidden="false" aria-label="Example heart icon">favorite</mat-icon>
-
-        <mat-icon [hidden]="userAuthenticated" class="example-icon" aria-hidden="false" aria-label="Example delete icon">delete</mat-icon>
-
-        <button mat-icon-button [hidden]="!userAuthenticated" [matMenuTriggerFor]="menu">
-            <mat-icon>account_circle</mat-icon>
-          </button>
-          <mat-menu #menu="matMenu">
-            <button mat-menu-item (click)="deleteAccount()">
-              <mat-icon>delete</mat-icon>
-              <span>Delete account</span>
-            </button>
-            <button mat-menu-item 
-                enabled
-                routerLink="/register">
-                <mat-icon>edit</mat-icon>
-                <span>Edit account</span>
-            </button>
-            <button mat-menu-item color="warn" class="mat-focus-indicator mat-raised-button button-menu" (click)="logout()">
-                <mat-icon> cancel_presentation</mat-icon>
-                <span>LoGout</span>
-            </button>
-          </mat-menu>
-          
-    </mat-toolbar-row>
+</mat-toolbar-row>
 </mat-toolbar>

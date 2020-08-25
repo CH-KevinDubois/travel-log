@@ -1,1 +1,35 @@
-<p>register-dialog works!</p>
+<h1 mat-dialog-title>Register a new account</h1>
+<form mat-dialog-content  #registerForm="ngForm" (submit)="onSubmit(registerForm)">
+    <div class="example-container">
+        <mat-form-field appearance="fill">
+          <mat-label>Username</mat-label>
+          <input matInput 
+            [(ngModel)]="registerRequest.name" 
+            name="username" 
+            [formControl]="usernameControl" 
+            required
+            placeholder="MyTravelName">
+          <mat-error *ngIf="usernameControl.invalid || usernameControl.touched">Username is required</mat-error>
+        </mat-form-field>
+        <br>
+        <mat-form-field appearance="fill">
+          <mat-label>Password</mat-label>
+          <input matInput 
+            [(ngModel)]="registerRequest.password" 
+            name="password" 
+            [formControl]="passwordControl" 
+            required
+            placeholder="A strong password">
+          <mat-error [hidden]="passwordControl.invalid || passwordControl.touched">Password is required</mat-error>
+        </mat-form-field>
+        <br>
+        <button 
+            mat-raised-button
+            mat-dialog-close 
+            [disabled]="passwordControl.invalid || usernameControl.invalid " 
+            type="submit" 
+            color="primary">
+                Register
+            </button>
+      </div>
+</form>

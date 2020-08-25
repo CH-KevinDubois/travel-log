@@ -21,6 +21,7 @@ import { TripTableComponent } from '../table/trip-table/trip-table.component';
 import { PlaceTableComponent } from '../table/place-table/place-table.component';
 import { MapComponent } from '../map/map.component';
 import { UserNotificationService } from '../api/services/user-notification.service';
+import { DataManagementService } from '../api/services/data-management.service';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
@@ -46,7 +47,12 @@ export class MyTripsPageComponent implements OnInit {
   @ViewChild(MapComponent) map: MapComponent
   
   myId: string;
-  selections: ActiveSelections;
+  //selections: ActiveSelections;
+
+  isTripSelected: boolean;
+  isPlaceSelected: boolean;
+  selectedTrip: Trip;
+  selectedPlace: Place;
 
   markers: Marker[];
   
@@ -58,9 +64,10 @@ export class MyTripsPageComponent implements OnInit {
     private http: HttpClient,
     private changeDetectorRefs: ChangeDetectorRef,
     private auth: AuthService,
-    private mapManagement: MapManagementService
+    private mapManagement: MapManagementService,
+    private dataManagement: DataManagementService
     ) {
-      this.selections = new ActiveSelections();
+      //this.selections = new ActiveSelections();
       this.markers = [];
       //   marker([ 46.778186, 6.641524 ], { icon: defaultIcon }),
       //   marker([ 46.780796, 6.647395 ], { icon: defaultIcon }),
@@ -75,15 +82,32 @@ export class MyTripsPageComponent implements OnInit {
         },
         error: _ => console.log('Cannot retrieve user id')
       });
+
+      this.dataManagement.isTripSelected$.subscribe({
+        next: value => this.isTripSelected = value
+      });
+
+      this.dataManagement.isPlaceSelected$.subscribe({
+        next: value => this.isPlaceSelected = value
+      });
+
+      this.dataManagement.selectedTrip$.subscribe({
+        next: value => this.selectedTrip = value
+      });
+
+      this.dataManagement.selectedPlace$.subscribe({
+        next: value => this.selectedPlace = value
+      });
+
     }
     
     openTripDialog(): Observable<any> {
-      let tripForDialog: Trip;
-      if(this.selections.isTripSelected()){
-        tripForDialog = cloneDeep(this.selections.selectedTrip);
+      let dataForDialog: Trip;
+      if(this.isTripSelected){
+        dataForDialog = cloneDeep(this.selectedTrip);
       }
       else{
-        tripForDialog = new Trip();
+        dataForDialog = new Trip();
       }
 
       const dialogConfig = new MatDialogConfig();
@@ -91,7 +115,7 @@ export class MyTripsPageComponent implements OnInit {
       const dialogRef = this.dialog.open(TripDialogComponent, {
         width: '500px',
         minHeight: '500px',
-        data: tripForDialog
+        data: dataForDialog
       });
       
       return dialogRef.afterClosed();
@@ -106,7 +130,7 @@ export class MyTripsPageComponent implements OnInit {
         this.tripService.createNewTrip(tripRequest).subscribe({
           next: trip => {
             this.userNotification.openSuccessNotification('Trip successfully created!');
-            this.selections.selectedTrip = trip;
+            this.dataManagement.emitSelectedTrip(trip);
           },
           // Todo specify errors if time
           error: (err: HttpErrorResponse) => {
@@ -127,7 +151,7 @@ export class MyTripsPageComponent implements OnInit {
         this.tripService.updateTrip(result.id, tripRequest).subscribe({
           next: trip => {
             this.userNotification.openSuccessNotification('Trip successfully edited!');
-            this.selections.selectedTrip = trip;
+            this.dataManagement.emitSelectedTrip(trip);
           },
           // Todo specify errors if time
           error: (err: HttpErrorResponse) => {
@@ -141,10 +165,10 @@ export class MyTripsPageComponent implements OnInit {
     
     deleteSelectedTrip(): void {
       if(confirm("Do you want to delete the trip?")){
-        this.tripService.deleteTrip(this.selections.selectedTrip.id).subscribe({
+        this.tripService.deleteTrip(this.selectedTrip.id).subscribe({
           next: _ => {
             this.userNotification.openSuccessNotification('Trip successfully deleted!');
-            this.selections.removeSelectedTrip();
+            this.dataManagement.removeSelectedTrip();
           },
           error: (err: HttpErrorResponse) => {
             this.userNotification.openErrorNotification(err.error.message);
@@ -156,8 +180,8 @@ export class MyTripsPageComponent implements OnInit {
     
     openPlaceDialog(): Observable<any> {
       let placeForDialog: Place;
-      if(this.selections.isPlaceSelected()){
-        placeForDialog = cloneDeep(this.selections.selectedPlace);
+      if(this.isPlaceSelected){
+        placeForDialog = cloneDeep(this.selectedPlace);
       }
       else{
         placeForDialog = new Place();
@@ -177,13 +201,13 @@ export class MyTripsPageComponent implements OnInit {
         // The user is creating a new place
         else{
           let placeRequest = new PlaceRequest(place);
-          placeRequest.tripHref = this.selections.selectedTrip.href;
-          placeRequest.tripId = this.selections.selectedTrip.id;
+          placeRequest.tripHref = this.selectedTrip.href;
+          placeRequest.tripId = this.selectedTrip.id;
           
           this.placeService.createPlace(placeRequest).subscribe({
             next: place => {
               this.userNotification.openSuccessNotification('Place successfully created!');
-              this.selections.selectedPlace = place;
+              this.dataManagement.emitSelectedPlace(place);
             },
             error: (err: HttpErrorResponse) => {
               this.userNotification.openErrorNotification(err.error.message);
@@ -202,13 +226,13 @@ export class MyTripsPageComponent implements OnInit {
         // The user is editing the place
         else{
           let placeRequest = new PlaceRequest(place);
-          placeRequest.tripHref = this.selections.selectedTrip.href;
-          placeRequest.tripId = this.selections.selectedTrip.id;
+          placeRequest.tripHref = this.selectedTrip.href;
+          placeRequest.tripId = this.selectedTrip.id;
           
-          this.placeService.updatePlace(this.selections.selectedPlace.id, placeRequest).subscribe({
+          this.placeService.updatePlace(this.selectedPlace.id, placeRequest).subscribe({
             next: place => {
               this.userNotification.openSuccessNotification('Place successfully edited!');
-              this.selections.selectedPlace = place;
+              this.dataManagement.emitSelectedPlace(place);
             },
             error: (err: HttpErrorResponse) => {
               this.userNotification.openErrorNotification(err.error.message);
@@ -222,10 +246,10 @@ export class MyTripsPageComponent implements OnInit {
 
     deleteSelectedPlace(): void {
       if(confirm("Do you want to delete this place?")){
-        this.placeService.deletePlace(this.selections.selectedPlace.id).subscribe({
+        this.placeService.deletePlace(this.selectedPlace.id).subscribe({
           next: place => {
             this.userNotification.openSuccessNotification('Place successfully deleted!');
-            this.selections.removeSelectedPlace();
+            this.dataManagement.removeSelectedPlace();
           },
           error: (err: HttpErrorResponse) => {
             this.userNotification.openErrorNotification(err.error.message);
@@ -236,20 +260,20 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     selectTrip(trip: Trip){
-      if(this.selections.selectedTrip && this.selections.selectedTrip.id === trip.id){
-        this.selections.removeSelectedTrip();
+      if(this.selectedTrip && this.selectedTrip.id === trip.id){
+        this.dataManagement.removeSelectedTrip();
       }
       else{
-        this.selections.selectedTrip = trip;
+        this.dataManagement.emitSelectedTrip(trip);
       } 
     }
     
     selectPlace(place: Place){
-      if(this.selections.selectedPlace && this.selections.selectedPlace.id === place.id){
-        this.selections.removeSelectedPlace();
+      if(this.selectedPlace && this.selectedPlace.id === place.id){
+        this.dataManagement.removeSelectedPlace();
       }
       else{
-        this.selections.selectedPlace = place;
+        this.dataManagement.emitSelectedPlace(place);
         this.mapManagement.emitSelectedPlace(new GeoJsonLocation(place.location.coordinates[0], place.location.coordinates[1]));
         /* Find a way to select the trip when clicking the place
         if(!this.selections.selectedTrip)

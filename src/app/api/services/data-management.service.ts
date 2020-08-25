@@ -42,7 +42,7 @@ export class DataManagementService {
         this.removeSelectedPlace();
     }
 
-    public isTripSelected$(): Observable<Boolean> {
+    public get isTripSelected$(): Observable<boolean> {
         return this._isTripSelectedSubject.asObservable();
     }
 
@@ -60,7 +60,7 @@ export class DataManagementService {
         this._isPlaceSelectedSubject.next(false);
     }
 
-    public isPlaceSelected$(): Observable<boolean> {
+    public get isPlaceSelected$(): Observable<boolean> {
         return this._isPlaceSelectedSubject.asObservable();
     }
 

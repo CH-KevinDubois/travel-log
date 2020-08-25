@@ -58,7 +58,7 @@ export class MyTripsPageComponent implements OnInit {
     private http: HttpClient,
     private changeDetectorRefs: ChangeDetectorRef,
     private auth: AuthService,
-    private stateManagement: MapManagementService
+    private mapManagement: MapManagementService
     ) {
       this.selections = new ActiveSelections();
       this.markers = [];
@@ -250,6 +250,7 @@ export class MyTripsPageComponent implements OnInit {
       }
       else{
         this.selections.selectedPlace = place;
+        this.mapManagement.emitSelectedPlace(new GeoJsonLocation(place.location.coordinates[0], place.location.coordinates[1]));
         /* Find a way to select the trip when clicking the place
         if(!this.selections.selectedTrip)
         this.tripService.retrieveTripsByHref(place.href).subscribe({

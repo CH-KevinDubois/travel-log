@@ -39,12 +39,16 @@ export class PlaceDialogComponent implements OnInit {
     
     ngOnInit(): void {
 
-      this.mapClickedSubscription = this.stateManagement.getClickedPointOnMapSubject().subscribe({
+      this.mapClickedSubscription = this.stateManagement.clickedPointOnMap$.subscribe({
         next: location => {
           this.place.location.coordinates[0] = location.coordinates[0];
           this.place.location.coordinates[1] = location.coordinates[1];
         }
       });
+    }
+
+    ngAfterInit(): void {
+
     }
 
     ngOnDestroy(): void {

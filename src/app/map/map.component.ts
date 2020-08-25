@@ -36,67 +36,103 @@ const defaultRedIcon: Icon<IconOptions> = icon({
 export class MapComponent implements OnInit {
   @Input() isEditable: boolean = false;
   @Input() center: LatLng = new LatLng(0,0);
-  @Input() zoom: number = 2;
+  @Input() zoom: number;
   mapOptions: MapOptions;
   @Input() mapMarkers: Marker[];
   map: Map;
   previousSelectedPlace: Marker;
   markers = new Array();
 
+  readonly ZOOM_MIN = 2;
+  readonly ZOOM_MAX = 18;
+  readonly ZOOM_CLOSER = 9;
+  readonly ZOOM_START = 3;
+  
   constructor(
     private stateManagement: MapManagementService
-  ) {
-    this.mapOptions = {
-      layers: [
-        tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-          maxZoom: 18,
-          minZoom: 2,
+    ) {
+      if(!this.zoom)
+        this.zoom = this.ZOOM_START;
+      
+      this.mapOptions = {
+        layers: [
+          tileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+          maxZoom: this.ZOOM_MAX,
+          minZoom: this.ZOOM_MIN,
         }),
       ],
       zoom: this.zoom,
       center: this.center
     };
   }
-
+  
   onMapReady(map: Map) {
     this.map = map;
     if(this.isEditable){
       this.map.on('click', (event : LeafletMouseEvent) => {
         const coord = event.latlng;
-        console.log(`Map moved to ${coord.lat}, ${coord.lng}`);
-
+        //console.log(`Map moved to ${coord.lat}, ${coord.lng}`);
+      
         if(this.previousSelectedPlace)
-          this.previousSelectedPlace.removeFrom(map);
-
-        this.previousSelectedPlace = new Marker([ coord.lat, coord.lng], { icon: defaultRedIcon }).addTo(map);
-        this.stateManagement.getClickedPointOnMapSubject().next(new GeoJsonLocation(coord.lng, coord.lat));
-        //console.log(this.map);
-        //this.mapMarkers = [marker([ coord.lat, coord.lng ], { icon: defaultIcon })];
-        //map.invalidateSize();
+          this.removeMarker(this.previousSelectedPlace);
+        
+        this.previousSelectedPlace = this.renderMarker(
+          new Marker([ coord.lat, coord.lng], { icon: defaultRedIcon }));
+        
+        this.stateManagement.emitClickedPointOnMap(new GeoJsonLocation(coord.lng, coord.lat));
       });
     }
-
+    
     this.stateManagement.coordinates$.subscribe({
       next: coordinates => {
         while(this.markers.length > 0){
+          console.log(this.markers.length);
           this.removeMarker(this.markers.pop());
         }
         coordinates.forEach( coordinate => {
-          this.markers.push(new Marker([ coordinate.lat, coordinate.lng], { icon: defaultIcon }).addTo(map))
-        });
-        this.markers.forEach( marker => this.renderMarker(marker));
-      }
-    })
+          this.renderMarker(new Marker(
+            [coordinate.lat, coordinate.lng], { icon: defaultIcon }));
+      });
+    }
+  });
+  
+  this.stateManagement.selectedPlace$.subscribe({
+    next: coordinate => {
+      let searchedMarker = 
+        this.findMarkerWithSameCoordinates(
+          coordinate.coordinates[0], coordinate.coordinates[1]);
+      
+      if(searchedMarker)
+        this.map.setView([coordinate.coordinates[1], coordinate.coordinates[0]], this.ZOOM_CLOSER)   
+    }
+  });
+  
+}
 
+ngOnInit(): void {}
+
+renderMarker(marker: Marker): Marker{
+  marker.addTo(this.map);
+  this.markers.push(marker);
+  return marker;
+}
+
+removeMarker(marker: Marker){
+  marker.removeFrom(this.map);
+  const index = this.markers.indexOf(marker, 0);
+  if (index > -1) {
+    this.markers.splice(index, 1);
   }
+}
 
-  ngOnInit(): void {}
-
-  renderMarker(marker: Marker){
-    marker.addTo(this.map);
-  }
-
-  removeMarker(marker: Marker){
-    marker.removeFrom(this.map);
-  }
+findMarkerWithSameCoordinates(lng: number, lat: number): Marker {
+  let retrunedMarker = undefined;
+  this.markers.forEach(marker => {
+    const latLng = marker.getLatLng();
+    
+    if(latLng.lat == lat && latLng.lng == lng)
+      retrunedMarker = marker;
+  });
+  return retrunedMarker;
+}
 }

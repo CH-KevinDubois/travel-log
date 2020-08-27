@@ -55,6 +55,9 @@ export class MyTripsPageComponent implements OnInit {
   selectedPlace: Place;
 
   markers: Marker[];
+
+  readonly CLOSE_ZOOM = 11;
+  readonly WORLD_ZOOM = 2;
   
   constructor(
     public dialog: MatDialog,
@@ -257,32 +260,6 @@ export class MyTripsPageComponent implements OnInit {
           }
         })
       }
-    }
-    
-    selectTrip(trip: Trip){
-      if(this.selectedTrip && this.selectedTrip.id === trip.id){
-        this.dataManagement.removeSelectedTrip();
-      }
-      else{
-        this.dataManagement.emitSelectedTrip(trip);
-      } 
-    }
-    
-    selectPlace(place: Place){
-      if(this.selectedPlace && this.selectedPlace.id === place.id){
-        this.dataManagement.removeSelectedPlace();
-      }
-      else{
-        this.dataManagement.emitSelectedPlace(place);
-        this.mapManagement.emitSelectedPlace(new GeoJsonLocation(place.location.coordinates[0], place.location.coordinates[1]));
-        /* Find a way to select the trip when clicking the place
-        if(!this.selections.selectedTrip)
-        this.tripService.retrieveTripsByHref(place.href).subscribe({
-          next: trip => 
-          {this.selections.selectedTrip = trip;
-          }
-        });*/
-      } 
     }
   }
   

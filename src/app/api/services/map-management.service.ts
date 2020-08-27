@@ -26,12 +26,12 @@ export class MapManagementService {
     this._clickedPointOnMapSubject.next(coordinate);
   }
 
-  emitSelectedPlace(coordinate: GeoJsonLocation){
+  emitFocusSelectedPlace(coordinate: GeoJsonLocation){
     this._focusSelectedPlaceSubject.next(coordinate);
   }
 
   emitSetMapZoom(zoom: number){
-    this._setMapZoomSubject.next(zoom)
+    this._setMapZoomSubject.next(zoom);
   }
   
   emitCoordinates(coordinates: GeoJsonLocation[]){

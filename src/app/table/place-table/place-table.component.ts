@@ -139,11 +139,13 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   selectPlace(place: Place){
     if(this.isPlaceSelected && this.selectedPlace.id === place.id){
       this.dataManagement.removeSelectedPlace();
+      this.mapManagement.emitSetMapZoom(10);
     }
     else
       this.dataManagement.emitSelectedPlace(place);
-      this.mapManagement.emitSelectedPlace(
+      this.mapManagement.emitFocusSelectedPlace(
         new GeoJsonLocation(place.location.coordinates[0], place.location.coordinates[1]));
+      this.mapManagement.emitSetMapZoom(14);
   }
 
   ngOnDestroy(): void{

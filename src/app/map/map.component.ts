@@ -97,17 +97,19 @@ export class MapComponent implements OnInit {
   
   this.stateManagement.focusSelectedPlace$.subscribe({
     next: coordinate => {
-      let searchedMarker = 
+      /*let searchedMarker = 
         this.findMarkerWithSameCoordinates(
           coordinate.coordinates[0], coordinate.coordinates[1]);
       
-      if(searchedMarker)
-        this.map.panTo([coordinate.coordinates[1], coordinate.coordinates[0]])   
+      if(searchedMarker)*/
+      this.map.panTo([coordinate.coordinates[1], coordinate.coordinates[0]], {"duration":0.1})   
     }
   });
 
   this.stateManagement.setMapZoom$.subscribe({
-    next: zoom => this.map.setZoom(zoom)
+    next: zoom => {
+      setTimeout(() => this.map.setZoom(zoom), 500);     
+    }
   });
   
 }

@@ -8,6 +8,7 @@ import { Trip } from 'src/app/models/trip';
 import { tap } from 'rxjs/internal/operators/tap';
 import { FiltersComponent } from 'src/app/chips/filters/filters.component';
 import { DataManagementService } from 'src/app/api/services/data-management.service';
+import { MapManagementService } from 'src/app/api/services/map-management.service';
 ;
 @Component({
   selector: 'app-trip-table',
@@ -30,7 +31,8 @@ export class TripTableComponent implements AfterViewInit, OnInit {
 
   constructor(
     private tripService: TripService,
-    private dataManagement: DataManagementService) {
+    private dataManagement: DataManagementService,
+    private mapManagement: MapManagementService) {
   }
 
   /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
@@ -93,6 +95,7 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   selectTrip(trip: Trip){
     if(this.isTripSelected && this.selectedTrip.id === trip.id){
       this.dataManagement.removeSelectedTrip();
+      this.mapManagement.emitSetMapZoom(2);
     }
     else
       this.dataManagement.emitSelectedTrip(trip);

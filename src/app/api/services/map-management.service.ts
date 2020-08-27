@@ -10,11 +10,14 @@ export class MapManagementService {
   private _clickedPointOnMapSubject = new Subject<GeoJsonLocation>(); 
   public clickedPointOnMap$ = this._clickedPointOnMapSubject.asObservable();
 
-  private _selectedPlaceSubject = new Subject<GeoJsonLocation>(); 
-  public selectedPlace$ = this._selectedPlaceSubject.asObservable();
+  private _focusSelectedPlaceSubject = new Subject<GeoJsonLocation>(); 
+  public focusSelectedPlace$ = this._focusSelectedPlaceSubject.asObservable();
 
-  private _coordinatesSubject = new BehaviorSubject<GeoJsonLocation[]>([]);
-  public coordinates$ = this._coordinatesSubject.asObservable();
+  private _setMapZoomSubject = new Subject<number>(); 
+  public setMapZoom$ = this._setMapZoomSubject.asObservable();
+
+  private _renderedCoordinatesSubject = new BehaviorSubject<GeoJsonLocation[]>([]);
+  public renderedCoordinates$ = this._renderedCoordinatesSubject.asObservable();
 
   constructor() {
   }
@@ -24,10 +27,14 @@ export class MapManagementService {
   }
 
   emitSelectedPlace(coordinate: GeoJsonLocation){
-    this._selectedPlaceSubject.next(coordinate);
+    this._focusSelectedPlaceSubject.next(coordinate);
+  }
+
+  emitSetMapZoom(zoom: number){
+    this._setMapZoomSubject.next(zoom)
   }
   
   emitCoordinates(coordinates: GeoJsonLocation[]){
-    this._coordinatesSubject.next(coordinates);
+    this._renderedCoordinatesSubject.next(coordinates);
   }
 }

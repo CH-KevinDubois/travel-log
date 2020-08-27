@@ -45,7 +45,7 @@ export class MapComponent implements OnInit {
 
   readonly ZOOM_MIN = 2;
   readonly ZOOM_MAX = 18;
-  readonly ZOOM_CLOSER = 9;
+  readonly CLOSE_ZOOM = 11;
   readonly ZOOM_START = 3;
   
   constructor(
@@ -83,7 +83,7 @@ export class MapComponent implements OnInit {
       });
     }
     
-    this.stateManagement.coordinates$.subscribe({
+    this.stateManagement.renderedCoordinates$.subscribe({
       next: coordinates => {
         while(this.markers.length > 0){
           this.removeMarker(this.markers.pop());
@@ -95,15 +95,19 @@ export class MapComponent implements OnInit {
     }
   });
   
-  this.stateManagement.selectedPlace$.subscribe({
+  this.stateManagement.focusSelectedPlace$.subscribe({
     next: coordinate => {
       let searchedMarker = 
         this.findMarkerWithSameCoordinates(
           coordinate.coordinates[0], coordinate.coordinates[1]);
       
       if(searchedMarker)
-        this.map.setView([coordinate.coordinates[1], coordinate.coordinates[0]], this.ZOOM_CLOSER)   
+        this.map.panTo([coordinate.coordinates[1], coordinate.coordinates[0]])   
     }
+  });
+
+  this.stateManagement.setMapZoom$.subscribe({
+    next: zoom => this.map.setZoom(zoom)
   });
   
 }

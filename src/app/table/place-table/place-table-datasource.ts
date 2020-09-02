@@ -27,11 +27,13 @@ export class PlacesDataSource extends DataSource<Place> {
   
   public loading$ = this.loadingSubject.asObservable();
   
-  constructor(private placeService: PlaceService, private mapManagement: MapManagementService) {
+  constructor(
+    private placeService: PlaceService, 
+    private mapManagement: MapManagementService) {
     super();
   }
   
-  loadPlaces(tripsToLoad: Trip[]){
+  loadPlaces(tripsToLoad: Trip[]) {
     this.loadingSubject.next(true);
 
     let params: HttpParams = new HttpParams();
@@ -56,8 +58,6 @@ export class PlacesDataSource extends DataSource<Place> {
     */
     if(this.filters)
     this.filters.forEach(filter => params = params.append('search', filter.name));
-
-    console.log(params.toString());
     
     this.placeService.retrievePlaces(params).pipe(
       catchError(() => of([])),
@@ -66,12 +66,12 @@ export class PlacesDataSource extends DataSource<Place> {
       .subscribe(places => {
         this.placesSubject.next(places);
         this.data = places;
-        // Create the data for the map
+        // Create the data on the map
         let coordinates = new Array;
         this.data.forEach(place => {
           coordinates.push(
-            // Use the coordinates for bc it is not a well formed GeoJsonLocation object 
-            // (/!\ it is not instancited, thus we cannot use the setter/getter)
+            // Use the coordinates bc it is not a well formed GeoJsonLocation object 
+            // (/!\ it is not instanciated, thus I cannot use the setter/getter)
             new GeoJsonLocation(
               place.location.coordinates[0], 
               place.location.coordinates[1]

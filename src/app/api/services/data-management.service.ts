@@ -3,6 +3,7 @@ import { Trip } from 'src/app/models/trip';
 import { Place } from 'src/app/models/place';
 import { Subject, Observable, BehaviorSubject, AsyncSubject } from 'rxjs';
 import { MAT_HAMMER_OPTIONS } from '@angular/material/core';
+import { retry } from 'rxjs/operators';
 
 
 @Injectable({
@@ -12,11 +13,16 @@ export class DataManagementService {
 
     private _selectedTripSubject: Subject<Trip>;
     private _isTripSelectedSubject: BehaviorSubject<boolean>;
+    // Undefined if removed
+    private _hasTripChanged: Subject<Trip | undefined>;
     
     private _selectedPlaceSubject: Subject<Place>;
     private _isPlaceSelectedSubject: BehaviorSubject<boolean>;
+    // Undefined if removed
+    private _hasPlaceChanged: Subject<Place | undefined>;
 
     private _tripListSubject: BehaviorSubject<Trip[]>;
+    // Ready when data is emitted the first time
     private _tripListReadySubject: AsyncSubject<boolean>;
 
     constructor() {
@@ -26,6 +32,8 @@ export class DataManagementService {
         this._selectedPlaceSubject = new Subject<Place>();
         this._tripListSubject = new BehaviorSubject<Trip[]>([]);
         this._tripListReadySubject = new AsyncSubject<boolean>();
+        this._hasTripChanged = new Subject<Trip>();
+        this._hasPlaceChanged = new Subject<Place>();
         
     }
 
@@ -49,6 +57,14 @@ export class DataManagementService {
         return this._isTripSelectedSubject.asObservable();
     }
 
+    public get hasTripChanged$(): Observable<Trip> {
+        return this._hasTripChanged.asObservable();
+    }
+
+    public emitTripChanged(t : Trip) {
+        this._hasTripChanged.next(t);
+    }
+
     public get selectedPlace$() : Observable<Place> {
         return this._selectedPlaceSubject.asObservable();
     }
@@ -65,6 +81,14 @@ export class DataManagementService {
 
     public get isPlaceSelected$(): Observable<boolean> {
         return this._isPlaceSelectedSubject.asObservable();
+    }
+
+    public get hasPlaceChanged$(): Observable<Place> {
+        return this._hasPlaceChanged.asObservable();
+    }
+
+    public emitPlaceChanged(p : Place) {
+        this._hasPlaceChanged.next(p);
     }
 
     public get tripList$(): Observable<Trip[]> {

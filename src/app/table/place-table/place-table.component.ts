@@ -89,10 +89,9 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
       })
       ).subscribe());
 
-    this.subscriptionTable.push(this.dataManagement.selectedPlace$.pipe(
+    this.subscriptionTable.push(this.dataManagement.hasPlaceChanged$.pipe(
       tap( _ => {
-        //if(this.isPlaceSelected)
-          this.loadPlaces();
+        this.loadPlaces();
       })
       ).subscribe());
 
@@ -128,8 +127,6 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   }
 
   loadPlaces(){
-    console.log(this.selectedTrip);
-    console.log(this.isTripSelected);
     if(this.isTripSelected)
       this.dataSource.loadPlaces([this.selectedTrip]);
     else
@@ -144,7 +141,9 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
     else
       this.dataManagement.emitSelectedPlace(place);
       this.mapManagement.emitFocusSelectedPlace(
-        new GeoJsonLocation(place.location.coordinates[0], place.location.coordinates[1]));
+        new GeoJsonLocation(
+          place.location.coordinates[0], 
+          place.location.coordinates[1]));
       this.mapManagement.emitSetMapZoom(14);
   }
 

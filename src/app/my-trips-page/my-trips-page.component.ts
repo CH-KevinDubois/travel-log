@@ -211,6 +211,10 @@ export class MyTripsPageComponent implements OnInit {
             next: place => {
               this.userNotification.openSuccessNotification('Place successfully created!');
               this.dataManagement.emitSelectedPlace(place);
+              this.dataManagement.emitPlaceChanged(place);
+              this.mapManagement.emitFocusSelectedPlace(
+                new GeoJsonLocation(place.location.coordinates[0], place.location.coordinates[1]));
+              this.mapManagement.emitSetMapZoom(14);
             },
             error: (err: HttpErrorResponse) => {
               this.userNotification.openErrorNotification(err.error.message);
@@ -236,6 +240,7 @@ export class MyTripsPageComponent implements OnInit {
             next: place => {
               this.userNotification.openSuccessNotification('Place successfully edited!');
               this.dataManagement.emitSelectedPlace(place);
+              this.dataManagement.emitPlaceChanged(place);
             },
             error: (err: HttpErrorResponse) => {
               this.userNotification.openErrorNotification(err.error.message);
@@ -253,6 +258,8 @@ export class MyTripsPageComponent implements OnInit {
           next: place => {
             this.userNotification.openSuccessNotification('Place successfully deleted!');
             this.dataManagement.removeSelectedPlace();
+            this.dataManagement.emitPlaceChanged(place);
+            this.mapManagement.emitSetMapZoom(2);
           },
           error: (err: HttpErrorResponse) => {
             this.userNotification.openErrorNotification(err.error.message);

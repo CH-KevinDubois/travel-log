@@ -134,6 +134,7 @@ export class MyTripsPageComponent implements OnInit {
           next: trip => {
             this.userNotification.openSuccessNotification('Trip successfully created!');
             this.dataManagement.emitSelectedTrip(trip);
+            this.dataManagement.emitTripChanged(trip);
           },
           // Todo specify errors if time
           error: (err: HttpErrorResponse) => {
@@ -155,6 +156,7 @@ export class MyTripsPageComponent implements OnInit {
           next: trip => {
             this.userNotification.openSuccessNotification('Trip successfully edited!');
             this.dataManagement.emitSelectedTrip(trip);
+            this.dataManagement.emitTripChanged(trip);
           },
           // Todo specify errors if time
           error: (err: HttpErrorResponse) => {
@@ -172,6 +174,7 @@ export class MyTripsPageComponent implements OnInit {
           next: _ => {
             this.userNotification.openSuccessNotification('Trip successfully deleted!');
             this.dataManagement.removeSelectedTrip();
+            this.dataManagement.emitTripChanged(undefined);
           },
           error: (err: HttpErrorResponse) => {
             this.userNotification.openErrorNotification(err.error.message);

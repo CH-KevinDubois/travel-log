@@ -9,11 +9,19 @@ import { tap } from 'rxjs/internal/operators/tap';
 import { FiltersComponent } from 'src/app/chips/filters/filters.component';
 import { DataManagementService } from 'src/app/api/services/data-management.service';
 import { MapManagementService } from 'src/app/api/services/map-management.service';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 ;
 @Component({
   selector: 'app-trip-table',
   templateUrl: './trip-table.component.html',
-  styleUrls: ['./trip-table.component.scss']
+  styleUrls: ['./trip-table.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class TripTableComponent implements AfterViewInit, OnInit {
   @Input() userId: string = null;
@@ -26,17 +34,18 @@ export class TripTableComponent implements AfterViewInit, OnInit {
 
   dataSource: TripsDataSource;
 
-  selectedTrip: Trip;
+  selectedTrip: Trip | null;
   isTripSelected: boolean;
+
+  // Columns displayed in the table.
+  displayedColumns = ['title'];
+  expandedTrip: Trip | null;
 
   constructor(
     private tripService: TripService,
     private dataManagement: DataManagementService,
     private mapManagement: MapManagementService) {
   }
-
-  /** Columns displayed in the table. Columns IDs can be added, removed, or reordered. */
-  displayedColumns = ['title'];
 
   ngOnInit() {
     this.dataSource = new TripsDataSource(
@@ -47,13 +56,18 @@ export class TripTableComponent implements AfterViewInit, OnInit {
     this.dataManagement.selectedTrip$.subscribe({
       next: trip => {
         this.selectedTrip = trip;
+      }
+    });
+
+    this.dataManagement.hasTripChanged$.subscribe({
+      next: trip => {
         this.loadTrips();
       }
-    })
+    });
 
     this.dataManagement.isTripSelected$.subscribe({
       next: value => this.isTripSelected = value
-    })
+    });
   }
 
   // ngOnChanges(changes: SimpleChanges) {
@@ -76,7 +90,10 @@ export class TripTableComponent implements AfterViewInit, OnInit {
 
     this.sort.sortChange
       .pipe(
-        tap(() => this.loadTrips())
+        tap(() => {
+          this.loadTrips();
+          this.dataManagement.removeSelectedTrip();
+        })
       )
       .subscribe();
 

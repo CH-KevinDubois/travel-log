@@ -12,11 +12,19 @@ import { MapManagementService } from 'src/app/api/services/map-management.servic
 import { DataManagementService } from 'src/app/api/services/data-management.service';
 import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 import { Subscription } from 'rxjs';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-place-table',
   templateUrl: './place-table.component.html',
-  styleUrls: ['./place-table.component.scss']
+  styleUrls: ['./place-table.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+      state('collapsed', style({height: '0px', minHeight: '0'})),
+      state('expanded', style({height: '*'})),
+      transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+  ],
 })
 export class PlaceTableComponent implements AfterViewInit, OnInit {
   //@Input() userId: string = null;
@@ -39,14 +47,16 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
 
   subscriptionTable : Subscription[] = new Array<Subscription>();
 
+  expandedPlace: Place | null;
+
+  // Column displayed in the table
+  displayedColumns = ['name'];
+
   constructor(
     private placeService: PlaceService, 
     private mapManagement: MapManagementService,
     private dataManagement: DataManagementService) {
   }
-
-  // Columns displayed in the table
-  displayedColumns = ['name'];
 
   // Load the places on init
   ngOnInit() {

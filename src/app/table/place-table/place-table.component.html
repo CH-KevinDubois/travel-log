@@ -10,25 +10,42 @@
   <table 
     mat-table 
     #table 
+    multiTemplateDataRows
     class="full-width-table" 
     matSort 
-    matSortActive="title"
+    matSortActive="name"
     matSortDirection="asc" 
     matSortDisableClear 
     aria-label="Elements">
-    <!-- Title Column -->
+    
+    <!-- Place name Column -->
     <ng-container matColumnDef="name">
       <th mat-header-cell *matHeaderCellDef mat-sort-header>Place name</th>
       <td mat-cell *matCellDef="let row">{{row.name}}</td>
+    </ng-container>
+
+    <!-- Expanded Content Column -->
+    <ng-container matColumnDef="expandedDetail">
+      <td mat-cell *matCellDef="let rowDetail" [attr.colspan]="displayedColumns.length">
+        <div class="row-detail"
+            [@detailExpand]="rowDetail == expandedPlace ? 'expanded' : 'collapsed'">
+          <img [src]="selectedPlace?.pictureUrl">
+          <div class="row-description">
+            {{rowDetail.description}}
+          </div>
+        </div>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr 
       mat-row 
       (click)="selectPlace(row)" 
-      [ngClass]="{'selected': selectedPlace?.id == row.id}" 
-      *matRowDef="let row; columns: displayedColumns;">
+      [ngClass]="{'selected': selectedPlace?.id == row.id, 'expanded-row' : expandedPlace?.id == row.id}" 
+      *matRowDef="let row; columns: displayedColumns;"
+      (click)="expandedPlace = expandedPlace === row ? null : row">
     </tr>
+    <tr mat-row *matRowDef="let row; columns: ['expandedDetail']" class="expanded-row-detail"></tr>
   </table>
 
   <mat-paginator #paginator

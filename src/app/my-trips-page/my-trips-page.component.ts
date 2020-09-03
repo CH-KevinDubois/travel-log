@@ -133,7 +133,6 @@ export class MyTripsPageComponent implements OnInit {
         this.tripService.createNewTrip(tripRequest).subscribe({
           next: trip => {
             this.userNotification.openSuccessNotification('Trip successfully created!');
-            this.dataManagement.emitSelectedTrip(trip);
             this.dataManagement.emitTripChanged(trip);
           },
           // Todo specify errors if time
@@ -155,7 +154,7 @@ export class MyTripsPageComponent implements OnInit {
         this.tripService.updateTrip(result.id, tripRequest).subscribe({
           next: trip => {
             this.userNotification.openSuccessNotification('Trip successfully edited!');
-            this.dataManagement.emitSelectedTrip(trip);
+            this.dataManagement.removeSelectedTrip();
             this.dataManagement.emitTripChanged(trip);
           },
           // Todo specify errors if time

@@ -92,7 +92,6 @@ export class TripTableComponent implements AfterViewInit, OnInit {
       .pipe(
         tap(() => {
           this.loadTrips();
-          this.dataManagement.removeSelectedTrip();
         })
       )
       .subscribe();
@@ -105,6 +104,7 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   }
 
   loadTrips(){
+    this.dataManagement.removeSelectedTrip();
     this.dataSource.loadTrips(this.userId);
     this.paginator.length = this.dataSource.data.length;
   }

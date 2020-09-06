@@ -33,3 +33,11 @@ tr.selected {
 tr.expanded-row-detail {
   height: 0;
 }
+
+.mat-column-expandedDetail {
+  background-color:#efefef;
+}
+
+.selected > .mat-column-title.mat-cell {
+  font-weight: bold;
+}

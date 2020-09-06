@@ -19,7 +19,6 @@ tr.selected {
 
 .row-description {
   padding: 5px;
-  width: 100%;
 }
 
 .expanded-row td {
@@ -37,4 +36,12 @@ tr.expanded-row-detail {
 img {
   max-width: 100%;
   border-radius: 50%;
+}
+
+.mat-column-expandedDetail {
+  background-color:#efefef;
+}
+
+.selected > .mat-column-name.mat-cell {
+  font-weight: bold;
 }

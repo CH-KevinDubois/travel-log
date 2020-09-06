@@ -111,8 +111,7 @@ export class TripTableComponent implements AfterViewInit, OnInit {
 
   selectTrip(trip: Trip){
     if(this.isTripSelected && this.selectedTrip.id === trip.id){
-      this.dataManagement.removeSelectedTrip();
-      this.mapManagement.emitSetMapZoom(2);
+      this.dataManagement.removeSelectedTrip();    
     }
     else
       this.dataManagement.emitSelectedTrip(trip);

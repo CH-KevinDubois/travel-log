@@ -29,7 +29,11 @@
       <td mat-cell *matCellDef="let rowDetail" [attr.colspan]="displayedColumns.length">
         <div class="row-detail"
             [@detailExpand]="rowDetail == expandedPlace ? 'expanded' : 'collapsed'">
-          <img [src]="selectedPlace?.pictureUrl">
+          <mat-icon (click)="focus()">center_focus_strong</mat-icon>
+          <mat-icon (click)="zoomIn()">zoom_in</mat-icon>
+          <mat-icon (click)="zoomOut()">zoom_out</mat-icon>
+          <mat-icon (click)="zoomMin()"> zoom_out_map</mat-icon>
+          <img *ngIf="rowDetail?.pictureUrl" [src]="rowDetail.pictureUrl">
           <div class="row-description">
             {{rowDetail.description}}
           </div>

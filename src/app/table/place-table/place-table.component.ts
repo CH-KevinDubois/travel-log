@@ -146,16 +146,41 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   selectPlace(place: Place){
     if(this.isPlaceSelected && this.selectedPlace.id === place.id){
       this.dataManagement.removeSelectedPlace();
-      this.mapManagement.emitSetMapZoom(10);
+      // this.mapManagement.emitSetMapZoom(10);
     }
     else
       this.dataManagement.emitSelectedPlace(place);
+      // this.mapManagement.emitFocusSelectedPlace(
+      //   new GeoJsonLocation(
+      //     place.location.coordinates[0], 
+      //     place.location.coordinates[1]));
+      // this.mapManagement.emitSetMapZoom(14);
+  }
+
+  zoomIn(): void {
+    if(this.isPlaceSelected)
+      this.mapManagement.emitSetMapZoom(2);
+  }
+
+  zoomOut(): void {
+    if(this.isPlaceSelected)
+      this.mapManagement.emitSetMapZoom(-2);
+  }
+
+  zoomMin(): void {
+    if(this.isPlaceSelected)
+      this.mapManagement.emitSetMapZoom(-18);
+  }
+
+  focus(): void {
+    if(this.isPlaceSelected)
       this.mapManagement.emitFocusSelectedPlace(
         new GeoJsonLocation(
-          place.location.coordinates[0], 
-          place.location.coordinates[1]));
-      this.mapManagement.emitSetMapZoom(14);
+          this.selectedPlace.location.coordinates[0], 
+          this.selectedPlace.location.coordinates[1]));
   }
+
+  
 
   ngOnDestroy(): void{
     this.subscriptionTable.forEach(

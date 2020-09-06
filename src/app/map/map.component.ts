@@ -108,12 +108,11 @@ export class MapComponent implements OnInit {
 
   this.stateManagement.setMapZoom$.subscribe({
     next: zoom => {
-      this.zoom += zoom;
-      if(this.zoom + zoom > this.ZOOM_MAX)
-        this.zoom = this.ZOOM_MAX;
-      else if (this.zoom + zoom < this.ZOOM_MIN)
-      this.zoom = this.ZOOM_MIN;
-      setTimeout(() => this.map.setZoom(this.zoom), 500);     
+      if(zoom > this.ZOOM_MAX)
+        zoom = this.ZOOM_MAX;
+      else if (zoom < this.ZOOM_MIN)
+        zoom = this.ZOOM_MIN;
+      setTimeout(() => this.map.setZoom(zoom), 500);     
     }
   });
   

@@ -39,6 +39,8 @@ export class PlacesDataSource extends DataSource<Place> {
     let params: HttpParams = new HttpParams();
     /*if(userId)
       params = params.append('user', userId);*/
+
+    // If multiples trips, load places for each trips
     tripsToLoad.forEach(trip => 
       params = params.append('trip', trip.id))
       
@@ -57,8 +59,11 @@ export class PlacesDataSource extends DataSource<Place> {
     }
     */
     if(this.filters)
-    this.filters.forEach(filter => params = params.append('search', filter.name));
+      this.filters.forEach(filter => params = params.append('search', filter.name));
     
+    if(tripsToLoad.length > 1)
+      params = params.append('include', 'trip');
+
     this.placeService.retrievePlaces(params).pipe(
       catchError(() => of([])),
       finalize(() => this.loadingSubject.next(false))

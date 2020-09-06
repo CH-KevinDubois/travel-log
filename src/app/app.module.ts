@@ -16,6 +16,7 @@ import { MatTableModule, MatTable } from '@angular/material/table';
 import { MatDialogModule, MatDialogContent } from '@angular/material/dialog';
 import { MatGridListModule } from '@angular/material/grid-list'; 
 import { MatChipsModule } from '@angular/material/chips';
+import { MatSliderModule } from '@angular/material/slider'; 
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -38,6 +39,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FiltersComponent } from './chips/filters/filters.component';
 import { PlaceTableComponent } from './table/place-table/place-table.component';
+
 
 
 
@@ -82,7 +84,8 @@ import { PlaceTableComponent } from './table/place-table/place-table.component';
     MatPaginatorModule,
     MatSortModule,
     MatProgressSpinnerModule,
-    MatChipsModule
+    MatChipsModule,
+    MatSliderModule
   ],
   providers: [
     {

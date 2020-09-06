@@ -52,6 +52,8 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   // Column displayed in the table
   displayedColumns = ['name'];
 
+  sliderValue: number;
+
   constructor(
     private placeService: PlaceService, 
     private mapManagement: MapManagementService,
@@ -157,19 +159,10 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
       // this.mapManagement.emitSetMapZoom(14);
   }
 
-  zoomIn(): void {
-    if(this.isPlaceSelected)
-      this.mapManagement.emitSetMapZoom(2);
-  }
-
-  zoomOut(): void {
-    if(this.isPlaceSelected)
-      this.mapManagement.emitSetMapZoom(-2);
-  }
-
   zoomMin(): void {
     if(this.isPlaceSelected)
       this.mapManagement.emitSetMapZoom(-18);
+    this.sliderValue = 2;
   }
 
   focus(): void {
@@ -180,7 +173,10 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
           this.selectedPlace.location.coordinates[1]));
   }
 
-  
+  updateZoom(): void {
+    if(this.isPlaceSelected)
+      this.mapManagement.emitSetMapZoom(this.sliderValue);
+  }
 
   ngOnDestroy(): void{
     this.subscriptionTable.forEach(

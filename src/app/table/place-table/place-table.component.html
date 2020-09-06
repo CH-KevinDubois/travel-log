@@ -30,10 +30,16 @@
         <div class="row-detail"
             [@detailExpand]="rowDetail == expandedPlace ? 'expanded' : 'collapsed'">
           <mat-icon (click)="focus()">center_focus_strong</mat-icon>
-          <mat-icon (click)="zoomIn()">zoom_in</mat-icon>
-          <mat-icon (click)="zoomOut()">zoom_out</mat-icon>
+          <mat-slider
+            [(ngModel)]="sliderValue"
+            (change)="updateZoom()"
+            tickInterval="1"
+            min="2"
+            max="18">
+          </mat-slider>
           <mat-icon (click)="zoomMin()"> zoom_out_map</mat-icon>
-          <img *ngIf="rowDetail?.pictureUrl" [src]="rowDetail.pictureUrl">
+          <div *ngIf="rowDetail.trip?.title">{{rowDetail.trip.title}}</div>
+          <img *ngIf="rowDetail.pictureUrl" [src]="rowDetail.pictureUrl">
           <div class="row-description">
             {{rowDetail.description}}
           </div>

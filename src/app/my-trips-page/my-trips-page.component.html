@@ -32,16 +32,6 @@
             <app-place-table ></app-place-table>
         </div>
     </section>
-    <section class="descriptionContainer">
-        <h2 *ngIf="selectedTrip">{{selectedTrip.title}}</h2>
-        <h3 *ngIf="selectedTrip">{{selectedTrip.description}}</h3>
-        <ng-container *ngIf="isPlaceSelected">
-            <img [src]="selectedPlace?.pictureUrl">
-            <div>{{selectedPlace.name}}</div>
-            <div>{{selectedPlace.description}}</div>
-        </ng-container>
-        <!--Insert here comments-component list / no API implemented so far-->
-    </section>
     <section>
         <app-map [mapMarkers]="markers"></app-map>
     </section>

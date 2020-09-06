@@ -143,6 +143,8 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
       this.dataSource.loadPlaces([this.selectedTrip]);
     else
       this.dataSource.loadPlaces(this.tripList);
+
+    this.dataManagement.removeSelectedPlace();
   }
 
   selectPlace(place: Place){
@@ -160,9 +162,10 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   }
 
   zoomMin(): void {
-    if(this.isPlaceSelected)
+    if(this.isPlaceSelected){
       this.mapManagement.emitSetMapZoom(-18);
-    this.sliderValue = 2;
+      this.sliderValue = 2;
+    }
   }
 
   focus(): void {

@@ -1,0 +1,53 @@
+.mainbox {
+    background-color: #673AB7;
+    margin: auto;
+    height: 100%;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: 1fr 1fr;
+    
+}
+
+.err {
+    color: #ffffff;
+    font-size: 11rem;
+    position:absolute;
+    left: 40%;
+    top: 15%;
+}
+
+.travelog-logo {
+    width: 200px;
+    animation: rotation 8s infinite linear;
+}
+
+@keyframes rotation {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(359deg);
+    }
+}
+
+.msg {
+    grid-row-start: 2;
+    height: 130px;
+    line-height: normal;
+    text-align: center;
+    font-size: 1.6rem;
+}
+
+p {
+    height: 100%;
+}
+
+a {
+    text-decoration: none;
+    color: white;
+}
+
+a:hover {
+    text-decoration: underline;
+}

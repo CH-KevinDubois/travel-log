@@ -6,6 +6,7 @@ import { AuthGuard } from './security/guards/auth.guard';
 import { RegisterPageComponent } from './security/register-page/register-page.component';
 import { AllTripsPageComponent } from './all-trips-page/all-trips-page.component';
 import { MyTripsPageComponent } from './my-trips-page/my-trips-page.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 
 const routes: Routes = [
@@ -13,7 +14,6 @@ const routes: Routes = [
   { path: "all-trips", component: AllTripsPageComponent },
   { path: "login", component: LoginPageComponent },
   { path: "register", component:  RegisterPageComponent},
-  //{ path: "**", component: ErrorPageComponent},
   {
     path: "dummy", component: DummyPageComponent,
     // Prevent access to this page to unauthenticated users
@@ -24,6 +24,17 @@ const routes: Routes = [
     // Prevent access to this page to unauthenticated users
     canActivate: [AuthGuard],
   },
+  {
+    path: "my-trips/:idTrip", component: MyTripsPageComponent,
+    // Prevent access to this page to unauthenticated users
+    canActivate: [AuthGuard],
+  },
+  {
+    path: "my-trips/:idTrip/:idPlace", component: MyTripsPageComponent,
+    // Prevent access to this page to unauthenticated users
+    canActivate: [AuthGuard],
+  },
+  { path: "**", component: ErrorPageComponent},
 ];
 
 @NgModule({

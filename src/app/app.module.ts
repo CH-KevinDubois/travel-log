@@ -39,6 +39,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { FiltersComponent } from './chips/filters/filters.component';
 import { PlaceTableComponent } from './table/place-table/place-table.component';
+import { ErrorPageComponent } from './error-page/error-page.component';
 
 
 
@@ -58,6 +59,7 @@ import { PlaceTableComponent } from './table/place-table/place-table.component';
     TripTableComponent,
     FiltersComponent,
     PlaceTableComponent,
+    ErrorPageComponent,
   ],
   entryComponents: [
     TripDialogComponent

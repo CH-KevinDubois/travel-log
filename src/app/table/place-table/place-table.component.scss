@@ -3,13 +3,13 @@
 }
 
 .table-container{
-  max-height: 400px;
+  max-height: 90vh;
   overflow: auto;
 }
 
 .mat-paginator-sticky {
     bottom: 0px;
-    position: fixed;
+    position: sticky;
     z-index: 10;
 }
 

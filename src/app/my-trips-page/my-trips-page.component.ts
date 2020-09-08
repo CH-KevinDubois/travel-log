@@ -22,6 +22,8 @@ import { PlaceTableComponent } from '../table/place-table/place-table.component'
 import { MapComponent } from '../map/map.component';
 import { UserNotificationService } from '../api/services/user-notification.service';
 import { DataManagementService } from '../api/services/data-management.service';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
 
 const defaultIcon: Icon<IconOptions> = icon({
   // This define the displayed icon size, in pixel
@@ -58,6 +60,9 @@ export class MyTripsPageComponent implements OnInit {
 
   readonly CLOSE_ZOOM = 11;
   readonly WORLD_ZOOM = 2;
+
+  idPlace: number;
+  idTrip: number;
   
   constructor(
     public dialog: MatDialog,
@@ -68,7 +73,9 @@ export class MyTripsPageComponent implements OnInit {
     private changeDetectorRefs: ChangeDetectorRef,
     private auth: AuthService,
     private mapManagement: MapManagementService,
-    private dataManagement: DataManagementService
+    private dataManagement: DataManagementService,
+    private route: ActivatedRoute,
+    private location: Location
     ) {
       //this.selections = new ActiveSelections();
       this.markers = [];
@@ -95,11 +102,37 @@ export class MyTripsPageComponent implements OnInit {
       });
 
       this.dataManagement.selectedTrip$.subscribe({
-        next: value => this.selectedTrip = value
+        next: value => {
+          this.selectedTrip = value;
+          // Display the trip id in the url (without redirection)
+          if (this.isTripSelected)
+            this.location.go(this.route.snapshot.url.join('/') 
+              + '/' + this.selectedTrip.id);
+          else
+            this.location.go(this.route.snapshot.url.join('/'));
+        }
       });
 
       this.dataManagement.selectedPlace$.subscribe({
-        next: value => this.selectedPlace = value
+        next: value => {
+          this.selectedPlace = value;
+          // Display the trip/place id in the url (without redirection)
+          if (this.isTripSelected && this.isPlaceSelected) {
+            this.location.go(this.route.snapshot.url.join('/') 
+              + '/' + this.selectedTrip.id
+              + '/' + this.selectedPlace.id);
+          }
+          else if (this.isPlaceSelected) {
+            this.location.go(this.route.snapshot.url.join('/') 
+              + '/' + this.selectedPlace.id);
+          }
+          else if (this.isTripSelected) {
+            this.location.go(this.route.snapshot.url.join('/') 
+              + '/' + this.selectedTrip.id);
+            }
+          else
+            this.location.go(this.route.snapshot.url.join('/'));
+        }
       });
 
     }

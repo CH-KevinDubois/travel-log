@@ -44,11 +44,13 @@ export class DataManagementService {
     public emitSelectedTrip(t : Trip) {
         this._isTripSelectedSubject.next(true);
         this._selectedTripSubject.next(t);
-        this.removeSelectedPlace();
+        if(this._isPlaceSelectedSubject.value)
+            this.removeSelectedPlace();
     }
     
     public removeSelectedTrip(): void {
-        this.removeSelectedPlace();
+        if(this._isPlaceSelectedSubject.value)
+            this.removeSelectedPlace();
         this._isTripSelectedSubject.next(false);
         this._selectedTripSubject.next();   
     }
@@ -75,8 +77,10 @@ export class DataManagementService {
     }
     
     public removeSelectedPlace(): void {
-        this._isPlaceSelectedSubject.next(false);
-        this._selectedPlaceSubject.next();
+        if(this._isPlaceSelectedSubject.value) {
+            this._isPlaceSelectedSubject.next(false);
+            this._selectedPlaceSubject.next();
+        }
     }
 
     public get isPlaceSelected$(): Observable<boolean> {

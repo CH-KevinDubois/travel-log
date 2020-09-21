@@ -12,13 +12,13 @@
 .err {
     color: #ffffff;
     font-size: 11rem;
-    position:absolute;
-    left: 40%;
-    top: 15%;
+    justify-self: center;
+    align-self: center;
+
 }
 
 .travelog-logo {
-    width: 200px;
+    width: 160px;
     animation: rotation 8s infinite linear;
 }
 

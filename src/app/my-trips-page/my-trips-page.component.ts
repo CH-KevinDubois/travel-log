@@ -14,7 +14,7 @@ import { PlaceService } from '../api/services/place.service';
 import { GeoJsonLocation } from '../models/geo-json-location';
 import { MapManagementService } from '../api/services/map-management.service';
 import { TripRequest } from '../models/trip-request';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 import { ActiveSelections } from '../models/active-selections';
 import { Marker, marker, Icon, IconOptions, icon } from 'leaflet';
 import { TripTableComponent } from '../table/trip-table/trip-table.component';
@@ -56,6 +56,8 @@ export class MyTripsPageComponent implements OnInit {
   selectedTrip: Trip;
   selectedPlace: Place;
 
+  subscriptionTable : Subscription[] = new Array<Subscription>();
+
   markers: Marker[];
 
   readonly CLOSE_ZOOM = 11;
@@ -87,22 +89,22 @@ export class MyTripsPageComponent implements OnInit {
     }
     
     ngOnInit(): void {
-      this.auth.getUser().subscribe({
+      this.subscriptionTable.push(this.auth.getUser().subscribe({
         next: (user) => {
           this.myId = user.id
         },
         error: _ => console.log('Cannot retrieve user id')
-      });
+      }));
 
-      this.dataManagement.isTripSelected$.subscribe({
+      this.subscriptionTable.push(this.dataManagement.isTripSelected$.subscribe({
         next: value => this.isTripSelected = value
-      });
+      }));
 
-      this.dataManagement.isPlaceSelected$.subscribe({
+      this.subscriptionTable.push(this.dataManagement.isPlaceSelected$.subscribe({
         next: value => this.isPlaceSelected = value
-      });
+      }));
 
-      this.dataManagement.selectedTrip$.subscribe({
+      this.subscriptionTable.push(this.dataManagement.selectedTrip$.subscribe({
         next: value => {
           this.selectedTrip = value;
           // Display the trip id in the url (without redirection)
@@ -112,9 +114,9 @@ export class MyTripsPageComponent implements OnInit {
           else
             this.location.go(this.route.snapshot.url.join('/'));
         }
-      });
+      }));
 
-      this.dataManagement.selectedPlace$.subscribe({
+      this.subscriptionTable.push(this.dataManagement.selectedPlace$.subscribe({
         next: value => {
           this.selectedPlace = value;
           // Display the trip/place id in the url (without redirection)
@@ -134,7 +136,7 @@ export class MyTripsPageComponent implements OnInit {
           else
             this.location.go(this.route.snapshot.url.join('/'));
         }
-      });
+      }));
 
     }
     
@@ -159,7 +161,7 @@ export class MyTripsPageComponent implements OnInit {
     }
 
     createNewTrip(): void {
-      this.openTripDialog().subscribe(result => {
+      this.subscriptionTable.push(this.openTripDialog().subscribe(result => {
         // If dialog closed
         if(result === undefined) return;
         
@@ -176,11 +178,11 @@ export class MyTripsPageComponent implements OnInit {
           }
         });
       }, 
-      error => console.log(`Dialog error : ${error}`));
+      error => console.log(`Dialog error : ${error}`)));
     }
     
     editSelectedTrip(): void {
-      this.openTripDialog().subscribe(result => {
+      this.subscriptionTable.push(this.openTripDialog().subscribe(result => {
         // If dialog closed
         if(result === undefined) return;
         
@@ -197,13 +199,13 @@ export class MyTripsPageComponent implements OnInit {
             console.log(err);
           }
         });
-      }, error => console.log(`Dialog error : ${error}`));
+      }, error => console.log(`Dialog error : ${error}`)));
       
     }
     
     deleteSelectedTrip(): void {
       if(confirm("Do you want to delete the trip?")){
-        this.tripService.deleteTrip(this.selectedTrip.id).subscribe({
+        this.subscriptionTable.push(this.tripService.deleteTrip(this.selectedTrip.id).subscribe({
           next: _ => {
             this.userNotification.openSuccessNotification('Trip successfully deleted!');
             this.dataManagement.removeSelectedTrip();
@@ -213,7 +215,7 @@ export class MyTripsPageComponent implements OnInit {
             this.userNotification.openErrorNotification(err.error.message);
             console.log(err);
           }
-        });
+        }));
       }
     }
     
@@ -234,7 +236,7 @@ export class MyTripsPageComponent implements OnInit {
     }
 
     createNewPlace(): void {
-      this.openPlaceDialog().subscribe(place => {
+      this.subscriptionTable.push(this.openPlaceDialog().subscribe(place => {
         // Undefined means the dialog has been closed so just return
         if(place === undefined) return;
         // The user is creating a new place
@@ -259,11 +261,11 @@ export class MyTripsPageComponent implements OnInit {
           });
         }
       }, 
-      error => console.log(`Dialog error : ${error}`));
+      error => console.log(`Dialog error : ${error}`)));
     }
 
     editSelectedPlace(): void {
-      this.openPlaceDialog().subscribe(place => {
+      this.subscriptionTable.push(this.openPlaceDialog().subscribe(place => {
         // Undefined means the dialog has been closed so just return
         if(place === undefined) return;
         // The user is editing the place
@@ -285,12 +287,12 @@ export class MyTripsPageComponent implements OnInit {
           });
         }
       },
-      error => console.log(`Dialog error : ${error}`));
+      error => console.log(`Dialog error : ${error}`)));
     }
 
     deleteSelectedPlace(): void {
       if(confirm("Do you want to delete this place?")){
-        this.placeService.deletePlace(this.selectedPlace.id).subscribe({
+        this.subscriptionTable.push(this.placeService.deletePlace(this.selectedPlace.id).subscribe({
           next: place => {
             this.userNotification.openSuccessNotification('Place successfully deleted!');
             this.dataManagement.removeSelectedPlace();
@@ -301,8 +303,14 @@ export class MyTripsPageComponent implements OnInit {
             this.userNotification.openErrorNotification(err.error.message);
             console.log(err);
           }
-        })
+        }))
       }
+    }
+
+    ngOnDestroy(): void{
+      this.subscriptionTable.forEach(
+        subscription => subscription.unsubscribe()
+      );
     }
   }
   

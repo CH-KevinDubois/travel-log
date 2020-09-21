@@ -37,7 +37,11 @@ export class DataManagementService {
         
     }
 
-    public get selectedTrip$() : Observable<Trip> {
+    public reset(): void{
+        this.removeSelectedTrip();
+    }
+
+    public get selectedTrip$(): Observable<Trip> {
         return this._selectedTripSubject.asObservable();
     }
 

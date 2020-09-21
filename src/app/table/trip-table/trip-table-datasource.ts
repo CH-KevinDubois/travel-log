@@ -30,7 +30,8 @@ export class TripsDataSource extends DataSource<Trip> {
   constructor(
     private tripService: TripService,
     private dataManagement: DataManagementService) {
-    super();
+      super();
+      this.dataManagement.reset();
   }
   
   loadTrips(id?: string){

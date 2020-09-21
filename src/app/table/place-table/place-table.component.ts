@@ -58,7 +58,6 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
     private placeService: PlaceService, 
     private mapManagement: MapManagementService,
     private dataManagement: DataManagementService) {
-      this.dataManagement.reset();
   }
 
   // Load the places on init

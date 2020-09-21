@@ -77,6 +77,7 @@ export class MyTripsPageComponent implements OnInit {
     private route: ActivatedRoute,
     private location: Location
     ) {
+      this.dataManagement.reset();
       //this.selections = new ActiveSelections();
       this.markers = [];
       //   marker([ 46.778186, 6.641524 ], { icon: defaultIcon }),

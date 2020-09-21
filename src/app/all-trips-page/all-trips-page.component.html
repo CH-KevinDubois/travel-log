@@ -1,32 +1,19 @@
 <div class="outerContainer">
     <!-- Diplay the list of trips -->
-    <section colspan="1">
-        <section>
-            <mat-icon >add_box</mat-icon>
-            <mat-icon aria-hidden="false" aria-label="Example heart icon">delete</mat-icon>
-            <mat-icon aria-hidden="false" aria-label="Example heart icon">edit</mat-icon>
-            <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-                
-                <!-- Title Column -->
-                <ng-container matColumnDef="title">
-                    <th mat-header-cell *matHeaderCellDef> Trip title </th>
-                    <td mat-cell *matCellDef="let trip"> {{trip.title}} </td>
-                </ng-container>
-                
-                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                <tr mat-row (click)="logRow(row)" (dblclick)="edit(row)" [ngClass]="{'selected': selectedTrip.title == row.title}" *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>       
-        </section>
-    </section>
-    <!-- Display a summary of the display trip -->
-    <section colspan="1">
-        <div class="listPlacesContainer">
-            <img src="https://img-4.linternaute.com/XgC-fYZPQGbSmTLoO4e_GKd3DaU=/660x366/smart/64f33616425f4532a7d864613333af12/ccmcms-linternaute/10924262.jpg" alt="uneimage">
-            <div>Titre</div>
-            <div>Description</div>
-            <div>Liste des places</div>
+    <section>
+        <div>
+            <app-trip-table></app-trip-table>
         </div>
     </section>
-    <section>Carte</section>
+    <!-- Display the list of places -->
+    <section>
+        <div class="listPlacesContainer">
+            <mat-icon *ngIf="this.isTripSelected && this.isPlaceSelected" class="grey-icon"> insert_comment</mat-icon>
+            <app-place-table ></app-place-table>
+        </div>
+    </section>
+    <section>
+        <app-map></app-map>
+    </section>
 </div>
 

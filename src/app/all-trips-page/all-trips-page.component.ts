@@ -1,8 +1,10 @@
-import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Trip } from '../models/trip';
-import { MatTableDataSource } from '@angular/material/table';
-import { TripService } from '../api/services/trip.service';
-import { HttpClient } from '@angular/common/http';
+import { Place } from '../models/place';
+import { DataManagementService } from '../api/services/data-management.service';
+import { ActivatedRoute } from '@angular/router';
+import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-all-trips-page',
@@ -11,43 +13,71 @@ import { HttpClient } from '@angular/common/http';
 })
 export class AllTripsPageComponent implements OnInit {
 
-  allTrips: Trip[];
-  dataSource: MatTableDataSource<Trip>;
+  isTripSelected: boolean;
+  isPlaceSelected: boolean;
   selectedTrip: Trip;
+  selectedPlace: Place;
+
+  idPlace: number;
+  idTrip: number;
+
+  subscriptionTable : Subscription[] = new Array<Subscription>();
   
-  displayedColumns: string[] = ['title'];
-
   constructor(
-    private tripService: TripService,
-    private http: HttpClient,
-    private changeDetectorRefs: ChangeDetectorRef
-  ) {
-    this.selectedTrip = new Trip();
-   }
+    private dataManagement: DataManagementService,
+    private route: ActivatedRoute,
+    private location: Location
+    ) {
+      this.dataManagement.reset();  
+    }
+    
+    ngOnInit(): void {
+      this.subscriptionTable.push(this.dataManagement.isTripSelected$.subscribe({
+        next: value => this.isTripSelected = value
+      }));
 
-  ngOnInit(): void {
-    this.retrieveAllTrips();
+      this.subscriptionTable.push(this.dataManagement.isPlaceSelected$.subscribe({
+        next: value => this.isPlaceSelected = value
+      }));
+
+      this.subscriptionTable.push(this.dataManagement.selectedTrip$.subscribe({
+        next: value => {
+          this.selectedTrip = value;
+          // Display the trip id in the url (without redirection)
+          if (this.isTripSelected)
+            this.location.go(this.route.snapshot.url.join('/') 
+              + '/' + this.selectedTrip.id);
+          else
+            this.location.go(this.route.snapshot.url.join('/'));
+        }
+      }));
+
+      this.subscriptionTable.push(this.dataManagement.selectedPlace$.subscribe({
+        next: value => {
+          this.selectedPlace = value;
+          // Display the trip/place id in the url (without redirection)
+          if (this.isTripSelected && this.isPlaceSelected) {
+            this.location.go(this.route.snapshot.url.join('/') 
+              + '/' + this.selectedTrip.id
+              + '/' + this.selectedPlace.id);
+          }
+          else if (this.isPlaceSelected) {
+            this.location.go(this.route.snapshot.url.join('/') 
+              + '/' + this.selectedPlace.id);
+          }
+          else if (this.isTripSelected) {
+            this.location.go(this.route.snapshot.url.join('/') 
+              + '/' + this.selectedTrip.id);
+            }
+          else
+            this.location.go(this.route.snapshot.url.join('/'));
+        }
+      }));
+    }
+
+    ngOnDestroy(): void{
+      this.subscriptionTable.forEach(
+        subscription => subscription.unsubscribe()
+      );
+    }
   }
-
-  retrieveAllTrips(){
-    this.tripService.retrieveAllTrips().subscribe({
-      next: (trips) => {
-        this.dataSource = new MatTableDataSource(trips);
-        //this.changeDetectorRefs.detectChanges();
-      },
-      error: err => {
-        console.log(err.status);
-      }
-    })
-  }
-
-  logRow(row){
-    console.log(row);
-    this.selectedTrip = this.selectedTrip.title === row.title ? new Trip(): row;
-  }
-
-  edit(row){
-    console.log(`double ${row}`);
-  }
-
-}

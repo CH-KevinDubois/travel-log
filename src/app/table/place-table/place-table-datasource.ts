@@ -1,8 +1,8 @@
 import { DataSource } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { map, catchError, finalize } from 'rxjs/operators';
-import { Observable, of as observableOf, merge, BehaviorSubject, of } from 'rxjs';
+import { map, catchError, finalize, observeOn } from 'rxjs/operators';
+import { Observable, of as observableOf, merge, BehaviorSubject, of, asyncScheduler } from 'rxjs';
 import { Place } from 'src/app/models/place';
 import { Filter } from 'src/app/chips/filters/filters.component';
 import { HttpParams } from '@angular/common/http';
@@ -25,7 +25,9 @@ export class PlacesDataSource extends DataSource<Place> {
   private placesSubject = new BehaviorSubject<Place[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   
-  public loading$ = this.loadingSubject.asObservable();
+  public loading$ = this.loadingSubject.asObservable().pipe(
+    observeOn(asyncScheduler)
+  );
   
   constructor(
     private placeService: PlaceService, 

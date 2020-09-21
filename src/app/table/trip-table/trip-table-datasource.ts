@@ -1,8 +1,8 @@
 import { DataSource } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { map, catchError, finalize } from 'rxjs/operators';
-import { Observable, of as observableOf, merge, BehaviorSubject, of } from 'rxjs';
+import { map, catchError, finalize, observeOn } from 'rxjs/operators';
+import { Observable, of as observableOf, merge, BehaviorSubject, of, asyncScheduler } from 'rxjs';
 import { Trip } from 'src/app/models/trip';
 import { TripService } from 'src/app/api/services/trip.service';
 import { Filter } from 'src/app/chips/filters/filters.component';
@@ -23,7 +23,9 @@ export class TripsDataSource extends DataSource<Trip> {
   private tripsSubject = new BehaviorSubject<Trip[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
   
-  public loading$ = this.loadingSubject.asObservable();
+  public loading$ = this.loadingSubject.asObservable().pipe(
+    observeOn(asyncScheduler)
+  );
   
   constructor(
     private tripService: TripService,

@@ -11,9 +11,9 @@ const defaultIcon: Icon<IconOptions> = icon({
   // If not provided, the image center will be used, and that could be awkward
   iconAnchor: [ 13, 41 ],
   // The path to the image to display. In this case, it's a Leaflet asset
-  iconUrl: 'leaflet/marker-icon.png',
+  iconUrl: '../assets/img/leaflet/marker-icon.png',
   // The path to the image's shadow to display. Also a leaflet asset
-  shadowUrl: 'leaflet/marker-shadow.png'
+  shadowUrl: '../assets/img/leaflet/marker-shadow.png'
 });
 
 const defaultRedIcon: Icon<IconOptions> = icon({
@@ -23,9 +23,9 @@ const defaultRedIcon: Icon<IconOptions> = icon({
   // If not provided, the image center will be used, and that could be awkward
   iconAnchor: [ 16, 32 ],
   // The path to the image to display. In this case, it's a Leaflet asset
-  iconUrl: 'leaflet/marker-icon-red.png',
+  iconUrl: '../assets/img/leaflet/marker-icon-red.png',
   // The path to the image's shadow to display. Also a leaflet asset
-  shadowUrl: 'leaflet/smaller-marker-shadow.png'
+  shadowUrl: '../assets/img/leaflet/smaller-marker-shadow.png'
 });
 
 @Component({

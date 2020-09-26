@@ -1,4 +1,4 @@
-import { Component, OnInit, EventEmitter } from '@angular/core';
+import { Component, OnInit, EventEmitter, Input } from '@angular/core';
 import {COMMA, ENTER} from '@angular/cdk/keycodes';
 import {MatChipInputEvent} from '@angular/material/chips';
 
@@ -13,6 +13,7 @@ export interface Filter {
   styleUrls: ['./filters.component.scss']
 })
 export class FiltersComponent implements OnInit {
+  @Input() placeholder: string = "Add filters ...";
   visible = true;
   selectable = true;
   removable = true;

@@ -5,7 +5,7 @@
         {{filter.name}}
         <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
     </mat-chip>
-    <input placeholder="Add filters..."
+    <input [placeholder]="placeholder"
     [matChipInputFor]="chipList"
     [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
     [matChipInputAddOnBlur]="addOnBlur"

@@ -107,6 +107,12 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
       })
       ).subscribe());
 
+      this.subscriptionTable.push(this.dataManagement.tripList$.pipe(
+        tap( _ => {
+          this.loadPlaces();
+        })
+        ).subscribe());
+
     // Set up dataSource, sort, paginator and filters
     this.table.dataSource = this.dataSource;
     this.dataSource.sort = this.sort;

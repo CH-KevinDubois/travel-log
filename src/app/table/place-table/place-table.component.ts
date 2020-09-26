@@ -107,11 +107,17 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
       })
       ).subscribe());
 
-      this.subscriptionTable.push(this.dataManagement.tripList$.pipe(
-        tap( _ => {
-          this.loadPlaces();
-        })
-        ).subscribe());
+      this.subscriptionTable.push(this.dataManagement.tripListReady$
+        .subscribe({
+          next: _ => {
+            this.subscriptionTable.push(this.dataManagement.tripList$.pipe(
+              tap( value => {
+                this.tripList = value;
+                this.loadPlaces();
+              })
+              ).subscribe());
+          }
+      }));
 
     // Set up dataSource, sort, paginator and filters
     this.table.dataSource = this.dataSource;
@@ -137,11 +143,6 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
         tap(() => this.loadPlaces())
       )
       .subscribe());
-
-      this.subscriptionTable.push(this.dataManagement.tripListReady$
-      .subscribe({
-        next: _ => this.loadPlaces()
-    }));
   }
 
   loadPlaces(){

@@ -83,7 +83,9 @@ export class TripsDataSource extends DataSource<Trip> {
     *  Called when the table is being destroyed. Use this function, to clean up
     * any open connections or free any held resources that were set up during connect.
     */
-    disconnect() {}
+    disconnect() {
+      this.dataManagement.emitTripList([]);
+    }
     
   }
   

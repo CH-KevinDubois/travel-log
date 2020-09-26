@@ -35,7 +35,10 @@ export class PlacesDataSource extends DataSource<Place> {
     super();
   }
   
-  loadPlaces(tripsToLoad: Trip[]) {
+  loadPlaces(tripsToLoad: Trip[]): void {
+    if (tripsToLoad.length === 0)
+      return;
+
     this.loadingSubject.next(true);
 
     let params: HttpParams = new HttpParams();

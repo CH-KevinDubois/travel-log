@@ -19,20 +19,16 @@ mat-icon {
     height: 84vh;
     display: grid;
     grid-template-columns: 1.2fr 1.2fr 2fr;
-    grid-template-rows: 1fr;
+    grid-template-rows: 0.05fr 1fr;
     grid-gap: 15px;
-    padding: 10px;
-}
-
-.descriptionContainer {  
-    display: flex;
-    flex-flow: column nowrap;
-    grid-template-columns: auto;
-    grid-template-rows: 1fr 0.2fr 2fr 2fr;
-    grid-gap: 10px;
     padding: 10px;
 }
 
 .grey-icon {
     color: grey;
+}
+
+.row1{
+    grid-row: 1;
+    grid-column: 1 / 4;
 }

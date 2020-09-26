@@ -2,13 +2,14 @@
     <!-- Diplay the list of trips -->
     <section>
         <div>
+            <mat-icon class="grey-icon"> insert_comment</mat-icon>
             <app-trip-table></app-trip-table>
         </div>
     </section>
     <!-- Display the list of places -->
     <section>
         <div class="listPlacesContainer">
-            <mat-icon *ngIf="this.isTripSelected && this.isPlaceSelected" class="grey-icon"> insert_comment</mat-icon>
+            <mat-icon class="grey-icon"> insert_comment</mat-icon>
             <app-place-table ></app-place-table>
         </div>
     </section>

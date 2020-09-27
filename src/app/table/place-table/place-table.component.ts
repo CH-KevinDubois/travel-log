@@ -32,7 +32,6 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   //@Input() selectedTrip: Trip = null;
   @Input() onPlaceModified: EventEmitter<boolean>;
   //@Output() onPlaceClicked = new EventEmitter<Place>();
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<Place>;
   @ViewChild(FiltersComponent) filterList : FiltersComponent;
@@ -122,16 +121,9 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
     // Set up dataSource, sort, paginator and filters
     this.table.dataSource = this.dataSource;
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
     this.dataSource.filters = this.filterList.filters;
 
     // Automatic reloads when an action occurs
-    this.subscriptionTable.push(this.paginator.page
-      .pipe(
-        tap(() => this.loadPlaces())
-      )
-      .subscribe());
-
       this.subscriptionTable.push(this.sort.sortChange
       .pipe(
         tap(() => this.loadPlaces())
@@ -170,7 +162,7 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
 
   zoomMin(): void {
     if(this.isPlaceSelected){
-      this.mapManagement.emitSetMapZoom(-18);
+      this.mapManagement.emitSetMapZoom(2);
       this.sliderValue = 2;
     }
   }

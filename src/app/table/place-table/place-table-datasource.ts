@@ -18,7 +18,6 @@ import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 */
 export class PlacesDataSource extends DataSource<Place> {
   data: Place[];
-  paginator: MatPaginator;
   sort: MatSort;
   filters: Filter[];
   
@@ -57,12 +56,7 @@ export class PlacesDataSource extends DataSource<Place> {
     }
     else
       params = params.append('sort', 'name');
-    /* Does not work well with the API
-    if(this.paginator){
-      params = params.append('page', Number(this.paginator.pageIndex+1).toString());
-      params = params.append('pageSize', Number(this.paginator.pageSize).toString());
-    }
-    */
+      
     if(this.filters)
       this.filters.forEach(filter => params = params.append('search', filter.name));
     

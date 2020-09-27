@@ -1,5 +1,7 @@
-<div>
-  <app-filters placeholder="Place search keywords..."></app-filters>
+<mat-icon *ngIf="isUserAuthenticated" (click)="displaySearch()">search</mat-icon>
+
+<div [ngClass]="{'hidden' : isSeachHidden}">
+  <app-filters placeholder="Search in place list..."></app-filters>
 </div>
 
 <div class="spinner-container" *ngIf="dataSource.loading$ | async">

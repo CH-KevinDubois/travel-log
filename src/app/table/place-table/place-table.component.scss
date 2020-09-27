@@ -52,7 +52,15 @@ img {
 }
 
 mat-icon {
-  margin: 0 2px 0 2px;
+  font-size: 1.5rem;
+  color: #673AB7;
+  margin: 2px 5px;
+  height: auto;
+  width: auto;
+}
+
+.hidden {
+  display: none !important;
 }
 
 mat-slider {

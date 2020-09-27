@@ -13,6 +13,7 @@ import { DataManagementService } from 'src/app/api/services/data-management.serv
 import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 import { Subscription } from 'rxjs';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { AuthService } from 'src/app/security/auth.service';
 
 @Component({
   selector: 'app-place-table',
@@ -27,14 +28,10 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
   ],
 })
 export class PlaceTableComponent implements AfterViewInit, OnInit {
-  //@Input() userId: string = null;
-  //@Input() selectedPlace: Place = null;
-  //@Input() selectedTrip: Trip = null;
   @Input() onPlaceModified: EventEmitter<boolean>;
-  //@Output() onPlaceClicked = new EventEmitter<Place>();
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<Place>;
-  @ViewChild(FiltersComponent) filterList : FiltersComponent;
+  @ViewChild(FiltersComponent) searchList : FiltersComponent;
 
   dataSource: PlacesDataSource;
 
@@ -53,14 +50,22 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
 
   sliderValue: number;
 
+  isSeachHidden: boolean = true;
+  isUserAuthenticated: boolean;
+
   constructor(
     private placeService: PlaceService, 
     private mapManagement: MapManagementService,
-    private dataManagement: DataManagementService) {
+    private dataManagement: DataManagementService,
+    private auth: AuthService) {
   }
 
   // Load the places on init
   ngOnInit() {
+    this.subscriptionTable.push(this.auth.isAuthenticated().subscribe({
+      next: (value) => this.isUserAuthenticated = value
+    }));
+
     this.dataSource = new PlacesDataSource(this.placeService, this.mapManagement);
 
     this.subscriptionTable.push(this.dataManagement.isTripSelected$.subscribe({
@@ -121,7 +126,7 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
     // Set up dataSource, sort, paginator and filters
     this.table.dataSource = this.dataSource;
     this.dataSource.sort = this.sort;
-    this.dataSource.filters = this.filterList.filters;
+    this.dataSource.searches = this.searchList.filters;
 
     // Automatic reloads when an action occurs
       this.subscriptionTable.push(this.sort.sortChange
@@ -130,7 +135,7 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
       )
       .subscribe());
 
-      this.subscriptionTable.push(this.filterList.onChange
+      this.subscriptionTable.push(this.searchList.onChange
       .pipe(
         tap(() => this.loadPlaces())
       )
@@ -149,15 +154,9 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   selectPlace(place: Place){
     if(this.isPlaceSelected && this.selectedPlace.id === place.id){
       this.dataManagement.removeSelectedPlace();
-      // this.mapManagement.emitSetMapZoom(10);
     }
     else
       this.dataManagement.emitSelectedPlace(place);
-      // this.mapManagement.emitFocusSelectedPlace(
-      //   new GeoJsonLocation(
-      //     place.location.coordinates[0], 
-      //     place.location.coordinates[1]));
-      // this.mapManagement.emitSetMapZoom(14);
   }
 
   zoomMin(): void {
@@ -178,6 +177,17 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   updateZoom(): void {
     if(this.isPlaceSelected)
       this.mapManagement.emitSetMapZoom(this.sliderValue);
+  }
+
+  displaySearch(): void {
+    if(this.isSeachHidden)
+      this.isSeachHidden = false;
+    else{
+      const searches = this.searchList.filters;
+      searches.forEach(s => this.searchList.remove(s));
+
+      this.isSeachHidden = true;
+    }
   }
 
   ngOnDestroy(): void{

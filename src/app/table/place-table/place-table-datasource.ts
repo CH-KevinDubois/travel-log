@@ -12,14 +12,12 @@ import { MapManagementService } from 'src/app/api/services/map-management.servic
 import { GeoJsonLocation } from 'src/app/models/geo-json-location';
 
 /**
-* Data source for the PlaceTable view. This class should
-* encapsulate all logic for fetching and manipulating the displayed data
-* (including sorting, pagination, and filtering).
+* Data source for the PlaceTable view.
 */
 export class PlacesDataSource extends DataSource<Place> {
   data: Place[];
   sort: MatSort;
-  filters: Filter[];
+  searches: Filter[];
   
   private placesSubject = new BehaviorSubject<Place[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -57,8 +55,9 @@ export class PlacesDataSource extends DataSource<Place> {
     else
       params = params.append('sort', 'name');
       
-    if(this.filters)
-      this.filters.forEach(filter => params = params.append('search', filter.name));
+    if(this.searches)
+      this.searches.forEach(search => 
+        params = params.append('search', search.name));
     
     if(tripsToLoad.length > 1)
       params = params.append('include', 'trip');

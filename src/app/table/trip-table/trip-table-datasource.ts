@@ -67,7 +67,6 @@ export class TripsDataSource extends DataSource<Trip> {
     }
     else{
       this.tripService.retrieveTrips(params).pipe(
-        //this.tripService.retrieveFilteredTrips(params, [ "kev"]).pipe(
           catchError(() => of([])),
           finalize(() => this.loadingSubject.next(false))
           )

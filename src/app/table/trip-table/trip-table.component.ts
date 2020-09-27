@@ -11,6 +11,7 @@ import { DataManagementService } from 'src/app/api/services/data-management.serv
 import { MapManagementService } from 'src/app/api/services/map-management.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { filter } from 'lodash';
+import { AuthService } from 'src/app/security/auth.service';
 ;
 @Component({
   selector: 'app-trip-table',
@@ -42,14 +43,19 @@ export class TripTableComponent implements AfterViewInit, OnInit {
 
   isSeachHidden: boolean = true;
   isFilterHidden: boolean = true;
+  isUserAuthenticated: boolean;
 
   constructor(
     private tripService: TripService,
     private dataManagement: DataManagementService,
-    private mapManagement: MapManagementService) {
+    private auth: AuthService) {
   }
 
   ngOnInit() {
+    this.auth.isAuthenticated().subscribe({
+      next: (value) => this.isUserAuthenticated = value
+    });
+
     this.dataSource = new TripsDataSource(
       this.tripService,
       this.dataManagement);

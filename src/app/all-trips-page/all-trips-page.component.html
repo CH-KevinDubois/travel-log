@@ -1,6 +1,6 @@
 <div class="outerContainer">
     <div class="row1">
-        <app-filters *ngIf="userAuthenticated"></app-filters>
+        <app-filters [ngClass]="{'hidden': !userAuthenticated}"></app-filters>
     </div>
     <!-- Diplay the list of trips -->
         <section>

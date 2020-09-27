@@ -28,7 +28,11 @@ mat-icon {
     color: grey;
 }
 
-.row1{
+.row1 {
     grid-row: 1;
     grid-column: 1 / 4;
+}
+
+.hidden {
+    display: none !important;
 }

@@ -12,6 +12,7 @@ import { MapManagementService } from 'src/app/api/services/map-management.servic
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { filter } from 'lodash';
 import { AuthService } from 'src/app/security/auth.service';
+import { Subscription } from 'rxjs';
 ;
 @Component({
   selector: 'app-trip-table',
@@ -45,6 +46,8 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   isFilterHidden: boolean = true;
   isUserAuthenticated: boolean;
 
+  subscriptionTable : Subscription[] = new Array<Subscription>();
+
   constructor(
     private tripService: TripService,
     private dataManagement: DataManagementService,
@@ -52,30 +55,36 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit() {
-    this.auth.isAuthenticated().subscribe({
-      next: (value) => this.isUserAuthenticated = value
-    });
+    this.subscriptionTable.push(
+      this.auth.isAuthenticated().subscribe({
+        next: (value) => this.isUserAuthenticated = value
+    }));
 
     this.dataSource = new TripsDataSource(
       this.tripService,
       this.dataManagement);
     this.dataSource.loadTrips(this.userId);
 
-    this.dataManagement.selectedTrip$.subscribe({
-      next: trip => {
-        this.selectedTrip = trip;
-      }
-    });
+    this.subscriptionTable.push(
+      this.dataManagement.selectedTrip$.subscribe({
+        next: trip => {
+          this.selectedTrip = trip;
+        }
+    }));
 
-    this.dataManagement.hasTripChanged$.subscribe({
-      next: trip => {
-        this.loadTrips();
-      }
-    });
+    this.subscriptionTable.push(
+      this.dataManagement.hasTripChanged$.subscribe({
+        next: trip => {
+          this.loadTrips();
+        }
+    }));
 
-    this.dataManagement.isTripSelected$.subscribe({
-      next: value => this.isTripSelected = value
-    });
+    this.subscriptionTable.push(
+      this.dataManagement.isTripSelected$.subscribe({
+      
+        next: value => this.isTripSelected = value
+    
+    }));
   }
 
   // ngOnChanges(changes: SimpleChanges) {
@@ -90,25 +99,28 @@ export class TripTableComponent implements AfterViewInit, OnInit {
     this.dataSource.searches = this.searchList.filters;
     this.dataSource.filters = this.filterList.filters;
 
-    this.sort.sortChange
-      .pipe(
-        tap(() => {
-          this.loadTrips();
-        })
-      )
-      .subscribe();
+    this.subscriptionTable.push(
+      this.sort.sortChange
+        .pipe(
+          tap(() => {
+            this.loadTrips();
+          })
+        )
+        .subscribe());
 
-    this.searchList.onChange
-      .pipe(
-        tap(() => this.loadTrips())
-      )
-      .subscribe();
+    this.subscriptionTable.push(
+      this.searchList.onChange
+        .pipe(
+          tap(() => this.loadTrips())
+        )
+        .subscribe());
 
+    this.subscriptionTable.push(
       this.filterList.onChange
-      .pipe(
-        tap(() => this.loadTrips())
-      )
-      .subscribe();
+        .pipe(
+          tap(() => this.loadTrips())
+        )
+        .subscribe());
   }
 
   loadTrips(){
@@ -154,6 +166,12 @@ export class TripTableComponent implements AfterViewInit, OnInit {
 
       this.isFilterHidden = true;
     }
+  }
+
+  ngOnDestroy(): void{
+    this.subscriptionTable.forEach(
+      subscription => subscription.unsubscribe()
+    );
   }
 
 }

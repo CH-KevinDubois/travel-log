@@ -5,6 +5,7 @@ import { DataManagementService } from '../api/services/data-management.service';
 import { ActivatedRoute } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
+import { AuthService } from '../security/auth.service';
 
 @Component({
   selector: 'app-all-trips-page',
@@ -18,12 +19,15 @@ export class AllTripsPageComponent implements OnInit {
   selectedTrip: Trip;
   selectedPlace: Place;
 
+  userAuthenticated: boolean;
+
   idPlace: number;
   idTrip: number;
 
   subscriptionTable : Subscription[] = new Array<Subscription>();
   
   constructor(
+    private auth: AuthService,
     private dataManagement: DataManagementService,
     private route: ActivatedRoute,
     private location: Location
@@ -32,6 +36,14 @@ export class AllTripsPageComponent implements OnInit {
     }
     
     ngOnInit(): void {
+      this.subscriptionTable.push(this.auth.isAuthenticated().subscribe({
+        next: (value) => this.userAuthenticated = value,
+        error: (error) => {
+          this.userAuthenticated = false;
+          console.log(error);
+        }
+      }));
+
       this.subscriptionTable.push(this.dataManagement.isTripSelected$.subscribe({
         next: value => this.isTripSelected = value
       }));

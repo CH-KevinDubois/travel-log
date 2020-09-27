@@ -59,6 +59,37 @@ export class TripService {
     );
   }
 
+  retrieveFilteredTrips(params: HttpParams, filtres: string[]): Observable<Trip[]>{
+    // Make sure it returns the user
+    params = params.append('include', 'user');
+
+    return this.http.get<Trip[]>(`${environment.apiUrl}/trips`, {
+      params : params
+    }).pipe(
+    // Filters on username, description and title
+    map( trips => trips.filter( t => {
+      let found = false;
+      filtres.forEach(filtre => {
+        if(filtre === t.user.name)
+          found = true;
+      });
+      filtres.forEach(filtre => {
+        if(t.description.includes(filtre))
+          found = true;
+      });
+      filtres.forEach(filtre => {
+        if(t.title.includes(filtre))
+          found = true;
+      });
+      return found;
+    }) ),
+    catchError(err => {
+      console.log(err);
+      return throwError(err);
+      })
+    );
+  }
+
   retrieveTripsByHref(tripHref: String): Observable<Trip>{
     
     return this.http.get<Trip>(`${environment.url}${tripHref}`)

@@ -25,9 +25,6 @@ import { animate, state, style, transition, trigger } from '@angular/animations'
 })
 export class TripTableComponent implements AfterViewInit, OnInit {
   @Input() userId: string = null;
-  // @Input() selectedTrip: Trip = null;
-  // @Output() onTripClicked = new EventEmitter<Trip>();
-  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<Trip>;
   @ViewChild(FiltersComponent) filterList : FiltersComponent;
@@ -79,14 +76,7 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.table.dataSource = this.dataSource;
     this.dataSource.sort = this.sort;
-    this.dataSource.paginator = this.paginator;
     this.dataSource.filters = this.filterList.filters;
-
-    this.paginator.page
-      .pipe(
-        tap(() => this.loadTrips())
-      )
-      .subscribe();
 
     this.sort.sortChange
       .pipe(
@@ -106,7 +96,6 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   loadTrips(){
     this.dataManagement.removeSelectedTrip();
     this.dataSource.loadTrips(this.userId);
-    this.paginator.length = this.dataSource.data.length;
   }
 
   selectTrip(trip: Trip){

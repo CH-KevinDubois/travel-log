@@ -10,13 +10,10 @@ import { HttpParams } from '@angular/common/http';
 import { DataManagementService } from 'src/app/api/services/data-management.service';
 
 /**
-* Data source for the TripTable view. This class should
-* encapsulate all logic for fetching and manipulating the displayed data
-* (including sorting, pagination, and filtering).
+* Data source for the TripTable view. 
 */
 export class TripsDataSource extends DataSource<Trip> {
   data: Trip[];
-  paginator: MatPaginator;
   sort: MatSort;
   filters: Filter[];
   
@@ -47,14 +44,10 @@ export class TripsDataSource extends DataSource<Trip> {
     }
     else
       params = params.append('sort', 'title');
-    /* Does not work well with the API
-    if(this.paginator){
-      params = params.append('page', Number(this.paginator.pageIndex+1).toString());
-      params = params.append('pageSize', Number(this.paginator.pageSize).toString());
-    }
-    */
+
     if(this.filters)
-    this.filters.forEach(filter => params = params.append('search', filter.name));
+    this.filters.forEach(filter => 
+      params = params.append('search', filter.name));
     
     this.tripService.retrieveTrips(params).pipe(
       catchError(() => of([])),
@@ -83,7 +76,7 @@ export class TripsDataSource extends DataSource<Trip> {
     *  Called when the table is being destroyed. Use this function, to clean up
     * any open connections or free any held resources that were set up during connect.
     */
-    disconnect() {
+    disconnect() { 
       this.dataManagement.emitTripList([]);
     }
     

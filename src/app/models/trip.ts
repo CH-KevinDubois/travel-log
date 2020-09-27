@@ -1,3 +1,5 @@
+import { User } from './user';
+
 export class Trip {
     id: string;
     href: string;
@@ -8,4 +10,5 @@ export class Trip {
     userRef: string;
     createdAt: Date;
     updateAt: Date;
+    user?: User;
 }

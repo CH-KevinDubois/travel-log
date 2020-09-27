@@ -47,6 +47,8 @@ export class TripsDataSource extends DataSource<Trip> {
     else
       params = params.append('sort', 'title');
 
+    params = params.append('pageSize', '49');
+
     if(this.searches)
     this.searches.forEach(search => 
       params = params.append('search', search.name));

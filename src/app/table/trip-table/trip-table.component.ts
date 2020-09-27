@@ -27,7 +27,7 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   @Input() userId: string = null;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<Trip>;
-  @ViewChild(FiltersComponent) filterList : FiltersComponent;
+  @ViewChild(FiltersComponent) searchList : FiltersComponent;
 
   dataSource: TripsDataSource;
 
@@ -76,7 +76,7 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   ngAfterViewInit() {
     this.table.dataSource = this.dataSource;
     this.dataSource.sort = this.sort;
-    this.dataSource.filters = this.filterList.filters;
+    this.dataSource.searches = this.searchList.filters;
 
     this.sort.sortChange
       .pipe(
@@ -86,7 +86,7 @@ export class TripTableComponent implements AfterViewInit, OnInit {
       )
       .subscribe();
 
-    this.filterList.onChange
+    this.searchList.onChange
       .pipe(
         tap(() => this.loadTrips())
       )

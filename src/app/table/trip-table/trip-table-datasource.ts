@@ -16,6 +16,7 @@ export class TripsDataSource extends DataSource<Trip> {
   data: Trip[];
   sort: MatSort;
   filters: Filter[];
+  searches: Filter[];
   
   private tripsSubject = new BehaviorSubject<Trip[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
@@ -45,11 +46,12 @@ export class TripsDataSource extends DataSource<Trip> {
     else
       params = params.append('sort', 'title');
 
-    if(this.filters)
-    this.filters.forEach(filter => 
-      params = params.append('search', filter.name));
+    if(this.searches)
+    this.searches.forEach(search => 
+      params = params.append('search', search.name));
     
     this.tripService.retrieveTrips(params).pipe(
+    //this.tripService.retrieveFilteredTrips(params, [ "kev"]).pipe(
       catchError(() => of([])),
       finalize(() => this.loadingSubject.next(false))
       )

@@ -64,7 +64,7 @@ export class NavbarComponent implements OnInit {
     if(confirm("Do you really want to delete your account?")){
       this.accountManager.deleteUser();
       this.auth.logout();
-      this.router.navigateByUrl("/login");
+      this.router.navigateByUrl("/all-trips");
     }
   }
 

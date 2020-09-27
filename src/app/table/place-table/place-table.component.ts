@@ -48,8 +48,6 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   // Column displayed in the table
   displayedColumns = ['name'];
 
-  sliderValue: number;
-
   isSeachHidden: boolean = true;
   isUserAuthenticated: boolean;
 
@@ -162,7 +160,12 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
   zoomMin(): void {
     if(this.isPlaceSelected){
       this.mapManagement.emitSetMapZoom(2);
-      this.sliderValue = 2;
+    }
+  }
+
+  zoomMax(): void {
+    if(this.isPlaceSelected){
+      this.mapManagement.emitSetMapZoom(10);
     }
   }
 
@@ -172,11 +175,6 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
         new GeoJsonLocation(
           this.selectedPlace.location.coordinates[0], 
           this.selectedPlace.location.coordinates[1]));
-  }
-
-  updateZoom(): void {
-    if(this.isPlaceSelected)
-      this.mapManagement.emitSetMapZoom(this.sliderValue);
   }
 
   displaySearch(): void {

@@ -17,6 +17,18 @@
   margin: 60px auto 0 auto;
 }
 
+mat-icon {
+  font-size: 1.5rem;
+  color: #673AB7;
+  margin: 2px 5px;
+  height: auto;
+  width: auto;
+}
+
+.hidden {
+  display: none !important;
+}
+
 tr.selected {
   background-color:#efefef;
   

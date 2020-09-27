@@ -59,7 +59,7 @@ export class TripService {
     );
   }
 
-  retrieveFilteredTrips(params: HttpParams, filtres: string[]): Observable<Trip[]>{
+  retrieveFilteredTrips(params: HttpParams, filtres: Filter[]): Observable<Trip[]>{
     // Make sure it returns the user
     params = params.append('include', 'user');
 
@@ -68,20 +68,29 @@ export class TripService {
     }).pipe(
     // Filters on username, description and title
     map( trips => trips.filter( t => {
-      let found = false;
+      let foundInName = false;
+      let foundInDesciption = false;
+      let foundInTitle = false;
+      
       filtres.forEach(filtre => {
-        if(filtre === t.user.name)
-          found = true;
+        if(filtre.name === t.user.name)
+          foundInName = true;
+        else
+          foundInName = false;
       });
       filtres.forEach(filtre => {
-        if(t.description.includes(filtre))
-          found = true;
+        if(t.description.includes(filtre.name))
+          foundInDesciption = true;
+        else 
+          foundInDesciption = false;
       });
       filtres.forEach(filtre => {
-        if(t.title.includes(filtre))
-          found = true;
+        if(t.title.includes(filtre.name))
+          foundInTitle = true;
+        else
+        foundInTitle = false;
       });
-      return found;
+      return foundInName || foundInDesciption || foundInTitle;
     }) ),
     catchError(err => {
       console.log(err);

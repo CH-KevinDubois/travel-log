@@ -8,6 +8,7 @@ import { TripService } from 'src/app/api/services/trip.service';
 import { Filter } from 'src/app/chips/filters/filters.component';
 import { HttpParams } from '@angular/common/http';
 import { DataManagementService } from 'src/app/api/services/data-management.service';
+import { filter } from 'lodash';
 
 /**
 * Data source for the TripTable view. 
@@ -50,18 +51,33 @@ export class TripsDataSource extends DataSource<Trip> {
     this.searches.forEach(search => 
       params = params.append('search', search.name));
     
-    this.tripService.retrieveTrips(params).pipe(
-    //this.tripService.retrieveFilteredTrips(params, [ "kev"]).pipe(
-      catchError(() => of([])),
-      finalize(() => this.loadingSubject.next(false))
-      )
-      .subscribe(trips => {
-        this.tripsSubject.next(trips);
-        this.dataManagement.emitTripList(trips);
-        this.data = trips;
-      }
-        );
+    if(this.filters && this.filters.length > 0){
+      this.tripService.retrieveFilteredTrips(params, this.filters).pipe(
+          catchError(() => of([])),
+          finalize(() => this.loadingSubject.next(false))
+          )
+          .subscribe(trips => {
+            this.tripsSubject.next(trips);
+            this.dataManagement.emitTripList(trips);
+            this.data = trips;
+          }
+            );
     }
+    else{
+      this.tripService.retrieveTrips(params).pipe(
+        //this.tripService.retrieveFilteredTrips(params, [ "kev"]).pipe(
+          catchError(() => of([])),
+          finalize(() => this.loadingSubject.next(false))
+          )
+          .subscribe(trips => {
+            this.tripsSubject.next(trips);
+            this.dataManagement.emitTripList(trips);
+            this.data = trips;
+          }
+            );
+    }
+    
+  }
     
     /**
     * Connect this data source to the table. The table will only update when

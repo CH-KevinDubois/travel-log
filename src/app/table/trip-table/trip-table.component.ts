@@ -10,6 +10,7 @@ import { FiltersComponent } from 'src/app/chips/filters/filters.component';
 import { DataManagementService } from 'src/app/api/services/data-management.service';
 import { MapManagementService } from 'src/app/api/services/map-management.service';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { filter } from 'lodash';
 ;
 @Component({
   selector: 'app-trip-table',
@@ -27,7 +28,8 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   @Input() userId: string = null;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatTable) table: MatTable<Trip>;
-  @ViewChild(FiltersComponent) searchList : FiltersComponent;
+  @ViewChild('searchComponent') searchList : FiltersComponent;
+  @ViewChild('filterComponent') filterList : FiltersComponent;
 
   dataSource: TripsDataSource;
 
@@ -37,6 +39,9 @@ export class TripTableComponent implements AfterViewInit, OnInit {
   // Columns displayed in the table.
   displayedColumns = ['title'];
   expandedTrip: Trip | null;
+
+  isSeachHidden: boolean = true;
+  isFilterHidden: boolean = true;
 
   constructor(
     private tripService: TripService,
@@ -77,6 +82,7 @@ export class TripTableComponent implements AfterViewInit, OnInit {
     this.table.dataSource = this.dataSource;
     this.dataSource.sort = this.sort;
     this.dataSource.searches = this.searchList.filters;
+    this.dataSource.filters = this.filterList.filters;
 
     this.sort.sortChange
       .pipe(
@@ -87,6 +93,12 @@ export class TripTableComponent implements AfterViewInit, OnInit {
       .subscribe();
 
     this.searchList.onChange
+      .pipe(
+        tap(() => this.loadTrips())
+      )
+      .subscribe();
+
+      this.filterList.onChange
       .pipe(
         tap(() => this.loadTrips())
       )
@@ -104,6 +116,38 @@ export class TripTableComponent implements AfterViewInit, OnInit {
     }
     else
       this.dataManagement.emitSelectedTrip(trip);
+  }
+
+  displaySearch(): void {
+    if(this.isSeachHidden){
+      const filters = this.filterList.filters;
+      filters.forEach(f => this.filterList.remove(f));
+
+      this.isSeachHidden = false;
+      this.isFilterHidden = true;
+    }
+    else{
+      const searches = this.searchList.filters;
+      searches.forEach(s => this.searchList.remove(s));
+
+      this.isSeachHidden = true;
+    }
+  }
+
+  displayFilter(): void {
+    if(this.isFilterHidden){
+      const searches = this.searchList.filters;
+      searches.forEach(s => this.searchList.remove(s));
+
+      this.isSeachHidden = true;
+      this.isFilterHidden = false;
+    }
+    else{
+      const filters = this.filterList.filters;
+      filters.forEach(f => this.filterList.remove(f));
+
+      this.isFilterHidden = true;
+    }
   }
 
 }

@@ -1,5 +1,11 @@
-<div>
-  <app-filters placeholder="Trip search keywords..."></app-filters>
+<mat-icon (click)="displaySearch()">search</mat-icon>
+<mat-icon (click)="displayFilter()">filter_list</mat-icon>
+
+<div [ngClass]="{'hidden' : isSeachHidden}">
+  <app-filters #searchComponent placeholder="Search trip list..."></app-filters>
+</div>
+<div [ngClass]="{'hidden' : isFilterHidden}">
+  <app-filters #filterComponent placeholder="Filter trip list..."></app-filters>
 </div>
 
 <div class="spinner-container" *ngIf="dataSource.loading$ | async">

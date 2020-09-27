@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Trip } from '../models/trip';
 import { Place } from '../models/place';
 import { DataManagementService } from '../api/services/data-management.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { Subscription } from 'rxjs';
 import { AuthService } from '../security/auth.service';
@@ -29,8 +29,9 @@ export class AllTripsPageComponent implements OnInit {
   constructor(
     private auth: AuthService,
     private dataManagement: DataManagementService,
-    private route: ActivatedRoute,
-    private location: Location
+    private activatedRoute: ActivatedRoute,
+    private location: Location,
+    private router: Router
     ) {
       this.dataManagement.reset();  
     }
@@ -55,34 +56,48 @@ export class AllTripsPageComponent implements OnInit {
       this.subscriptionTable.push(this.dataManagement.selectedTrip$.subscribe({
         next: value => {
           this.selectedTrip = value;
+
           // Display the trip id in the url (without redirection)
+          let url: string;
           if (this.isTripSelected)
-            this.location.go(this.route.snapshot.url.join('/') 
-              + '/' + this.selectedTrip.id);
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute, 
+                queryParams: {tripId: this.selectedTrip.id}}).toString();
           else
-            this.location.go(this.route.snapshot.url.join('/'));
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute}).toString();
+
+          this.location.go(url);
         }
       }));
 
       this.subscriptionTable.push(this.dataManagement.selectedPlace$.subscribe({
         next: value => {
           this.selectedPlace = value;
+
           // Display the trip/place id in the url (without redirection)
+          let url: string;
           if (this.isTripSelected && this.isPlaceSelected) {
-            this.location.go(this.route.snapshot.url.join('/') 
-              + '/' + this.selectedTrip.id
-              + '/' + this.selectedPlace.id);
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute, 
+                queryParams: {tripId: this.selectedTrip.id, 
+                  placeId: this.selectedPlace.id}}).toString();
           }
           else if (this.isPlaceSelected) {
-            this.location.go(this.route.snapshot.url.join('/') 
-              + '/' + this.selectedPlace.id);
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute, 
+                queryParams: {placeId: this.selectedPlace.id},}).toString()
           }
           else if (this.isTripSelected) {
-            this.location.go(this.route.snapshot.url.join('/') 
-              + '/' + this.selectedTrip.id);
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute, 
+                queryParams: {tripId: this.selectedTrip.id},}).toString()
             }
           else
-            this.location.go(this.route.snapshot.url.join('/'));
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute}).toString();
+              
+          this.location.go(url);
         }
       }));
     }

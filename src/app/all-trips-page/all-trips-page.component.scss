@@ -19,7 +19,6 @@ mat-icon {
     height: 84vh;
     display: grid;
     grid-template-columns: 1.2fr 1.2fr 2fr;
-    grid-template-rows: 0.05fr 1fr;
     grid-gap: 15px;
     padding: 10px;
 }
@@ -28,11 +27,3 @@ mat-icon {
     color: grey;
 }
 
-.row1 {
-    grid-row: 1;
-    grid-column: 1 / 4;
-}
-
-.hidden {
-    display: none !important;
-}

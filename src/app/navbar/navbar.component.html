@@ -1,7 +1,11 @@
 <mat-toolbar color="primary">
     <mat-toolbar-row>
         <!--Left menu-->
-        <button mat-button routerLink="/homepage" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="0">
+        <button mat-button 
+            routerLink="/all-trips" 
+            routerLinkActive="active" 
+            class="mat-focus-indicator mat-button button-menu" 
+            tabindex="0">
             <span class="mat-button-wrapper">
                 <img src="../../assets/img/navbar/globe.svg" alt="TraveLog" class="travelog-logo"/>
                 <span class="logo-title"><strong>T</strong>rave<strong>L</strong>o<strong>G</strong></span>
@@ -9,7 +13,11 @@
             <div matripple="" class="mat-ripple mat-button-ripple"></div>
             <div class="mat-button-focus-overlay"></div>
         </button>
-        <button mat-button routerLink="/all-trips" routerLinkActive="active" class="mat-focus-indicator mat-button button-menu" tabindex="1">
+        <button mat-button 
+            routerLink="/all-trips" 
+            routerLinkActive="active" 
+            class="mat-focus-indicator mat-button button-menu" 
+            tabindex="1">
             <span class="mat-button-wrapper">
                 <span>All trips</span>
             </span>
@@ -28,7 +36,11 @@
         <div matripple="" class="mat-ripple mat-button-ripple"></div>
         <div class="mat-button-focus-overlay"></div>
     </button>
-    <a [disabled]="true" mat-button="" class="mat-focus-indicator mat-button button-menu" tabindex="3">
+    <a [disabled]="true"
+        [hidden]="!userAuthenticated" 
+        mat-button="" 
+        class="mat-focus-indicator mat-button button-menu" 
+        tabindex="3">
         <span class="mat-button-wrapper">
             <span>See comments</span>
         </span>
@@ -38,14 +50,22 @@
     <!--Spacer-->
     <div class="flex-spacer"></div>
     <!--Right menu-->
-    <button mat-button [hidden]="userAuthenticated" (click)="openLoginDialog()" class="mat-button button-menu" tabindex="4">
+    <button mat-button 
+        [hidden]="userAuthenticated" 
+        (click)="openLoginDialog()" 
+        class="mat-button button-menu" 
+        tabindex="4">
         <span class="mat-button-wrapper">
             <span>LoGin</span>
         </span>
         <div matripple="" class="mat-ripple mat-button-ripple"></div>
         <div class="mat-button-focus-overlay"></div>
     </button>
-    <button mat-button [hidden]="userAuthenticated" (click)="openRegisterDialog()" class="mat-focus-indicator mat-button button-menu" tabindex="6">
+    <button mat-button 
+        [hidden]="userAuthenticated" 
+        (click)="openRegisterDialog()" 
+        class="mat-focus-indicator mat-button button-menu" 
+        tabindex="5">
         <span class="mat-button-wrapper">
             <span>Register</span>
         </span>
@@ -53,7 +73,10 @@
         <div class="mat-button-focus-overlay"></div>
     </button>
     
-    <button mat-icon-button [hidden]="!userAuthenticated" [matMenuTriggerFor]="menu">
+    <button mat-icon-button 
+        [hidden]="!userAuthenticated" 
+        [matMenuTriggerFor]="menu" 
+        tabindex="6">
         <mat-icon>account_circle</mat-icon>
     </button>
     <mat-menu #menu="matMenu">

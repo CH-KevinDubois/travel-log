@@ -1,7 +1,7 @@
 <mat-icon *ngIf="isUserAuthenticated" (click)="displaySearch()">search</mat-icon>
 <mat-icon *ngIf="isUserAuthenticated" (click)="displayFilter()">filter_list</mat-icon>
 
-<h1>Trip</h1>
+<h1>Trips</h1>
 
 <div [ngClass]="{'hidden' : isSeachHidden}">
   <app-filters #searchComponent placeholder="Search trip list..."></app-filters>

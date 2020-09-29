@@ -62,6 +62,8 @@ export class PlacesDataSource extends DataSource<Place> {
     if(tripsToLoad.length > 1)
       params = params.append('include', 'trip');
 
+    params = params.append('pageSize', '49');
+
     this.placeService.retrievePlaces(params).pipe(
       catchError(() => of([])),
       finalize(() => this.loadingSubject.next(false))

@@ -57,7 +57,7 @@ export class AllTripsPageComponent implements OnInit {
         next: value => {
           this.selectedTrip = value;
 
-          // Display the trip id in the url (without redirection)
+          // Display the tripId as queryParam in the url (without redirection)
           let url: string;
           if (this.isTripSelected)
             url = this.router.createUrlTree([], 
@@ -75,7 +75,7 @@ export class AllTripsPageComponent implements OnInit {
         next: value => {
           this.selectedPlace = value;
 
-          // Display the trip/place id in the url (without redirection)
+          // Display the tripId/placeId as queryParam in the url (without redirection)
           let url: string;
           if (this.isTripSelected && this.isPlaceSelected) {
             url = this.router.createUrlTree([], 

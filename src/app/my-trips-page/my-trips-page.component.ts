@@ -22,7 +22,7 @@ import { PlaceTableComponent } from '../table/place-table/place-table.component'
 import { MapComponent } from '../map/map.component';
 import { UserNotificationService } from '../api/services/user-notification.service';
 import { DataManagementService } from '../api/services/data-management.service';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 
 const defaultIcon: Icon<IconOptions> = icon({
@@ -65,6 +65,7 @@ export class MyTripsPageComponent implements OnInit {
 
   idPlace: number;
   idTrip: number;
+  activatedRoute: ActivatedRoute;
   
   constructor(
     public dialog: MatDialog,
@@ -77,7 +78,8 @@ export class MyTripsPageComponent implements OnInit {
     private mapManagement: MapManagementService,
     private dataManagement: DataManagementService,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private router: Router
     ) {
       this.dataManagement.reset();
       //this.selections = new ActiveSelections();
@@ -107,34 +109,47 @@ export class MyTripsPageComponent implements OnInit {
       this.subscriptionTable.push(this.dataManagement.selectedTrip$.subscribe({
         next: value => {
           this.selectedTrip = value;
-          // Display the trip id in the url (without redirection)
+          // Display the tripId as queryParam in the url (without redirection)
+          let url: string;
           if (this.isTripSelected)
-            this.location.go(this.route.snapshot.url.join('/') 
-              + '/' + this.selectedTrip.id);
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute, 
+                queryParams: {tripId: this.selectedTrip.id}}).toString();
           else
-            this.location.go(this.route.snapshot.url.join('/'));
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute}).toString();
+
+          this.location.go(url);
         }
       }));
 
       this.subscriptionTable.push(this.dataManagement.selectedPlace$.subscribe({
         next: value => {
           this.selectedPlace = value;
-          // Display the trip/place id in the url (without redirection)
+          
+          // Display the tripId/placeId as queryParam in the url (without redirection)
+          let url: string;
           if (this.isTripSelected && this.isPlaceSelected) {
-            this.location.go(this.route.snapshot.url.join('/') 
-              + '/' + this.selectedTrip.id
-              + '/' + this.selectedPlace.id);
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute, 
+                queryParams: {tripId: this.selectedTrip.id, 
+                  placeId: this.selectedPlace.id}}).toString();
           }
           else if (this.isPlaceSelected) {
-            this.location.go(this.route.snapshot.url.join('/') 
-              + '/' + this.selectedPlace.id);
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute, 
+                queryParams: {placeId: this.selectedPlace.id}}).toString()
           }
           else if (this.isTripSelected) {
-            this.location.go(this.route.snapshot.url.join('/') 
-              + '/' + this.selectedTrip.id);
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute, 
+                queryParams: {tripId: this.selectedTrip.id}}).toString()
             }
           else
-            this.location.go(this.route.snapshot.url.join('/'));
+            url = this.router.createUrlTree([], 
+              {relativeTo: this.activatedRoute}).toString();
+              
+          this.location.go(url);
         }
       }));
 

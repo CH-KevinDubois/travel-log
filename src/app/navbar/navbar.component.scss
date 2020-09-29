@@ -1,12 +1,12 @@
-.example-icon {
-  padding: 0 14px;
+.mat-icon-transform {
+  transform: scale(2);
 }
 
 .flex-spacer {
   flex: 1 1 auto;
 }
 
- button > span {
+button > span {
   font-size: 1.2em;
 }
 
@@ -26,7 +26,8 @@ mat-toolbar{
 } 
 
 .travelog-logo {
-  padding: 0px 00px;
+  padding: 0px 0px;
+  transform: scale(1.5);
 }
 
 [hidden] {

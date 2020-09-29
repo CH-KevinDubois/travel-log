@@ -157,15 +157,15 @@ export class PlaceTableComponent implements AfterViewInit, OnInit {
       this.dataManagement.emitSelectedPlace(place);
   }
 
-  zoomMin(): void {
+  zoomClose(): void {
     if(this.isPlaceSelected){
-      this.mapManagement.emitSetMapZoom(2);
+      this.mapManagement.emitSetMapZoom(9);
     }
   }
 
   zoomMax(): void {
     if(this.isPlaceSelected){
-      this.mapManagement.emitSetMapZoom(10);
+      this.mapManagement.emitSetMapZoom(15);
     }
   }
 

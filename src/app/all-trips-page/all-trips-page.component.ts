@@ -86,12 +86,12 @@ export class AllTripsPageComponent implements OnInit {
           else if (this.isPlaceSelected) {
             url = this.router.createUrlTree([], 
               {relativeTo: this.activatedRoute, 
-                queryParams: {placeId: this.selectedPlace.id},}).toString()
+                queryParams: {placeId: this.selectedPlace.id}}).toString()
           }
           else if (this.isTripSelected) {
             url = this.router.createUrlTree([], 
               {relativeTo: this.activatedRoute, 
-                queryParams: {tripId: this.selectedTrip.id},}).toString()
+                queryParams: {tripId: this.selectedTrip.id}}).toString()
             }
           else
             url = this.router.createUrlTree([], 

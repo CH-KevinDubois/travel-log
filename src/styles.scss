@@ -11,3 +11,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
         outline: #4CAF50 solid 1px;
     }
 }
+
+#sign {
+    position: fixed;
+    bottom: 0px;
+    left: 0px;
+    height: 50px;
+}

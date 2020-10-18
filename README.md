@@ -37,7 +37,7 @@ Je suis parti de l'idée de me baser entièrement sur deux vues principales. La 
 Comme conseillé, j'ai crée un petit draft en début de projet :
 
 
-![Image du draft](.\resources\Travelog.jpg "Draft")
+![Image du draft](./resources/Travelog.jpg "Draft")
 
 C'était peu être un peu optimiste comme objectif, mais pour ma décharge, je commençais juste à découvrir ce que permet le Framework, n'ayant aucune connaissance préalable ni d'Angular, de React ou de Vue. Je ne savais pas vraiment ce qu’il m’attendait. Avec un peu de recul, je peux dire que je ne me suis pas franchement simplifié la vie. 
 Premièrement du point de vue de la structure des pages, une approche plus linéaire mais très certainement plus simple aurait été de faire une page par "action", ni plus ni moins. 
@@ -71,7 +71,7 @@ Sur cette page l'utilisateur peut :
 
 <br>
 
-![Image page accueil](.\resources\AccueilNL.jpg "All-trips")
+![Image page accueil](./resources/AccueilNL.jpg "All-trips")
 
 ## Barre de navigation - Etat loggé
 
@@ -86,7 +86,7 @@ Sous la barre de navigation, l'utilisateur peut :
 
 <br>
 
-![Image page accueil](.\resources\AccueilL.jpg "My-trips")
+![Image page accueil](./resources/AccueilL.jpg "My-trips")
 
 ## Page My trips - Etat loggé
 

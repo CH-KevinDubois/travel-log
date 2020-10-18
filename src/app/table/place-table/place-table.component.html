@@ -35,7 +35,7 @@
             [@detailExpand]="rowDetail == expandedPlace ? 'expanded' : 'collapsed'">
             <mat-icon (click)="focus()">location_searching</mat-icon>
           <mat-icon (click)="zoomMax()">center_focus_strong</mat-icon>
-          <mat-icon (click)="zoomClose()"> zoom_out_map</mat-icon>
+          <mat-icon (click)="zoomClose()">center_focus_weak</mat-icon>
           <div *ngIf="rowDetail.trip?.title">{{rowDetail.trip.title}}</div>
           <img *ngIf="rowDetail.pictureUrl" [src]="rowDetail.pictureUrl">
           <div class="row-description">

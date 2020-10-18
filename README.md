@@ -132,9 +132,11 @@ Lorsque l'utilisteur clique sur une entrée de la liste de places, la cellule ac
 
 # Quelques mots pour conclure
 
-Premièrement un grand merci pour ce cours super intéressant. C’est allé va très très vite, je suis sûr que je n'ai pas retenu 20% de ce qui a été dit, mais je me suis fait plaisir en apprenant de nouvelles technologies. C’est tout ce qui compte.
-
-Difficile parfois de marier boulot et études. Après des journées 9-10h à gérer des projets, il n’est pas toujours facile de se plonger dans de la programmation … j’ai fait ce que j’ai pu avec la motivation et le temps libre à ma disposition afin de rendre quelque chose de potable ! 
+Difficile parfois de marier boulot et études. Après des journées 9-10h à gérer des projets, il n’est pas toujours agréable de se plonger dans de la programmation … j’ai fait ce que j’ai pu avec la motivation et le temps libre à ma disposition afin de rendre quelque chose de potable ! 
 
 Je n’ai pas précisément calculé mais j’estime avoir passé entre 100 et 150 heures sur ce projet. Ça peut sembler beaucoup oui, mais au final il y a autant d’heures passées à éplucher de la doc ou à regarder des vidéos pour comprendre certaines spécificités/fonctionnalités que d’heures de codages effectives.
 
+Un tout grand merci pour ce cours super intéressant dispensé d'une manière très pro. C’est allé va très très vite (normal vu ta maîtrise du sujet), et je suis sûr que je n'ai pas retenu plus de 30% de ce qui a été montré, mais je me suis fait plaisir en apprenant de nouvelles technologies. Au final, élargir sa vision c’est tout ce qui compte.
+
+
+KD
